@@ -3,6 +3,8 @@
 <head>
 <!-- sections/head.main.blade -->
 @include('sections.head')
+@section('stylesheets')
+@show
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -24,5 +26,8 @@
 </div>
 <!-- ./wrapper -->
 @include('sections.scripts')
+<script src="js/main.js"></script>
+@section('scripts')
+@show
 </body>
 </html>

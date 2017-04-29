@@ -3,14 +3,14 @@
   <!-- mini logo for sidebar mini 50x50 pixels -->
   <span class="logo-mini"><b>Q</b>M</span>
   <!-- logo for regular state and mobile devices -->
-  <span class="logo-lg"><b>Q</b>uary<b> M</b>anager</span>
+  <span class="logo-lg">Quary Manager</span>
 </div>
 <!-- Header Navbar: style can be found in header.less -->
 <nav class="navbar navbar-static-top">
   <!-- Sidebar toggle button-->
-  <!-- <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+  <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
     <span class="sr-only">Toggle navigation</span>
-  </a> -->
+  </a>
 
   <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
@@ -51,7 +51,7 @@
               <a href="#" class="btn btn-default btn-flat">Profile</a>
             </div>
             <div class="pull-right">
-              <a href="#" class="btn btn-default btn-flat">Sign out</a>
+              <a href="{{ route('logout')}}" class="btn btn-default btn-flat">Logout</a>
             </div>
           </li>
         </ul>

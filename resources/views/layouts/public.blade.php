@@ -12,5 +12,6 @@
 </div>
 <!-- ./wrapper -->
 @include('sections.scripts')
+<script src="js/public-main.js"></script>
 </body>
 </html>

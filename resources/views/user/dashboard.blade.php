@@ -1,19 +1,27 @@
 @extends('layouts.app')
 @section('title', 'Dashboard')
+@section('stylesheets')
+<script src="js/dashboard.js"></script>
+    <!-- fullCalendar 2.2.5-->
+    <link rel="stylesheet" href="css/plugins/fullcalendar/fullcalendar.min.css">
+@endsection
 @section('content')
+<style type="text/css">
+#calendar td {
+    text-align: center;
+}
+.fc-unthemed .fc-today {
+  background-color: lightgoldenrodyellow;
+}
+</style>
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Dashboard
-        <small>Control panel</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
-      </ol>
-    </section>
-
+    @if (Session::has('message'))
+        <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
+            <h4>
+              {{ Session::get('message') }}
+            </h4>
+        </div>
+    @endif
     <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
@@ -35,7 +43,7 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-green">
+          <div class="small-box bg-info">
             <div class="inner">
               <h3>53<sup style="font-size: 20px">%</sup></h3>
 
@@ -82,28 +90,25 @@
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
-        <section class="col-lg-6 connectedSortable">
-          <!-- Calendar -->
-          <div class="box box-solid bg-green-gradient">
-            <div class="box-header">
-              <i class="fa fa-calendar"></i>
-              <h3 class="box-title">Calendar</h3>
-              <!-- tools box -->
-              <!-- /. tools -->
-            </div>
-            <!-- /.box-header -->
+        <div class="col-md-12">
+          <div class="box box-primary">
             <div class="box-body no-padding">
-              <!--The calendar -->
-              <div id="calendar" style="width: 100%"></div>
+              <!-- THE CALENDAR -->
+              <div id="calendar"></div>
             </div>
             <!-- /.box-body -->
           </div>
-          <!-- /.box -->
-        </section>
+          <!-- /. box -->
+        </div>
         <!-- right col -->
       </div>
       <!-- /.row (main row) -->
     </section>
     <!-- /.content -->
 </div>
+@endsection
+@section('scripts')
+<script src="js/dashboard.js"></script>
+<!-- fullCalendar 2.2.5-->
+<script src="js/plugins/fullcalendar/fullcalendar.min.js"></script>
 @endsection
