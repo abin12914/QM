@@ -53,20 +53,20 @@
                     <p style="color: red;" >{{$errors->first('phone')}}</p>
                 @endif
             </div>
-            <div class="{{ !empty($errors->first('role_id')) ? 'form-group has-feedback has-error' : 'form-group has-feedback' }}">
-                <select class="form-control" name="role_id" required>
-                    <option value="" {{ empty(old('role_id')) ? 'selected' : '' }}>Select User Role</option>
-                    <option value="1" {{ old('role_id') == 1 ? 'selected' : '' }}>Super Admin</option>
-                    <option value="2" {{ old('role_id') == 2 ? 'selected' : '' }}>Admin</option>
-                    <option value="3" {{ old('role_id') == 3 ? 'selected' : '' }}>User</option>
+            <div class="{{ !empty($errors->first('role')) ? 'form-group has-feedback has-error' : 'form-group has-feedback' }}">
+                <select class="form-control" name="role" required>
+                    <option value="" {{ empty(old('role')) ? 'selected' : '' }}>Select User Role</option>
+                    <option value="superadmin" {{ old('role') == 'superadmin' ? 'selected' : '' }}>Super Admin</option>
+                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
                 </select>
-                @if(!empty($errors->first('role_id')))
-                    <p style="color: red;" >{{$errors->first('role_id')}}</p>
+                @if(!empty($errors->first('role')))
+                    <p style="color: red;" >{{$errors->first('role')}}</p>
                 @endif
                 {{-- <span class="fa fa-users form-control-feedback"></span> --}}
             </div>
             <div class="{{ !empty($errors->first('valid_till')) ? 'form-group has-feedback has-error' : 'form-group has-feedback' }}">
-                <input type="text" name="valid_till" class="form-control" placeholder="Valid Till" value="{{ !empty(old('valid_till')) ? old('valid_till') : '' }}" id="datepicker">
+                <input type="text" name="valid_till" class="form-control" placeholder="User Valid Till (Keep this field empty for unlimited user validity.)" value="{{ !empty(old('valid_till')) ? old('valid_till') : '' }}" id="datepicker">
                 {{-- <input type="text" name="valid_till" class="form-control" placeholder="Valid Till" value="{{ old('valid_till') }}"> --}}
                 <span class="fa fa-calendar form-control-feedback"></span>
                 @if(!empty($errors->first('valid_till')))

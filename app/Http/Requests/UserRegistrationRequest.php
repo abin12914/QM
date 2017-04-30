@@ -23,8 +23,7 @@ class UserRegistrationRequest extends FormRequest
     public function messages()
     {
         return [
-            'role_id.required'          => 'The user role is required.',
-            'role_id.integer'           => 'The user role field faces some problem. Please try reloading the page.',
+            'role.required'             => 'The user role is required.',
             'valid_till.date_format'    => 'The user validity field should be a date and dd/mm/yyyy formated',
             'password.confirmed'        => 'The password confirmation does not match.',
         ];
@@ -42,7 +41,7 @@ class UserRegistrationRequest extends FormRequest
             'user_name'             => 'required',
             'email'                 => 'nullable|email',
             'phone'                 => 'required|digits_between:10,13',
-            'role_id'               => 'required|integer',
+            'role'                  => 'required',
             'valid_till'            => 'nullable|date_format:d/m/Y',
             'password'              => 'required|min:6|max:10|confirmed',
         ];

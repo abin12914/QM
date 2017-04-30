@@ -11,6 +11,14 @@ use App\Models\User;
 class LoginController extends Controller
 {
 	/**
+     * Return view for public home page
+     */
+    public function publicHome()
+    {
+        return view('public.home');
+    }
+
+    /**
      * Return view for login
      */
     public function login()
@@ -61,7 +69,7 @@ class LoginController extends Controller
     	$email 		= !empty($request->get('email')) ? $request->get('email') : null;
     	$phone 		= !empty($request->get('phone')) ? $request->get('phone') : '';
     	$password 	= !empty($request->get('password')) ? $request->get('password') : '';
-    	$roleId 	= !empty($request->get('role_id')) ? $request->get('role_id') : '';
+    	$role 	    = !empty($request->get('role')) ? $request->get('role') : '';
     	$validTill 	= !empty($request->get('valid_till')) ? $request->get('valid_till') : null;
 
     	$user = new User;
@@ -70,7 +78,7 @@ class LoginController extends Controller
         $user->email        = $email;
         $user->phone        = $phone;
         $user->password     = Hash::make($password);
-        $user->role_id      = $roleId;
+        $user->role         = $role;
         $user->status       = 1;
         $user->valid_till   = $validTill;
         if($user->save()) {
