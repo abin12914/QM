@@ -18,16 +18,24 @@ Route::group(['middleware' => 'is.guest'], function() {
 });
 
 Route::group(['middleware' => 'auth.check'], function () {
+	//superadmin routes
 	Route::group(['middleware' => 'user.role:superadmin'], function () {
-		Route::get('/register', 'LoginController@register')->name('register-view');
-		Route::post('/register/action', 'LoginController@registerAction')->name('register-action');
+		Route::get('/register', 'LoginController@register')->name('user-register-view');
+		Route::post('/register/action', 'LoginController@registerAction')->name('user-register-action');
 	});
 
-	Route::group(['middleware' => 'user.role:admin'], function () {
-		Route::get('/staff/register', 'LoginController@register')->name('register-view');
-		Route::post('/staff/register/action', 'LoginController@registerAction')->name('register-action');
+	//admin routes
+	Route::group(['middleware' => 'user.role:superadmin'], function () {
+		Route::get('staff/register', 'StaffController@register')->name('staff-register-view');
+		Route::post('/staff/register/action', 'StaffController@registerAction')->name('staff-register-action');
 	});
 
+	//user routes
+	Route::group(['middleware' => 'user.role:user'], function () {
+
+	});
+
+	//common routes
 	Route::get('/dashboard', 'LoginController@dashboard')->name('user-dashboard');
 	Route::get('/logout', 'LoginController@logout')->name('logout');
 

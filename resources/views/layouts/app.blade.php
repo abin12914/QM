@@ -26,7 +26,7 @@
 </div>
 <!-- ./wrapper -->
 @include('sections.scripts')
-<script src="js/main.js"></script>
+<script src="/js/main.js"></script>
 @section('scripts')
 @show
 </body>

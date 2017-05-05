@@ -11,7 +11,7 @@ class StaffController extends Controller
      */
     public function register()
     {
-    	return view('public.register');
+    	return view('staff.register');
     }
 
      /**

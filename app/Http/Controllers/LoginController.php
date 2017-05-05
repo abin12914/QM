@@ -56,7 +56,7 @@ class LoginController extends Controller
      */
     public function register()
     {
-    	return view('public.register');
+    	return view('user.register');
     }
 
      /**
