@@ -26,6 +26,8 @@ class UserRegistrationRequest extends FormRequest
             'role.required'             => 'The user role is required.',
             'valid_till.date_format'    => 'The user validity field should be a date and dd/mm/yyyy formated',
             'password.confirmed'        => 'The password confirmation does not match.',
+            'image_file.mimes'          => 'The image file should be of type jpeg, jpg, png, or bmp',
+            /*'image_file.size'           => 'The image file size should be less than 3 MB',*/
         ];
     }
 
@@ -38,12 +40,13 @@ class UserRegistrationRequest extends FormRequest
     {
         return [
             'name'                  => 'required',
-            'user_name'             => 'required',
-            'email'                 => 'nullable|email',
-            'phone'                 => 'required|digits_between:10,13',
+            'user_name'             => 'required|unique:users',
+            'email'                 => 'nullable|email|unique:users',
+            'phone'                 => 'required|digits_between:10,13|unique:users',
             'role'                  => 'required',
             'valid_till'            => 'nullable|date_format:d/m/Y',
             'password'              => 'required|min:6|max:10|confirmed',
+            'image_file'            => 'nullable|mimes:jpeg,jpg,bmp,png|max:3000'
         ];
     }
 }

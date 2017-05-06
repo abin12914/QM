@@ -4,7 +4,7 @@
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Owners
+            Owner
             <small>Registartion</small>
         </h1>
         <ol class="breadcrumb">
@@ -86,7 +86,7 @@
                                             <div class="col-sm-10">
                                                 <input type="file" name="image_file" class="form-control" id="image_file">
                                                 @if(!empty($errors->first('image_file')))
-                                                    <p style="color: red;" >{{$errors->first('phone')}}</p>
+                                                    <p style="color: red;" >{{$errors->first('image_file')}}</p>
                                                 @endif
                                             </div>
                                         </div>

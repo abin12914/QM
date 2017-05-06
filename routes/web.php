@@ -20,13 +20,16 @@ Route::group(['middleware' => 'is.guest'], function() {
 Route::group(['middleware' => 'auth.check'], function () {
 	//superadmin routes
 	Route::group(['middleware' => 'user.role:superadmin'], function () {
-		Route::get('/register', 'LoginController@register')->name('user-register-view');
-		Route::post('/register/action', 'LoginController@registerAction')->name('user-register-action');
+		Route::get('/user/register', 'UserController@register')->name('user-register-view');
+		Route::post('/user/register/action', 'UserController@registerAction')->name('user-register-action');
+
+		Route::get('/owner/register', 'UserController@ownerRegister')->name('owner-register-view');
+		Route::post('/owner/register/action', 'UserController@ownerRegisterAction')->name('owner-register-action');
 	});
 
 	//admin routes
 	Route::group(['middleware' => 'user.role:superadmin'], function () {
-		Route::get('staff/register', 'StaffController@register')->name('staff-register-view');
+		Route::get('/staff/register', 'StaffController@register')->name('staff-register-view');
 		Route::post('/staff/register/action', 'StaffController@registerAction')->name('staff-register-action');
 	});
 
