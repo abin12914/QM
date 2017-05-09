@@ -48,7 +48,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                       {{--  <div class="{{ !empty($errors->first('email')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="{{ !empty($errors->first('email')) ? 'form-group has-error' : 'form-group' }}">
                                             <label for="email" class="col-sm-2 control-label">E-mail : </label>
                                             <div class="col-sm-10">
                                                 <input type="email" name="email" class="form-control" id="email" placeholder="E-mail" value="{{ old('email') }}" required>
@@ -56,7 +56,7 @@
                                                     <p style="color: red;" >{{$errors->first('email')}}</p>
                                                 @endif
                                             </div>
-                                        </div> --}}
+                                        </div>
                                         <div class="{{ !empty($errors->first('phone')) ? 'form-group has-error' : 'form-group' }}">
                                             <label for="phone" class="col-sm-2 control-label"><b style="color: red;">* </b> Phone : </label>
                                             <div class="col-sm-10">
@@ -90,37 +90,39 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        {{-- <div class="{{ !empty($errors->first('category')) ? 'form-group has-error' : 'form-group' }}">
-                                            <label for="category" class="col-sm-2 control-label"><b style="color: red;">* </b> Category : </label>
+                                        <div class="{{ !empty($errors->first('user_name')) ? 'form-group has-error' : 'form-group' }}">
+                                            <label for="user_name" class="col-sm-2 control-label"><b style="color: red;">* </b> User Name : </label>
                                             <div class="col-sm-10">
-                                                <select class="form-control" name="category" id="category">
-                                                    <option value="" selected="">Select Category</option>
-                                                    <option value="staff">Staff</option>
-                                                    <option value="labour">Labour</option>
-                                                </select>
-                                                @if(!empty($errors->first('category')))
-                                                    <p style="color: red;" >{{$errors->first('category')}}</p>
-                                                @endif
-                                            </div>
-                                        </div> --}}
-                                        <div class="{{ !empty($errors->first('salary')) ? 'form-group has-error' : 'form-group' }}">
-                                            <label for="salary" class="col-sm-2 control-label"><b style="color: red;">* </b> Monthly Salary : </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="salary" class="form-control" id="salary" placeholder="Monthly Salary" value="{{ old('salary') }}" required>
-                                                @if(!empty($errors->first('salary')))
-                                                    <p style="color: red;" >{{$errors->first('salary')}}</p>
+                                                <input type="text" name="user_name" class="form-control" placeholder="User Name" value="{{ old('user_name') }}" tabindex="2" required>
+                                                @if(!empty($errors->first('user_name')))
+                                                    <p style="color: red;" >{{$errors->first('user_name')}}</p>
                                                 @endif
                                             </div>
                                         </div>
-                                        {{-- <div class="{{ !empty($errors->first('wage')) ? 'form-group has-error' : 'form-group' }}">
-                                            <label for="wage" class="col-sm-2 control-label"><b style="color: red;">* </b> Wage per Day : </label>
+                                        <div class="{{ !empty($errors->first('valid_till')) ? 'form-group has-error' : 'form-group' }}">
+                                            <label for="valid_till" class="col-sm-2 control-label">User Validity : </label>
                                             <div class="col-sm-10">
-                                                <input type="text" name="wage" class="form-control" id="wage" placeholder="Wage per Day" value="{{ old('wage') }}" required>
-                                                @if(!empty($errors->first('wage')))
-                                                    <p style="color: red;" >{{$errors->first('wage')}}</p>
+                                                <input type="text" name="valid_till" class="form-control" placeholder="Keep this field empty for unlimited user validity." value="{{ !empty(old('valid_till')) ? old('valid_till') : '' }}" id="datepicker" tabindex="7">
+                                                @if(!empty($errors->first('valid_till')))
+                                                    <p style="color: red;" >{{$errors->first('valid_till')}}</p>
                                                 @endif
                                             </div>
-                                        </div> --}}
+                                        </div>
+                                        <div class="{{ !empty($errors->first('password')) ? 'form-group has-error' : 'form-group' }}">
+                                            <label for="password" class="col-sm-2 control-label"><b style="color: red;">* </b> Password : </label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="password" class="form-control" placeholder="Password" required tabindex="8">
+                                                @if(!empty($errors->first('password')))
+                                                    <p style="color: red;" >{{$errors->first('password')}}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password_confirmation" class="col-sm-2 control-label"><b style="color: red;">* </b> Confirm Password : </label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" required tabindex="9">
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><b style="color: red;">* </b> Financial Status: </label>
                                             <div class="col-sm-10">

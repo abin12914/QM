@@ -19,7 +19,7 @@
     <div class="login-logo">
         <div>
             <b style="color: white;">
-                Quary Manager
+                Quarry Manager
             </b>
             <br>
         </div>

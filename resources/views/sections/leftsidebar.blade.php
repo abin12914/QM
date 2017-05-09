@@ -8,7 +8,7 @@
             </div>
             <div class="pull-left info">
                 <p>{{ Auth::user()->name }}</p>
-                <a><i class="fa fa-circle text-success"></i>Online</a>
+                <a><i class="fa fa-circle text-success"></i></a>
             </div>
         </div>
         <ul class="sidebar-menu">
@@ -40,13 +40,13 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{route('staff-register-view')}}"><i class="fa fa-circle-o"></i> Registration</a></li>
+                    <li><a href="{{route('account-register-view')}}"><i class="fa fa-circle-o"></i> Registration</a></li>
                     <li><a href="index2.html"><i class="fa fa-circle-o"></i> List</a></li>
                 </ul>
             </li>
             <li class="treeview {{ Request::is('owner/*')? 'active' : '' }}">
                 <a href="#">
-                    <i class="fa fa-user-secret"></i>
+                    <i class="fa fa-briefcase"></i>
                     <span>Owners</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
@@ -57,17 +57,38 @@
                     <li><a href="index2.html"><i class="fa fa-circle-o"></i> List</a></li>
                 </ul>
             </li>
-            <li class="treeview {{ Request::is('staff/*')? 'active' : '' }}">
+            <li class="treeview {{ Request::is('hr/*') ? 'active' : '' }}">
                 <a href="#">
-                    <i class="fa fa-briefcase"></i>
-                    <span>Staff</span>
+                    <i class="fa fa-male"></i> <span>Staff & Labour</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{route('staff-register-view')}}"><i class="fa fa-circle-o"></i> Registration</a></li>
-                    <li><a href="index2.html"><i class="fa fa-circle-o"></i> List</a></li>
+                    <li class="{{ Request::is('hr/staff/*')? 'active' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-pencil"></i> Staff
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{route('staff-register-view')}}"><i class="fa fa-circle-o"></i> Registration</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i> List</a></li>
+                        </ul>
+                    </li>
+                    <li class="{{ Request::is('hr/labour')? 'active' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-hand-paper-o"></i> Labour
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{route('labour-register-view')}}"><i class="fa fa-circle-o"></i> Registration</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i> List</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
             <li class="treeview {{ Request::is('product/*')? 'active' : '' }}">
@@ -79,21 +100,42 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="index.html"><i class="fa fa-circle-o"></i> Registration</a></li>
+                    <li><a href="{{route('product-register-view')}}"><i class="fa fa-circle-o"></i> Registration</a></li>
                     <li><a href="index2.html"><i class="fa fa-circle-o"></i> List</a></li>
                 </ul>
             </li>
             <li class="treeview {{ Request::is('machine/*')? 'active' : '' }}">
                 <a href="#">
-                    <i class="fa fa-cogs"></i>
-                    <span>Machines</span>
+                    <i class="fa fa-cogs"></i> <span>Machines</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="index.html"><i class="fa fa-circle-o"></i> Registration</a></li>
-                    <li><a href="index2.html"><i class="fa fa-circle-o"></i> List</a></li>
+                    <li class="{{ Request::is('machine/excavator/*')? 'active' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-arrow-down"></i> Excavators
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{route('excavator-register-view')}}"><i class="fa fa-circle-o"></i> Registration</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i> List</a></li>
+                        </ul>
+                    </li>
+                    <li class="{{ Request::is('machine/jackhammer')? 'active' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-thumb-tack"></i> Jackhammers
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{route('jackhammer-register-view')}}"><i class="fa fa-circle-o"></i> Registration</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i> List</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
             <li class="treeview {{ Request::is('vehicle/*')? 'active' : '' }}">
@@ -105,19 +147,19 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="index.html"><i class="fa fa-circle-o"></i> Registration</a></li>
+                    <li><a href="{{ route('vehicle-register-view') }}"><i class="fa fa-circle-o"></i> Registration</a></li>
                     <li><a href="index2.html"><i class="fa fa-circle-o"></i> List</a></li>
                 </ul>
             </li>
             <li class="treeview {{ Request::is('vehicletype/*')? 'active' : '' }}">
                 <a href="#">
-                    <i class="fa fa-truck"></i> <span>Vehicle Type</span>
+                    <i class="fa fa-bus"></i> <span>Vehicle Type</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="index.html"><i class="fa fa-circle-o"></i> Registration</a></li>
+                    <li><a href="{{ route('vehicle-type-register-view') }}"><i class="fa fa-circle-o"></i> Registration</a></li>
                     <li><a href="index2.html"><i class="fa fa-circle-o"></i> List</a></li>
                 </ul>
             </li>

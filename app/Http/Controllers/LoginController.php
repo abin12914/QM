@@ -41,7 +41,7 @@ class LoginController extends Controller
                 Auth::logout();
                 return redirect()->back()->withInput()->with("fixed-message",'Your account "'. $user->user_name . '" has been expired. Please click <a href="#">here</a> for more info.')->with("fixed-alert-class","alert-warning");
             }
-            return redirect(route('user-dashboard'))->with("message","Welcome " . $user->name . ". You are successfully logged in to the Quary Manager.")->with("alert-class","alert-success");
+            return redirect(route('user-dashboard'))->with("message","Welcome " . $user->name . ". You are successfully logged in to the Quarry Manager.")->with("alert-class","alert-success");
         } else {
         	// Authentication fails...
             return redirect()->back()->withInput()->with("message","Login failed. Incorrect user name and password.")->with("alert-class","alert-danger");

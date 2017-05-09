@@ -19,7 +19,7 @@
     <div class="login-logo">
         <div>
             <b {{-- style="color: white;" --}}>
-                Welcome To Quary Manager
+                Welcome To Quarry Manager
             </b>
         </div>
     </div>
