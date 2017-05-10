@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\AccountRegistrationRequest;
 
 class AccountController extends Controller
 {
@@ -17,8 +18,8 @@ class AccountController extends Controller
      /**
      * Handle new account registration
      */
-    public function registerAction()
+    public function registerAction(AccountRegistrationRequest $request)
     {
-    	
+    	echo"in";
     }
 }

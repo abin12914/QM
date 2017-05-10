@@ -16,7 +16,7 @@ class UserRegistrationRequest extends FormRequest
         return true;
     }
 
-     /**
+    /**
      * Customized error messages
      *
      */
@@ -27,7 +27,7 @@ class UserRegistrationRequest extends FormRequest
             'valid_till.date_format'    => 'The user validity field should be a date and dd/mm/yyyy formated',
             'password.confirmed'        => 'The password confirmation does not match.',
             'image_file.mimes'          => 'The image file should be of type jpeg, jpg, png, or bmp',
-            /*'image_file.size'           => 'The image file size should be less than 3 MB',*/
+            'image_file.size'           => 'The image file size should be less than 3 MB',
         ];
     }
 
