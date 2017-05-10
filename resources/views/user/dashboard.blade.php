@@ -1,9 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Dashboard')
 @section('stylesheets')
-<script src="js/dashboard.js"></script>
     <!-- fullCalendar 2.2.5-->
-    <link rel="stylesheet" href="css/plugins/fullcalendar/fullcalendar.min.css">
+    <link rel="stylesheet" href="/css/plugins/fullcalendar/fullcalendar.min.css">
 @endsection
 @section('content')
 <style type="text/css">
@@ -120,7 +119,7 @@
 </div>
 @endsection
 @section('scripts')
-<script src="js/dashboard.js"></script>
 <!-- fullCalendar 2.2.5-->
-<script src="js/plugins/fullcalendar/fullcalendar.min.js"></script>
+<script src="/js/plugins/fullcalendar/fullcalendar.min.js"></script>
+<script src="/js/dashboard.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection
