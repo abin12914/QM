@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 
 	//common routes
 	Route::get('/dashboard', 'LoginController@dashboard')->name('user-dashboard');
+	Route::get('/user/profile', 'UserController@profileView')->name('user-profile-view');
 	Route::get('/logout', 'LoginController@logout')->name('logout');
 
 

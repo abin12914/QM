@@ -38,8 +38,8 @@
                             <i class="fa fa-circle-o"></i> List
                         </a>
                     </li>
-                    <li class="{{ Request::is('profile/*')? 'active' : '' }}">
-                        <a href="#">
+                    <li class="{{ Request::is('user/profile')? 'active' : '' }}">
+                        <a href="{{ route('user-profile-view') }}">
                             <i class="fa fa-circle-o"></i> My profile
                         </a>
                     </li>
@@ -59,7 +59,7 @@
                             <i class="fa fa-circle-o"></i> Registration
                         </a>
                     </li>
-                    <li class="{{ Request::is('account/list')? 'active' : '' }}>
+                    <li class="{{ Request::is('account/list')? 'active' : '' }}">
                         <a href="#">
                             <i class="fa fa-circle-o"></i> List
                         </a>

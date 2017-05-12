@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Models\AccountType;
 
 class AccountRegistrationRequest extends FormRequest
 {
@@ -23,7 +25,8 @@ class AccountRegistrationRequest extends FormRequest
     public function messages()
     {
         return [
-
+            'account_type.max'      => 'Something went wrong. Please try again after reloading the page',
+            'financial_status.max'  => 'Something went wrong. Please try again after reloading the page'
         ];
     }
     
@@ -35,12 +38,19 @@ class AccountRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => 'required',
-            'phone'                 => 'nullable|unique:accounts',
-            'address'               => 'nullable|unique:accounts',
-            'account_type'          => 'required',
-            'financial_status'      => 'required',
-            'opening_balance'       => 'required'
+            'name'                  => 'required|max:200|unique:accounts',
+            'description'           => 'nullable|max:200',
+            'account_type'          => [
+                                            'required',
+                                            'max:50',
+                                            Rule::in(AccountType::pluck('value')->toArray())
+                                        ],
+            'financial_status'      => [
+                                            'required',
+                                            'max:8',
+                                            Rule::in(['none','credit','debit'])
+                                        ],
+            'opening_balance'       => 'required|numeric'
         ];
     }
 }

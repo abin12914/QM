@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Register')
+@section('title', 'User Registartion')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
@@ -37,55 +37,55 @@
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <div class="row">
                                     <div class="col-md-11">
-                                        <div class="{{ !empty($errors->first('name')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label"><b style="color: red;">* </b> Name : </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="name" class="form-control" placeholder="Name" value="{{ old('name') }}" tabindex="1" required>
+                                            <div class="col-sm-10 {{ !empty($errors->first('name')) ? 'has-error' : '' }}">
+                                                <input type="text" name="name" class="form-control" placeholder="Name" value="{{ old('name') }}" tabindex="1" >
                                                 @if(!empty($errors->first('name')))
                                                     <p style="color: red;" >{{$errors->first('name')}}</p>
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="{{ !empty($errors->first('user_name')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="form-group">
                                             <label for="user_name" class="col-sm-2 control-label"><b style="color: red;">* </b> User Name : </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="user_name" class="form-control" placeholder="User Name" value="{{ old('user_name') }}" tabindex="2" required>
+                                            <div class="col-sm-10 {{ !empty($errors->first('user_name')) ? 'has-error' : '' }}">
+                                                <input type="text" name="user_name" class="form-control" placeholder="User Name" value="{{ old('user_name') }}" tabindex="2" >
                                                 @if(!empty($errors->first('user_name')))
                                                     <p style="color: red;" >{{$errors->first('user_name')}}</p>
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="{{ !empty($errors->first('email')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="form-group">
                                             <label for="email" class="col-sm-2 control-label">E-mail : </label>
-                                            <div class="col-sm-10">
+                                            <div class="col-sm-10 {{ !empty($errors->first('email')) ? 'has-error' : '' }}">
                                                 <input type="email" name="email" class="form-control" placeholder="E-Mail" value="{{ !empty(old('email')) ? old('email') : '' }}" tabindex="3">
                                                 @if(!empty($errors->first('email')))
                                                     <p style="color: red;" >{{$errors->first('email')}}</p>
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="{{ !empty($errors->first('phone')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="form-group">
                                             <label for="phone" class="col-sm-2 control-label"><b style="color: red;">* </b> Phone : </label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="phone" class="form-control" placeholder="Phone Number" value="{{ old('phone') }}" required tabindex="4">
+                                            <div class="col-sm-10 {{ !empty($errors->first('phone')) ? 'has-error' : '' }}">
+                                                <input type="text" name="phone" class="form-control" placeholder="Phone Number" value="{{ old('phone') }}"  tabindex="4">
                                                 @if(!empty($errors->first('phone')))
                                                     <p style="color: red;" >{{$errors->first('phone')}}</p>
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="{{ !empty($errors->first('image_file')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="form-group">
                                             <label for="image_file" class="col-sm-2 control-label">Image : </label>
-                                            <div class="col-sm-10">
+                                            <div class="col-sm-10 {{ !empty($errors->first('image_file')) ? 'has-error' : '' }}">
                                                 <input type="file" name="image_file" class="form-control" id="image_file" accept="image/*" tabindex="5">
                                                 @if(!empty($errors->first('image_file')))
                                                     <p style="color: red;" >{{$errors->first('image_file')}}</p>
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="{{ !empty($errors->first('role')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="form-group">
                                             <label for="role" class="col-sm-2 control-label"><b style="color: red;">* </b> User Role : </label>
-                                            <div class="col-sm-10">
-                                                <select class="form-control" name="role" id="role" required tabindex="6">
+                                            <div class="col-sm-10 {{ !empty($errors->first('role')) ? 'has-error' : '' }}">
+                                                <select class="form-control" name="role" id="role"  tabindex="6">
                                                     <option value="" {{ empty(old('role')) ? 'selected' : '' }}>Select User Role</option>
                                                     <option value="superadmin" {{ old('role') == 'superadmin' ? 'selected' : '' }}>Super Admin</option>
                                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
@@ -97,19 +97,19 @@
                                             </div>
                                             {{-- <span class="fa fa-users form-control-feedback"></span> --}}
                                         </div>
-                                        <div class="{{ !empty($errors->first('valid_till')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="form-group">
                                             <label for="valid_till" class="col-sm-2 control-label">User Validity : </label>
-                                            <div class="col-sm-10">
+                                            <div class="col-sm-10 {{ !empty($errors->first('valid_till')) ? 'has-error' : '' }}">
                                                 <input type="text" name="valid_till" class="form-control" placeholder="Keep this field empty for unlimited user validity." value="{{ !empty(old('valid_till')) ? old('valid_till') : '' }}" id="datepicker" tabindex="7">
                                                 @if(!empty($errors->first('valid_till')))
                                                     <p style="color: red;" >{{$errors->first('valid_till')}}</p>
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="{{ !empty($errors->first('password')) ? 'form-group has-error' : 'form-group' }}">
+                                        <div class="form-group">
                                             <label for="password" class="col-sm-2 control-label"><b style="color: red;">* </b> Password : </label>
-                                            <div class="col-sm-10">
-                                                <input type="password" name="password" class="form-control" placeholder="Password" required tabindex="8">
+                                            <div class="col-sm-10 {{ !empty($errors->first('password')) ? 'has-error' : '' }}">
+                                                <input type="password" name="password" class="form-control" placeholder="Password"  tabindex="8">
                                                 @if(!empty($errors->first('password')))
                                                     <p style="color: red;" >{{$errors->first('password')}}</p>
                                                 @endif
@@ -117,8 +117,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="password_confirmation" class="col-sm-2 control-label"><b style="color: red;">* </b> Confirm Password : </label>
-                                            <div class="col-sm-10">
-                                                <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" required tabindex="9">
+                                            <div class="col-sm-10 {{ !empty($errors->first('password')) ? 'has-error' : '' }}">
+                                                <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" tabindex="9">
+                                                @if(!empty($errors->first('password')))
+                                                    <p style="color: red;" >{{ $errors->first('password') }}</p>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

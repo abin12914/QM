@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRegistrationRequest;
 use Hash;
+use Auth;
 use App\Models\User;
 
 class UserController extends Controller
@@ -22,13 +23,13 @@ class UserController extends Controller
      */
     public function registerAction(UserRegistrationRequest $request)
     {
-    	$name 		= !empty($request->get('name')) ? $request->get('name') : '';
-    	$userName 	= !empty($request->get('user_name')) ? $request->get('user_name') : '';
-    	$email 		= !empty($request->get('email')) ? $request->get('email') : null;
-    	$phone 		= !empty($request->get('phone')) ? $request->get('phone') : '';
-    	$password 	= !empty($request->get('password')) ? $request->get('password') : '';
-    	$role 	    = !empty($request->get('role')) ? $request->get('role') : '';
-    	$validTill 	= !empty($request->get('valid_till')) ? $request->get('valid_till') : null;
+    	$name 		= $request->get('name');
+    	$userName 	= $request->get('user_name');
+    	$email 		= $request->get('email');
+    	$phone 		= $request->get('phone');
+    	$password 	= $request->get('password');
+    	$role 	    = $request->get('role');
+    	$validTill 	= $request->get('valid_till');
 
     	if ($request->hasFile('image_file')) {
 	      	$destination 		= '/images/user/'; // upload path
@@ -92,5 +93,16 @@ class UserController extends Controller
         } else {
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the user data. Try reloading the page.")->with("alert-class","alert-danger");
         }
+    }
+
+    /**
+     * Return view user profile
+     */
+    public function profileView()
+    {
+        $user = Auth::user();
+        return view('user.profile',[
+            'user' => $user
+        ]);
     }
 }
