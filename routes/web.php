@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 	});
 
 	//admin routes
-	Route::group(['middleware' => 'user.role:superadmin'], function () {
+	Route::group(['middleware' => 'user.role:admin'], function () {
 	});
 
 	//user routes

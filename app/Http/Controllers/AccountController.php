@@ -37,7 +37,7 @@ class AccountController extends Controller
         $account->type              = $accountType;
         $account->financial_status  = $financialStatus;
         $account->opening_balance   = $openingBalance;
-        $account->status               = 1;
+        $account->status            = 1;
         if($account->save()) {
             return redirect()->back()->with("message","Account saved successfully.")->with("alert-class","alert-success");
         } else {
