@@ -42,7 +42,7 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label"><b style="color: red;">* </b> Name : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('name')) ? 'has-error' : '' }}">
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}" >
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}" tabindex="1">
                                                 @if(!empty($errors->first('name')))
                                                     <p style="color: red;" >{{$errors->first('name')}}</p>
                                                 @endif
@@ -51,7 +51,7 @@
                                         <div class="form-group">
                                             <label for="email" class="col-sm-2 control-label">E-mail : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('email')) ? 'has-error' : '' }}">
-                                                <input type="text" name="email" class="form-control" id="email" placeholder="E-mail" value="{{ old('email') }}" >
+                                                <input type="text" name="email" class="form-control" id="email" placeholder="E-mail" value="{{ old('email') }}" tabindex="2">
                                                 @if(!empty($errors->first('email')))
                                                     <p style="color: red;" >{{$errors->first('email')}}</p>
                                                 @endif
@@ -60,7 +60,7 @@
                                         <div class="form-group">
                                             <label for="phone" class="col-sm-2 control-label"><b style="color: red;">* </b> Phone : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('phone')) ? 'has-error' : '' }}">
-                                                <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone number" value="{{ old('phone') }}" >
+                                                <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone number" value="{{ old('phone') }}" tabindex="3" onkeypress="return isNumberKey(event)">
                                                 @if(!empty($errors->first('phone')))
                                                     <p style="color: red;" >{{$errors->first('phone')}}</p>
                                                 @endif
@@ -70,9 +70,9 @@
                                             <label for="address" class="col-sm-2 control-label">Address : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('address')) ? 'has-error' : '' }}">
                                                 @if(!empty(old('address')))
-                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;">{{ old('address') }}</textarea>
+                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;" tabindex="4">{{ old('address') }}</textarea>
                                                 @else
-                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;"></textarea>
+                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;" tabindex="4"></textarea>
                                                 @endif
                                                 @if(!empty($errors->first('address')))
                                                     <p style="color: red;" >{{$errors->first('address')}}</p>
@@ -82,7 +82,7 @@
                                         <div class="form-group">
                                             <label for="image_file" class="col-sm-2 control-label">Image : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('image_file')) ? 'has-error' : '' }}">
-                                                <input type="file" name="image_file" class="form-control" id="image_file">
+                                                <input type="file" name="image_file" class="form-control" id="image_file" tabindex="5">
                                                 @if(!empty($errors->first('image_file')))
                                                     <p style="color: red;" >{{$errors->first('image_file')}}</p>
                                                 @endif
@@ -91,7 +91,7 @@
                                         <div class="form-group">
                                             <label for="user_name" class="col-sm-2 control-label"><b style="color: red;">* </b> User Name : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('name')) ? 'has-error' : '' }}">
-                                                <input type="text" name="user_name" class="form-control" placeholder="User Name" value="{{ old('user_name') }}" tabindex="2" >
+                                                <input type="text" name="user_name" class="form-control" placeholder="User Name" value="{{ old('user_name') }}" tabindex="6" >
                                                 @if(!empty($errors->first('user_name')))
                                                     <p style="color: red;" >{{$errors->first('user_name')}}</p>
                                                 @endif
@@ -127,7 +127,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><b style="color: red;">* </b> Financial Status: </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('financial_status')) ? 'has-error' : '' }}">
-                                                <select class="form-control" name="financial_status" id="financial_status">
+                                                <select class="form-control" name="financial_status" id="financial_status" tabindex="10">
                                                     <option value="" {{ empty(old('financial_status')) ? 'selected' : '' }}>Select Status</option>
                                                     <option value="none" {{ old('financial_status') == 'none' ? 'selected' : '' }}>None (No pending transactions)</option>
                                                     <option value="debit" {{ old('financial_status') == 'debit' ? 'selected' : '' }}>Debitor (Account Holder Owe Company)</option>
@@ -141,7 +141,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><b style="color: red;">* </b> Opening Balance: </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('opening_balance')) ? 'has-error' : '' }}">
-                                                <input type="text" class="form-control" name="opening_balance" id="opening_balance" placeholder="Opening Balance" value="{{ old('opening_balance') }}">
+                                                <input type="text" class="form-control" name="opening_balance" id="opening_balance" placeholder="Opening Balance" value="{{ old('opening_balance') }}" tabindex="11" onkeypress="return isDecimalNumberKey(event)">
                                                 @if(!empty($errors->first('opening_balance')))
                                                     <p style="color: red;" >{{$errors->first('opening_balance')}}</p>
                                                 @endif
@@ -153,11 +153,11 @@
                                 <div class="row">
                                     <div class="col-xs-3"></div>
                                     <div class="col-xs-3">
-                                        <button type="reset" class="btn btn-default btn-block btn-flat">Clear</button>
+                                        <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="13">Clear</button>
                                     </div>
                                     {{-- <div class="col-sm-1"></div> --}}
                                     <div class="col-xs-3">
-                                        <button type="submit" class="btn btn-primary btn-block btn-flat">Submit</button>
+                                        <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="12">Submit</button>
                                     </div>
                                     <!-- /.col -->
                                 </div><br>
@@ -172,4 +172,33 @@
     </section>
     <!-- /.content -->
 </div>
+@endsection
+@section('scripts')
+    <script type="text/javascript">
+        var decimalFlag = 0;
+
+        function isNumberKey(evt){
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function isDecimalNumberKey(evt){
+            // attaching 1 to the end for number like 1.0
+            var fieldValue = (document.getElementById(event.target.id).value+'1');
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57))) {
+                return false;
+            }
+            if(charCode == 46) {
+                if(decimalFlag == 1 && fieldValue % 1 != 0) {
+                    return false;
+                }
+                decimalFlag = 1;
+            }
+            return true;
+        }
+    </script>
 @endsection

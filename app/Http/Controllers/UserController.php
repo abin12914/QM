@@ -102,6 +102,8 @@ class UserController extends Controller
         $user->password     = Hash::make($password);
         if(!empty($fileName)) {
             $user->image    = $destination.$fileName;
+        } else {
+            $user->image    = $destination."default_user.jpg";
         }
         $user->role         = 'admin';
         $user->status       = 1;
@@ -125,6 +127,8 @@ class UserController extends Controller
                 $owner->account_id  = $account->id;
                 if(!empty($fileName)) {
                     $owner->image   = $destination.$fileName;
+                } else {
+                    $owner->image   = "/images/owner/default_owner.jpg";
                 }
                 $owner->status      =1;
                 if($owner->save()){
@@ -142,7 +146,7 @@ class UserController extends Controller
         if($flag == 0) {
             return redirect()->back()->with("message","Owner successfully saved as the Admin.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the owner data. Try after reloading the page. Error code : ".$flag)->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the owner data. Try after reloading the page. Error code : 00".$flag)->with("alert-class","alert-danger");
         }
     }
 

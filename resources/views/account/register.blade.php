@@ -92,7 +92,7 @@
                                     <div class="form-group">
                                         <label for="opening_balance" class="col-sm-2 control-label"><b style="color: red;">* </b> Opening Balance : </label>
                                         <div class="col-sm-10 {{ !empty($errors->first('opening_balance')) ? 'has-error' : '' }}">
-                                            <input type="text" class="form-control" name="opening_balance" id="opening_balance" placeholder="Opening balance" value="{{ old('opening_balance') }}" ="" tabindex="5">
+                                            <input type="text" class="form-control" name="opening_balance" id="opening_balance" placeholder="Opening balance" value="{{ old('opening_balance') }}" ="" tabindex="5" onkeypress="return isDecimalNumberKey(event)">
                                             @if(!empty($errors->first('opening_balance')))
                                                 <p style="color: red;" >{{$errors->first('opening_balance')}}</p>
                                             @endif
@@ -123,4 +123,25 @@
     </section>
     <!-- /.content -->
 </div>
+@endsection
+@section('scripts')
+    <script type="text/javascript">
+        var decimalFlag = 0;
+
+        function isDecimalNumberKey(evt){
+            // attaching 1 to the end for number like 1.0
+            var fieldValue = (document.getElementById(event.target.id).value+'1');
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57))) {
+                return false;
+            }
+            if(charCode == 46) {
+                if(decimalFlag == 1 && fieldValue % 1 != 0) {
+                    return false;
+                }
+                decimalFlag = 1;
+            }
+            return true;
+        }
+    </script>
 @endsection

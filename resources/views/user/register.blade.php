@@ -67,7 +67,7 @@
                                         <div class="form-group">
                                             <label for="phone" class="col-sm-2 control-label"><b style="color: red;">* </b> Phone : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('phone')) ? 'has-error' : '' }}">
-                                                <input type="text" name="phone" class="form-control" placeholder="Phone Number" value="{{ old('phone') }}"  tabindex="4">
+                                                <input type="text" name="phone" class="form-control" placeholder="Phone Number" value="{{ old('phone') }}"  tabindex="4" onkeypress="return isNumberKey(event)">
                                                 @if(!empty($errors->first('phone')))
                                                     <p style="color: red;" >{{$errors->first('phone')}}</p>
                                                 @endif
@@ -147,4 +147,17 @@
     </section>
     <!-- /.content -->
 </div>
+@endsection
+@section('scripts')
+    <script type="text/javascript">
+        var decimalFlag = 0;
+
+        function isNumberKey(evt){
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+    </script>
 @endsection
