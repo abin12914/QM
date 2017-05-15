@@ -1,15 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Staff Registration')
+@section('title', 'Employee Registration')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Staff
+            Employee
             <small>Registartion</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Staff</a></li>
+            <li><a href="#"> Employee</a></li>
             <li class="active">Registration</li>
         </ol>
     </section>
@@ -29,12 +29,12 @@
             <div class="col-md-8">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title" style="float: left;">Staff Registration</h3>
+                        <h3 class="box-title" style="float: left;">Employee Registration</h3>
                             <p>&nbsp&nbsp&nbsp(Fields marked with <b style="color: red;">* </b>are mandatory.)</p>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form action="{{route('staff-register-action')}}" method="post" class="form-horizontal" multipart-form-data>
+                    <form action="{{route('employee-register-action')}}" method="post" class="form-horizontal" multipart-form-data>
                         <div class="box-body">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="row">
@@ -80,11 +80,33 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label"><b style="color: red;">* </b>Employee Type : </label>
+                                    <div class="col-sm-10 {{ !empty($errors->first('employee_type')) ? 'has-error' : '' }}">
+                                        <select class="form-control" name="employee_type" id="employee_type" tabindex="6">
+                                            <option value="" {{ empty(old('employee_type')) ? 'selected' : '' }}>Select employee type</option>
+                                            <option value="staff" {{ old('employee_type') == 'staff' ? 'selected' : '' }}>Staff</option>
+                                            <option value="labour" {{ old('employee_type') == 'labour' ? 'selected' : '' }}>Labour</option>
+                                        </select>
+                                        @if(!empty($errors->first('employee_type')))
+                                            <p style="color: red;" >{{$errors->first('employee_type')}}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group" id="salary_div">
                                     <label for="salary" class="col-sm-2 control-label"><b style="color: red;">* </b> Monthly Salary : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('salary')) ? 'has-error' : '' }}">
-                                        <input type="text" name="salary" class="form-control" id="salary" placeholder="Monthly Salary" value="{{ old('salary') }}" tabindex="5" onkeypress="return isDecimalNumberKey(event)">
+                                        <input type="text" name="salary" class="form-control" id="salary" placeholder="Monthly salary" value="{{ old('salary') }}" tabindex="5" onkeypress="return isDecimalNumberKey(event)">
                                         @if(!empty($errors->first('salary')))
                                             <p style="color: red;" >{{$errors->first('salary')}}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group" id="daily_wage_div" hidden>
+                                    <label for="wage" class="col-sm-2 control-label"><b style="color: red;">* </b> Daily Wage : </label>
+                                    <div class="col-sm-10 {{ !empty($errors->first('wage')) ? 'has-error' : '' }}">
+                                        <input type="text" name="wage" class="form-control" id="wage" placeholder="Daily wage" value="{{ old('wage') }}" tabindex="5" onkeypress="return isDecimalNumberKey(event)" disabled>
+                                        @if(!empty($errors->first('wage')))
+                                            <p style="color: red;" >{{$errors->first('wage')}}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -105,7 +127,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"><b style="color: red;">* </b> Opening Balance: </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('opening_balance')) ? 'has-error' : '' }}">
-                                        <input type="text" class="form-control" name="opening_balance" id="opening_balance" placeholder="Opening Balance" value="{{ old('opening_balance') }}" tabindex="7" onkeypress="return isDecimalNumberKey(event)">
+                                        <input type="text" class="form-control" name="opening_balance" id="opening_balance" placeholder="Opening balance" value="{{ old('opening_balance') }}" tabindex="7" onkeypress="return isDecimalNumberKey(event)">
                                         @if(!empty($errors->first('opening_balance')))
                                             <p style="color: red;" >{{$errors->first('opening_balance')}}</p>
                                         @endif

@@ -38,12 +38,12 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/account/register/action', 'AccountController@registerAction')->name('account-register-action');
 
 		//staff
-		Route::get('hr/staff/register', 'StaffController@register')->name('staff-register-view');
-		Route::post('hr/staff/register/action', 'StaffController@registerAction')->name('staff-register-action');
+		Route::get('hr/employee/register', 'EmployeeController@register')->name('employee-register-view');
+		Route::post('hr/employee/register/action', 'EmployeeController@registerAction')->name('employee-register-action');
 
 		//labour
-		Route::get('hr/labour/register', 'LabourController@register')->name('labour-register-view');
-		Route::post('hr/labour/register/action', 'LabourController@registerAction')->name('labour-register-action');
+		/*Route::get('hr/labour/register', 'LabourController@register')->name('labour-register-view');
+		Route::post('hr/labour/register/action', 'LabourController@registerAction')->name('labour-register-action');*/
 
 		//product
 		Route::get('/product/register', 'ProductController@register')->name('product-register-view');

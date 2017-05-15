@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StaffRegistrationRequest extends FormRequest
+class EmployeeRegistrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,11 +40,17 @@ class StaffRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => 'required|max:200|unique:accounts|unique:staff',
-            'phone'                 => 'required|numeric|digits_between:10,13|unique:staff|unique:owners',
+            'name'                  => 'required|max:200|unique:accounts|unique:employees',
+            'phone'                 => 'required|numeric|digits_between:10,13|unique:employees|unique:owners',
             'address'               => 'nullable|max:200',
             'image_file'            => 'nullable|mimes:jpeg,jpg,bmp,png|max:3000',
-            'salary'                => 'required|numeric',
+            'employee_type'         => [
+                                            'required',
+                                            'max:7',
+                                            Rule::in(['staff','labour'])
+                                        ],
+            'salary'                => 'sometimes|filled|required_if:employee_type,staff|numeric',
+            'wage'                  => 'sometimes|filled|required_if:employee_type,labour|numeric',
             'financial_status'      => [
                                             'required',
                                             'max:8',

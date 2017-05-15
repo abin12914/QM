@@ -87,7 +87,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview {{ Request::is('hr/*') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('hr/employee') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-male"></i>
                     <span>Staff & Labour</span>
@@ -96,45 +96,15 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{ Request::is('hr/staff/*')? 'active' : '' }}">
-                        <a href="#">
-                            <i class="fa fa-pencil"></i> Staff
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
+                    <li class="{{ Request::is('hr/employee/register')? 'active' : '' }}">
+                        <a href="{{route('employee-register-view')}}">
+                            <i class="fa fa-circle-o"></i> Registration
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="{{ Request::is('staff/register')? 'active' : '' }}">
-                                <a href="{{route('staff-register-view')}}">
-                                    <i class="fa fa-circle-o"></i> Registration
-                                </a>
-                            </li>
-                            <li class="{{ Request::is('staff/list')? 'active' : '' }}">
-                                <a href="#">
-                                    <i class="fa fa-circle-o"></i> List
-                                </a>
-                            </li>
-                        </ul>
                     </li>
-                    <li class="{{ Request::is('hr/labour')? 'active' : '' }}">
+                    <li class="{{ Request::is('hr/employee/list')? 'active' : '' }}">
                         <a href="#">
-                            <i class="fa fa-hand-paper-o"></i> Labour
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
+                            <i class="fa fa-circle-o"></i> List
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="{{ Request::is('labour/register')? 'active' : '' }}">
-                                <a href="{{route('labour-register-view')}}">
-                                    <i class="fa fa-circle-o"></i> Registration
-                                </a>
-                            </li>
-                            <li class="{{ Request::is('labour/list')? 'active' : '' }}">
-                                <a href="#">
-                                    <i class="fa fa-circle-o"></i> List
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             </li>

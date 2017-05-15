@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Models\AccountType;
 
 class AccountRegistrationRequest extends FormRequest
 {
@@ -40,11 +39,7 @@ class AccountRegistrationRequest extends FormRequest
         return [
             'name'                  => 'required|max:200|unique:accounts',
             'description'           => 'nullable|max:200',
-            'account_type'          => [
-                                            'required',
-                                            'max:50',
-                                            Rule::in(AccountType::pluck('value')->toArray())
-                                        ],
+            'account_type'          => 'required|max:50|exists:account_types,value',
             'financial_status'      => [
                                             'required',
                                             'max:8',

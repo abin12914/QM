@@ -3,32 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StaffRegistrationRequest;
+use App\Http\Requests\EmployeeRegistrationRequest;
 use App\Models\Account;
-use App\Models\Staff;
+use App\Models\Employee;
 
-class StaffController extends Controller
+class EmployeeController extends Controller
 {
     /**
-     * Return view for staff registration
+     * Return view for employee registration
      */
     public function register()
     {
-    	return view('staff.register');
+        return view('employee.register');
     }
 
      /**
-     * Handle new staff registration
+     * Handle new employee registration
      */
-    public function registerAction(StaffRegistrationRequest $request)
+    public function registerAction(EmployeeRegistrationRequest $request)
     {
-    	$destination        = '/images/staff/'; // image file upload path
+        $destination        = '/images/labour/'; // image file upload path
         $flag =0;
 
         $name               = $request->get('name');
         $phone              = $request->get('phone');
         $address            = $request->get('address');
+        $employeeType       = $request->get('employee_type');
         $salary             = $request->get('salary');
+        $wage               = $request->get('wage');
         $financialStatus    = $request->get('financial_status');
         $openingBalance     = $request->get('opening_balance');
 
@@ -47,7 +49,7 @@ class StaffController extends Controller
         $account->opening_balance   = $openingBalance;
         $account->status            = 1;
         if($account->save()) {
-            $staff = new Staff;
+            $staff = new Employee;
             $staff->name        = $name;
             $staff->phone       = $phone;
             $staff->address     = $address;
