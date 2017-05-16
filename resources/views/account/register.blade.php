@@ -40,11 +40,11 @@
                             <div class="row">
                                 <div class="col-md-11">
                                     <div class="form-group">
-                                        <label for="name" class="col-sm-2 control-label"><b style="color: red;">* </b> Name : </label>
-                                        <div class="col-sm-10 {{ !empty($errors->first('name')) ? 'has-error' : '' }}">
-                                            <input type="text" name="name" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}"  tabindex="1">
-                                            @if(!empty($errors->first('name')))
-                                                <p style="color: red;" >{{$errors->first('name')}}</p>
+                                        <label for="account_name" class="col-sm-2 control-label"><b style="color: red;">* </b> Account Name : </label>
+                                        <div class="col-sm-10 {{ !empty($errors->first('account_name')) ? 'has-error' : '' }}">
+                                            <input type="text" name="account_name" class="form-control" id="account_name" placeholder="Account Name" value="{{ old('account_name') }}"  tabindex="1">
+                                            @if(!empty($errors->first('account_name')))
+                                                <p style="color: red;" >{{$errors->first('account_name')}}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -66,6 +66,7 @@
                                         <div class="col-sm-10 {{ !empty($errors->first('account_type')) ? 'has-error' : '' }}">
                                             <select class="form-control" name="account_type" id="account_type" tabindex="3">
                                                 <option value="" {{ empty(old('financial_status')) ? 'selected' : '' }}>Select account type</option>
+                                                <option value="real">Real</option>
                                                 @foreach($accountTypes as $accountType)
                                                     <option value="{{ $accountType->value }}" {{ (old('account_type') == $accountType->value) ? 'selected' : '' }}>{{ $accountType->name }}</option>
                                                 @endforeach
@@ -75,6 +76,49 @@
                                             @endif
                                         </div>
                                     </div>
+                                    <div id="personal_detail_div">
+                                        <br>
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title" style="float: left;">Personal Details</h3>
+                                                <p>&nbsp&nbsp&nbsp(Leave this section empty for real accounts)</p>
+                                        </div><br>
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-2 control-label">Name : </label>
+                                            <div class="col-sm-10 {{ !empty($errors->first('name')) ? 'has-error' : '' }}">
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Account holder name" value="{{ old('name') }}" tabindex="1">
+                                                @if(!empty($errors->first('name')))
+                                                    <p style="color: red;" >{{$errors->first('name')}}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone" class="col-sm-2 control-label"> Phone : </label>
+                                            <div class="col-sm-10 {{ !empty($errors->first('phone')) ? 'has-error' : '' }}">
+                                                <input type="text" name="phone" class="form-control number_only" id="phone" placeholder="Phone number" value="{{ old('phone') }}" tabindex="2">
+                                                @if(!empty($errors->first('phone')))
+                                                    <p style="color: red;" >{{$errors->first('phone')}}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="address" class="col-sm-2 control-label">Address : </label>
+                                            <div class="col-sm-10 {{ !empty($errors->first('address')) ? 'has-error' : '' }}">
+                                                @if(!empty(old('address')))
+                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;" tabindex="3">{{ old('address') }}</textarea>
+                                                @else
+                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;" tabindex="3"></textarea>
+                                                @endif
+                                                @if(!empty($errors->first('address')))
+                                                    <p style="color: red;" >{{$errors->first('address')}}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title" style="float: left;">Financial Details</h3>
+                                            <p>&nbsp&nbsp&nbsp</p>
+                                    </div><br>
                                     <div class="form-group">
                                         <label for="financial_status" class="col-sm-2 control-label"><b style="color: red;">* </b> Financial Status : </label>
                                         <div class="col-sm-10 {{ !empty($errors->first('financial_status')) ? 'has-error' : '' }}">
@@ -92,7 +136,7 @@
                                     <div class="form-group">
                                         <label for="opening_balance" class="col-sm-2 control-label"><b style="color: red;">* </b> Opening Balance : </label>
                                         <div class="col-sm-10 {{ !empty($errors->first('opening_balance')) ? 'has-error' : '' }}">
-                                            <input type="text" class="form-control" name="opening_balance" id="opening_balance" placeholder="Opening balance" value="{{ old('opening_balance') }}" ="" tabindex="5" onkeypress="return isDecimalNumberKey(event)">
+                                            <input type="text" class="form-control decimal_number_only" name="opening_balance" id="opening_balance" placeholder="Opening balance" value="{{ old('opening_balance') }}" ="" tabindex="5">
                                             @if(!empty($errors->first('opening_balance')))
                                                 <p style="color: red;" >{{$errors->first('opening_balance')}}</p>
                                             @endif
@@ -123,25 +167,4 @@
     </section>
     <!-- /.content -->
 </div>
-@endsection
-@section('scripts')
-    <script type="text/javascript">
-        var decimalFlag = 0;
-
-        function isDecimalNumberKey(evt){
-            // attaching 1 to the end for number like 1.0
-            var fieldValue = (document.getElementById(event.target.id).value+'1');
-            var charCode = (evt.which) ? evt.which : event.keyCode;
-            if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57))) {
-                return false;
-            }
-            if(charCode == 46) {
-                if(decimalFlag == 1 && fieldValue % 1 != 0) {
-                    return false;
-                }
-                decimalFlag = 1;
-            }
-            return true;
-        }
-    </script>
 @endsection

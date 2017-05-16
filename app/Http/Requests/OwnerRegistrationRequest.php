@@ -28,7 +28,7 @@ class OwnerRegistrationRequest extends FormRequest
             'image_file.mimes'          => 'The image file should be of type jpeg, jpg, png, or bmp',
             'image_file.size'           => 'The image file size should be less than 3 MB',
             'financial_status.max'      => 'Something went wrong. Please try again after reloading the page',
-            'name.unique:accounts'      => 'The name has already been taken by an existing account. Please verify your entry or use initials.',
+            'name.unique'               => 'The name has already been taken by an existing account. Please verify your entry or use initials.',
         ];
     }
 
@@ -42,8 +42,8 @@ class OwnerRegistrationRequest extends FormRequest
         return [
             'name'                  => 'required|max:200|unique:accounts',
             'user_name'             => 'required|unique:users|max:145',
-            'email'                 => 'nullable|email|unique:users|max:145',
-            'phone'                 => 'required|numeric|digits_between:10,13|unique:users|unique:owners',
+            'email'                 => 'nullable|email|unique:users|unique:account_details|max:145',
+            'phone'                 => 'required|numeric|digits_between:10,13|unique:users|unique:account_details',
             'valid_till'            => 'nullable|date_format:d/m/Y',
             'password'              => 'required|min:6|max:25|confirmed',
             'image_file'            => 'nullable|mimes:jpeg,jpg,bmp,png|max:3000',

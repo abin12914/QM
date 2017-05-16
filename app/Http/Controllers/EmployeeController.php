@@ -43,6 +43,13 @@ class EmployeeController extends Controller
 
         $account = new Account;
         $account->name              = $name;
+        if($employeeType == 'staff') {
+            $account->description       = "Staff of the organization";
+            $account->type              = "staff";
+        } else {
+            $account->description       = "Labour of the organization";
+            $account->type              = "staff";
+        }
         $account->description       = "Staff of the organization";
         $account->type              = "staff";
         $account->financial_status  = $financialStatus;

@@ -60,7 +60,7 @@
                                         <div class="form-group">
                                             <label for="phone" class="col-sm-2 control-label"><b style="color: red;">* </b> Phone : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('phone')) ? 'has-error' : '' }}">
-                                                <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone number" value="{{ old('phone') }}" tabindex="3" onkeypress="return isNumberKey(event)">
+                                                <input type="text" name="phone" class="form-control number_only" id="phone" placeholder="Phone number" value="{{ old('phone') }}" tabindex="3">
                                                 @if(!empty($errors->first('phone')))
                                                     <p style="color: red;" >{{$errors->first('phone')}}</p>
                                                 @endif
@@ -82,7 +82,7 @@
                                         <div class="form-group">
                                             <label for="image_file" class="col-sm-2 control-label">Image : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('image_file')) ? 'has-error' : '' }}">
-                                                <input type="file" name="image_file" class="form-control" id="image_file" tabindex="5">
+                                                <input type="file" name="image_file" class="form-control" id="image_file" accept="image/*" tabindex="5">
                                                 @if(!empty($errors->first('image_file')))
                                                     <p style="color: red;" >{{$errors->first('image_file')}}</p>
                                                 @endif
@@ -125,6 +125,15 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label for="account_name" class="col-sm-2 control-label"><b style="color: red;">* </b> Account Name : </label>
+                                            <div class="col-sm-10 {{ !empty($errors->first('account_name')) ? 'has-error' : '' }}">
+                                                <input type="text" name="account_name" class="form-control" id="account_name" placeholder="Account Name" value="{{ old('account_name') }}"  tabindex="1">
+                                                @if(!empty($errors->first('account_name')))
+                                                    <p style="color: red;" >{{$errors->first('account_name')}}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="col-sm-2 control-label"><b style="color: red;">* </b> Financial Status: </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('financial_status')) ? 'has-error' : '' }}">
                                                 <select class="form-control" name="financial_status" id="financial_status" tabindex="10">
@@ -141,7 +150,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><b style="color: red;">* </b> Opening Balance: </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('opening_balance')) ? 'has-error' : '' }}">
-                                                <input type="text" class="form-control" name="opening_balance" id="opening_balance" placeholder="Opening Balance" value="{{ old('opening_balance') }}" tabindex="11" onkeypress="return isDecimalNumberKey(event)">
+                                                <input type="text" class="form-control decimal_number_only" name="opening_balance" id="opening_balance" placeholder="Opening Balance" value="{{ old('opening_balance') }}" tabindex="11">
                                                 @if(!empty($errors->first('opening_balance')))
                                                     <p style="color: red;" >{{$errors->first('opening_balance')}}</p>
                                                 @endif
@@ -172,33 +181,4 @@
     </section>
     <!-- /.content -->
 </div>
-@endsection
-@section('scripts')
-    <script type="text/javascript">
-        var decimalFlag = 0;
-
-        function isNumberKey(evt){
-            var charCode = (evt.which) ? evt.which : event.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                return false;
-            }
-            return true;
-        }
-
-        function isDecimalNumberKey(evt){
-            // attaching 1 to the end for number like 1.0
-            var fieldValue = (document.getElementById(event.target.id).value+'1');
-            var charCode = (evt.which) ? evt.which : event.keyCode;
-            if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57))) {
-                return false;
-            }
-            if(charCode == 46) {
-                if(decimalFlag == 1 && fieldValue % 1 != 0) {
-                    return false;
-                }
-                decimalFlag = 1;
-            }
-            return true;
-        }
-    </script>
 @endsection

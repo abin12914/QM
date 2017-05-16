@@ -40,8 +40,12 @@ class EmployeeRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => 'required|max:200|unique:accounts|unique:employees',
-            'phone'                 => 'required|numeric|digits_between:10,13|unique:employees|unique:owners',
+            'name'                  => [
+                                            'required',
+                                            'max:200',
+                                            'unique:accounts',
+                                        ],
+            'phone'                 => 'required|numeric|digits_between:10,13|unique:account_details',
             'address'               => 'nullable|max:200',
             'image_file'            => 'nullable|mimes:jpeg,jpg,bmp,png|max:3000',
             'employee_type'         => [

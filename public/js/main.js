@@ -33,6 +33,45 @@ $(function () {
             $('#wage').prop("disabled",false);
         }
     });
+
+    $('body').on("change", "#account_type", function () {
+        accountType = this.value;
+        if(accountType == 'real') {
+            $('#personal_detail_div').hide();
+            $('#name').prop("disabled",true);
+            $('#phone').prop("disabled",true);
+            $('#address').prop("disabled",true);
+        } else {
+            $('#personal_detail_div').show();
+            $('#name').prop("disabled",false);
+            $('#phone').prop("disabled",false);
+            $('#address').prop("disabled",false);
+        }
+    });
+    
+    // for checking if the pressed key is a number
+    $('body').on("keypress", ".number_only", function (evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            return false;
+        }
+        return true;
+    });
+
+    // for checking if the pressed key is a number or decimal
+    $('body').on("keypress", ".decimal_number_only", function (evt) {
+        // attaching 1 to the end for number like 1.0
+        var fieldValue = this.value+'1';
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57))) {
+            return false;
+        }
+        if(charCode == 46 && (fieldValue % 1 != 0)) {
+            return false;
+        }
+        return true;
+    });
 });
 function dismissAlert() {
 	$("#alert-message").fadeTo(5000, 500).slideUp(500, function(){
