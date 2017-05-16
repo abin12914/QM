@@ -36,26 +36,46 @@ $(function () {
 
     $('body').on("change", "#account_type", function () {
         accountType = this.value;
-        if(accountType == 'real') {
-            $('#personal_detail_div').hide();
-            $('#name').prop("disabled",true);
-            $('#phone').prop("disabled",true);
-            $('#address').prop("disabled",true);
+        // account type 1 are real accounts
+        if(accountType == 1) {
+            $('#real_account_flag_message').show();
+            $('#name').val("This organization");
+            $('#phone').val("0000000000");
+            $('#address').val("Address of this organization");
+            $('#name').prop('readonly',true)
+            $('#phone').prop('readonly',true)
+            $('#address').prop('readonly',true)
         } else {
-            $('#personal_detail_div').show();
-            $('#name').prop("disabled",false);
-            $('#phone').prop("disabled",false);
-            $('#address').prop("disabled",false);
+            $('#real_account_flag_message').hide();
+            $('#name').val("");
+            $('#phone').val("");
+            $('#address').val("");
+            $('#name').prop('readonly',false)
+            $('#phone').prop('readonly',false)
+            $('#address').prop('readonly',false)
         }
     });
     
     // for checking if the pressed key is a number
     $('body').on("keypress", ".number_only", function (evt) {
+        var fieldValue = this.value;
         var charCode = (evt.which) ? evt.which : event.keyCode;
+        if(this.id == 'phone') {
+            if(fieldValue.length == 0 && charCode == 43) {
+                return true;
+            }
+            if(fieldValue.length >= 13) {
+                evt.preventDefault();
+                $(this).data("title", "Phone number must be between 10 and 13 digits!").tooltip("show");
+                return false;
+            }
+        }
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
             evt.preventDefault();
+            $(this).data("title", "Only numbers are allowed!").tooltip("show");
             return false;
         }
+        $(this).data("title", "").tooltip("destroy");
         return true;
     });
 
@@ -65,11 +85,16 @@ $(function () {
         var fieldValue = this.value+'1';
         var charCode = (evt.which) ? evt.which : event.keyCode;
         if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57))) {
+            evt.preventDefault();
+            $(this).data("title", "Only numbers are allowed!").tooltip("show");
             return false;
         }
         if(charCode == 46 && (fieldValue % 1 != 0)) {
+            evt.preventDefault();
+            $(this).data("title", "Only numbers are allowed!").tooltip("show");
             return false;
         }
+        $(this).data("title", "").tooltip("destroy");
         return true;
     });
 });

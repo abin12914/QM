@@ -24,8 +24,10 @@ class AccountRegistrationRequest extends FormRequest
     public function messages()
     {
         return [
+            'account_name.unique'   => 'The account name has already been taken by an existing account. Please verify your entry or use initials.',
+            'phone.unique'          => 'The phone number has already been taken by an existing account. Please verify your entry or check for duplicates.',
             'account_type.max'      => 'Something went wrong. Please try again after reloading the page',
-            'financial_status.max'  => 'Something went wrong. Please try again after reloading the page'
+            'financial_status.max'  => 'Something went wrong. Please try again after reloading the page',
         ];
     }
     
@@ -37,15 +39,18 @@ class AccountRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => 'required|max:200|unique:accounts',
+            'account_name'          => 'required|max:200|unique:accounts',
             'description'           => 'nullable|max:200',
-            'account_type'          => 'required|max:50|exists:account_types,value',
+            'account_type'          => 'required|integer|exists:account_types,id',
             'financial_status'      => [
                                             'required',
                                             'max:8',
                                             Rule::in(['none','credit','debit'])
                                         ],
-            'opening_balance'       => 'required|numeric'
+            'opening_balance'       => 'required|numeric',
+            'name'                  => 'sometimes|required|max:200',
+            'phone'                 => 'sometimes|required|numeric|digits_between:10,13|unique:account_details',
+            'address'               => 'nullable|max:200',
         ];
     }
 }
