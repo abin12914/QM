@@ -24,10 +24,13 @@ class AccountRegistrationRequest extends FormRequest
     public function messages()
     {
         return [
-            'account_name.unique'   => 'The account name has already been taken by an existing account. Please verify your entry or use initials.',
-            'phone.unique'          => 'The phone number has already been taken by an existing account. Please verify your entry or check for duplicates.',
-            'account_type.max'      => 'Something went wrong. Please try again after reloading the page',
-            'financial_status.max'  => 'Something went wrong. Please try again after reloading the page',
+            'account_name.unique'       => 'The account name has already been taken by an existing account. Please verify your entry or use initials.',
+            'phone.unique'              => 'The phone number has already been taken by an existing account. Please verify your entry or check for duplicates.',
+            'account_type.max'          => 'Something went wrong. Please try again after reloading the page',
+            'financial_status.max'      => 'Something went wrong. Please try again after reloading the page',
+            'name.required'             => 'The name field is required for personal accounts.',
+            'relation_type.required'    => 'The relation type is required for personal accounts.',
+            'phone.required'            => 'The phone is required for personal accounts.',
         ];
     }
     
@@ -41,7 +44,11 @@ class AccountRegistrationRequest extends FormRequest
         return [
             'account_name'          => 'required|max:200|unique:accounts',
             'description'           => 'nullable|max:200',
-            'account_type'          => 'required|integer|exists:account_types,id',
+            'account_type'          => [
+                                            'required',
+                                            'max:8',
+                                            Rule::in(['real','nominal','personal'])
+                                        ],
             'financial_status'      => [
                                             'required',
                                             'max:8',
@@ -50,7 +57,13 @@ class AccountRegistrationRequest extends FormRequest
             'opening_balance'       => 'required|numeric',
             'name'                  => 'sometimes|required|max:200',
             'phone'                 => 'sometimes|required|numeric|digits_between:10,13|unique:account_details',
-            'address'               => 'nullable|max:200',
+            'address'               => 'sometimes|nullable|max:200',
+            'relation_type'         => [
+                                            'sometimes',
+                                            'required',
+                                            'max:8',
+                                            Rule::in(['employee','supplier','customer','other'])
+                                        ],
         ];
     }
 }

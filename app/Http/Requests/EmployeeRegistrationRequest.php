@@ -28,7 +28,7 @@ class EmployeeRegistrationRequest extends FormRequest
             'image_file.size'           => 'The image file size should be less than 3 MB',
             'financial_status.max'      => 'Something went wrong. Please try again after reloading the page',
             'phone.unique'              => 'The phone number has already been taken by an existing account. Please verify your entry.',
-            'name.unique'               => 'The name has already been taken by an existing account. Please verify your entry or use initials.',
+            'account_name.unique'       => 'The name has already been taken by an existing account. Please verify your entry or use initials.',
         ];
     }
 
@@ -40,11 +40,7 @@ class EmployeeRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => [
-                                            'required',
-                                            'max:200',
-                                            'unique:accounts',
-                                        ],
+            'name'                  => 'required|max:200',
             'phone'                 => 'required|numeric|digits_between:10,13|unique:account_details',
             'address'               => 'nullable|max:200',
             'image_file'            => 'nullable|mimes:jpeg,jpg,bmp,png|max:3000',
@@ -55,6 +51,7 @@ class EmployeeRegistrationRequest extends FormRequest
                                         ],
             'salary'                => 'sometimes|filled|required_if:employee_type,staff|numeric',
             'wage'                  => 'sometimes|filled|required_if:employee_type,labour|numeric',
+            'account_name'          => 'required|max:200|unique:accounts',
             'financial_status'      => [
                                             'required',
                                             'max:8',

@@ -28,7 +28,7 @@ class OwnerRegistrationRequest extends FormRequest
             'image_file.mimes'          => 'The image file should be of type jpeg, jpg, png, or bmp',
             'image_file.size'           => 'The image file size should be less than 3 MB',
             'financial_status.max'      => 'Something went wrong. Please try again after reloading the page',
-            'name.unique'               => 'The name has already been taken by an existing account. Please verify your entry or use initials.',
+            'account_name.unique'       => 'The name has already been taken by an existing account. Please verify your entry or use initials.',
         ];
     }
 
@@ -40,7 +40,7 @@ class OwnerRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => 'required|max:200|unique:accounts',
+            'name'                  => 'required|max:200',
             'user_name'             => 'required|unique:users|max:145',
             'email'                 => 'nullable|email|unique:users|unique:account_details|max:145',
             'phone'                 => 'required|numeric|digits_between:10,13|unique:users|unique:account_details',
@@ -52,6 +52,7 @@ class OwnerRegistrationRequest extends FormRequest
                                             'max:8',
                                             Rule::in(['none','credit','debit'])
                                         ],
+            'account_name'          => 'required|max:200|unique:accounts',
             'opening_balance'       => 'required|numeric',
             'address'               => 'nullable|max:200'
         ];

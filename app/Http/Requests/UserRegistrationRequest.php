@@ -42,7 +42,7 @@ class UserRegistrationRequest extends FormRequest
             'name'                  => 'required|max:200',
             'user_name'             => 'required|unique:users|max:145',
             'email'                 => 'nullable|email|unique:users|max:145',
-            'phone'                 => 'required|nuemeric|digits_between:10,13|unique:users',
+            'phone'                 => 'required|numeric|digits_between:10,13|unique:users',
             'role'                  => [
                                             'required',
                                             Rule::in(['superadmin','admin','user'])

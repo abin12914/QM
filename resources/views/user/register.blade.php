@@ -108,7 +108,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="password" class="col-sm-2 control-label"><b style="color: red;">* </b> Password : </label>
-                                            <div class="col-sm-10 {{ !empty($errors->first('password')) ? 'has-error' : '' }}">
+                                            <div class="col-sm-10 {{ count($errors) > 0 ? 'has-error' : '' }}">
                                                 <input type="password" name="password" class="form-control" placeholder="Password"  tabindex="8">
                                                 @if(!empty($errors->first('password')))
                                                     <p style="color: red;" >{{$errors->first('password')}}</p>
@@ -117,7 +117,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="password_confirmation" class="col-sm-2 control-label"><b style="color: red;">* </b> Confirm Password : </label>
-                                            <div class="col-sm-10 {{ !empty($errors->first('password')) ? 'has-error' : '' }}">
+                                            <div class="col-sm-10 {{ count($errors) > 0 ? 'has-error' : '' }}">
                                                 <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" tabindex="9">
                                                 @if(!empty($errors->first('password')))
                                                     <p style="color: red;" >{{ $errors->first('password') }}</p>

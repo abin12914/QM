@@ -90,7 +90,7 @@
             <li class="treeview {{ Request::is('hr/employee') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-male"></i>
-                    <span>Staff & Labour</span>
+                    <span>Employees</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>

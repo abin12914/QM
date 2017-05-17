@@ -21,38 +21,47 @@ $(function () {
         employeeType = this.value;
         if(employeeType == 'staff') {
             $('#daily_wage_div').hide();
+            $('#wage').val('0');
             $('#wage').prop("disabled",true);
 
             $('#salary_div').show();
+            $('#salary').val('');
             $('#salary').prop("disabled",false);
         } else if(employeeType == 'labour') {
             $('#salary_div').hide();
+            $('#salary').val('0');
             $('#salary').prop("disabled",true);
 
             $('#daily_wage_div').show();
+            $('#wage').val('');
             $('#wage').prop("disabled",false);
         }
     });
 
     $('body').on("change", "#account_type", function () {
         accountType = this.value;
-        // account type 1 are real accounts
-        if(accountType == 1) {
+        if(accountType != 'personal') {
             $('#real_account_flag_message').show();
+            $('#personal_account_details').hide();
             $('#name').val("This organization");
             $('#phone').val("0000000000");
             $('#address').val("Address of this organization");
-            $('#name').prop('readonly',true)
-            $('#phone').prop('readonly',true)
-            $('#address').prop('readonly',true)
+            $('#relation_type').val("other").change();
+            $('#name').prop('disabled',true);
+            $('#phone').prop('disabled',true);
+            $('#address').prop('disabled',true);
+            $('#relation_type').prop('disabled',true);
         } else {
             $('#real_account_flag_message').hide();
+            $('#personal_account_details').show();
             $('#name').val("");
             $('#phone').val("");
             $('#address').val("");
-            $('#name').prop('readonly',false)
-            $('#phone').prop('readonly',false)
-            $('#address').prop('readonly',false)
+            $('#relation_type').val("").change();
+            $('#name').prop('disabled',false);
+            $('#phone').prop('disabled',false);
+            $('#address').prop('disabled',false);
+            $('#relation_type').prop('disabled',false);
         }
     });
     
@@ -91,7 +100,7 @@ $(function () {
         }
         if(charCode == 46 && (fieldValue % 1 != 0)) {
             evt.preventDefault();
-            $(this).data("title", "Only numbers are allowed!").tooltip("show");
+            $(this).data("title", "Only numbers and decimal point are allowed!").tooltip("show");
             return false;
         }
         $(this).data("title", "").tooltip("destroy");

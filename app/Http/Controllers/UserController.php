@@ -7,8 +7,10 @@ use App\Http\Requests\UserRegistrationRequest;
 use App\Http\Requests\OwnerRegistrationRequest;
 use Hash;
 use Auth;
+use DateTime;
 use App\Models\User;
 use App\Models\Account;
+use App\Models\AccountDetail;
 use App\Models\Owner;
 
 class UserController extends Controller
@@ -53,7 +55,9 @@ class UserController extends Controller
         }
         $user->role         = $role;
         $user->status       = 1;
-        $user->valid_till   = $validTill;
+        // appending time to validtill
+        $validTill          = DateTime::createFromFormat('d/m/Y H:i:s',$validTill.' 23:59:00');
+        $user->valid_till   = $validTill->format('Y-m-d H:i:s');
         if($user->save()) {
             return redirect()->back()->with("message","User saved successfully.")->with("alert-class","alert-success");
         } else {
@@ -84,6 +88,7 @@ class UserController extends Controller
         $userName           = $request->get('user_name');
         $validTill          = $request->get('valid_till');
         $password           = $request->get('password');
+        $accountName        = $request->get('account_name');
         $financialStatus    = $request->get('financial_status');
         $openingBalance     = $request->get('opening_balance');
 
@@ -107,29 +112,41 @@ class UserController extends Controller
         }
         $user->role         = 'admin';
         $user->status       = 1;
-        $user->valid_till   = $validTill;
+        // appending time to validtill
+        $validTill          = DateTime::createFromFormat('d/m/Y H:i:s',$validTill.' 23:59:00');
+        $user->valid_till   = $validTill->format('Y-m-d H:i:s');
 
         if($user->save()) {
             $account = new Account;
-            $account->name              = $name;
+            $account->account_name      = $accountName;
             $account->description       = "Owner of the organization";
-            $account->type              = "owner";
+            $account->type              = "personal";
+            $account->relation          = "owner";
             $account->financial_status  = $financialStatus;
             $account->opening_balance   = $openingBalance;
             $account->status            = 1;
             if($account->save()) {
+                $accountDetails = new AccountDetail;
+                $accountDetails->account_id = $account->id;
+                $accountDetails->name       = $name;
+                $accountDetails->phone      = $phone;
+                $accountDetails->email      = $email;
+                $accountDetails->address    = $address;
+                if(!empty($fileName)) {
+                    $accountDetails->image   = $destination.$fileName;
+                } else {
+                    $accountDetails->image   = "/images/owner/default_owner.jpg";
+                }
+                $accountDetails->status     = 1;
+                if($accountDetails->save()) {
+                    $flag = 0;
+                } else {
+                    $flag = 4;
+                }
+
                 $owner = new Owner;
-                $owner->name        = $name;
-                $owner->email       = $email;
-                $owner->phone       = $phone;
-                $owner->address     = $address;
                 $owner->user_id     = $user->id;
                 $owner->account_id  = $account->id;
-                if(!empty($fileName)) {
-                    $owner->image   = $destination.$fileName;
-                } else {
-                    $owner->image   = "/images/owner/default_owner.jpg";
-                }
                 $owner->status      =1;
                 if($owner->save()){
                     $flag =0;

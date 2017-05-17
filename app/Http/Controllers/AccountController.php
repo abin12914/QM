@@ -15,10 +15,7 @@ class AccountController extends Controller
      */
     public function register()
     {
-        $accountTypes = AccountType::all();
-    	return view('account.register',[
-            'accountTypes' => $accountTypes
-        ]);
+    	return view('account.register');
     }
 
      /**
@@ -34,13 +31,15 @@ class AccountController extends Controller
         $financialStatus    = $request->get('financial_status');
         $openingBalance     = $request->get('opening_balance');
         $name               = $request->get('name');
-        $phone               = $request->get('phone');
-        $address               = $request->get('address');
+        $phone              = $request->get('phone');
+        $address            = $request->get('address');
+        $relation           = $request->get('relation_type');
 
         $account = new Account;
         $account->account_name      = $accountName;
         $account->description       = $description;
         $account->type              = $accountType;
+        $account->relation          = !empty($relation) ? $relation : $accountType;
         $account->financial_status  = $financialStatus;
         $account->opening_balance   = $openingBalance;
         $account->status            = 1;
@@ -48,12 +47,12 @@ class AccountController extends Controller
             $accountDetails = new AccountDetail;
             $accountDetails->account_id = $account->id;
             // account type of real accounts does not need to store personal data
-            if($accountType == 1) {
-                $accountDetails->name       = "Real Account";
-            } else {
+            if($accountType == 'personal') {
                 $accountDetails->name       = $name;
                 $accountDetails->phone      = $phone;
                 $accountDetails->address    = $address;
+            } else {
+                $accountDetails->name       = $accountName;
             }
             $accountDetails->status     = 1;
             if($accountDetails->save()) {

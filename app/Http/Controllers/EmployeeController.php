@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRegistrationRequest;
 use App\Models\Account;
+use App\Models\AccountDetail;
 use App\Models\Employee;
 
 class EmployeeController extends Controller
@@ -22,7 +23,7 @@ class EmployeeController extends Controller
      */
     public function registerAction(EmployeeRegistrationRequest $request)
     {
-        $destination        = '/images/labour/'; // image file upload path
+        $destination        = '/images/employee/'; // image file upload path
         $flag =0;
 
         $name               = $request->get('name');
@@ -31,6 +32,7 @@ class EmployeeController extends Controller
         $employeeType       = $request->get('employee_type');
         $salary             = $request->get('salary');
         $wage               = $request->get('wage');
+        $accountName        = $request->get('account_name');
         $financialStatus    = $request->get('financial_status');
         $openingBalance     = $request->get('opening_balance');
 
@@ -42,33 +44,43 @@ class EmployeeController extends Controller
         }
 
         $account = new Account;
-        $account->name              = $name;
+        $account->account_name          = $accountName;
         if($employeeType == 'staff') {
-            $account->description       = "Staff of the organization";
-            $account->type              = "staff";
+            $account->description       = "Category : Staff. Payment mode : Monthly";
         } else {
-            $account->description       = "Labour of the organization";
-            $account->type              = "staff";
+            $account->description       = "Category : Labour.  Payment mode : Daily";
         }
-        $account->description       = "Staff of the organization";
-        $account->type              = "staff";
+        $account->type              = "personal";
+        $account->relation          = "employee";
         $account->financial_status  = $financialStatus;
         $account->opening_balance   = $openingBalance;
         $account->status            = 1;
         if($account->save()) {
-            $staff = new Employee;
-            $staff->name        = $name;
-            $staff->phone       = $phone;
-            $staff->address     = $address;
-            if(!empty($fileName)) {
-                $staff->image   = $destination.$fileName;
+            $employee = new Employee;
+            $employee->employee_type    = $employeeType;
+            $employee->salary           = $salary;
+            $employee->wage             = $wage;
+            $employee->account_id       = $account->id;
+            $employee->status           = 1;
+
+            if($employee->save()){
+                $flag =0;
             } else {
-                $staff->image   = $destination."default_staff.jpg";
+                $flag = 3;
             }
-            $staff->salary      = $salary;
-            $staff->account_id  = $account->id;
-            $staff->status      =1;
-            if($staff->save()){
+
+            $accountDetail = new AccountDetail;
+            $accountDetail->account_id  = $account->id;
+            $accountDetail->name        = $name;
+            $accountDetail->phone       = $phone;
+            $accountDetail->address     = $address;
+            if(!empty($fileName)) {
+                $accountDetail->image   = $destination.$fileName;
+            } else {
+                $accountDetail->image   = $destination."default_employee.jpg";
+            }
+            $accountDetail->status      = 1;
+            if($accountDetail->save()){
                 $flag =0;
             } else {
                 $flag = 2;
