@@ -61,8 +61,8 @@ class AccountRegistrationRequest extends FormRequest
             'relation_type'         => [
                                             'sometimes',
                                             'required',
-                                            'max:8',
-                                            Rule::in(['employee','supplier','customer','other'])
+                                            'max:10',
+                                            Rule::in(['employee','supplier','customer','contractor','general'])
                                         ],
         ];
     }

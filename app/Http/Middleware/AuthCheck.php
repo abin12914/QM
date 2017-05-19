@@ -19,7 +19,7 @@ class AuthCheck
         if(Auth::check()) {
             return $next($request);            
         } else {
-            return redirect(route('login-view'))->with("message"," Unauthorized action. Login to continue.")
+            return redirect(route('login-view'))->with("message","No valid sessions found. Login to continue.")
                                                 ->with("alert-class","alert-danger");
         }
     }
