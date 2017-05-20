@@ -62,10 +62,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="contractor_account_id" class="col-sm-2 control-label"><b style="color: red;">* </b> Contractor or Provider : </label>
+                                    <label for="contractor_account_id" class="col-sm-2 control-label"><b style="color: red;">* </b> Contractor : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('contractor_account_id')) ? 'has-error' : '' }}">
-                                        <select class="form-control" name="contractor_account_id" id="contractor_account_id" tabindex="3" size="1">
-                                            <option value="1000" selected="">Select contractor or provider account</option>
+                                        <select class="form-control" name="contractor_account_id" id="contractor_account_id" tabindex="3">
+                                            <option value="" {{ empty(old('contractor_account_id')) ? 'selected' : '' }}>Select contractor or provider account</option>
                                             @foreach($accounts as $account)
                                                 <option value="{{ $account->id }}" {{ $account->id == old('contractor_account_id') ? 'selected' : '' }}>{{ $account->account_name }} - ({{ $account->relation }} account)</option>
                                             @endforeach

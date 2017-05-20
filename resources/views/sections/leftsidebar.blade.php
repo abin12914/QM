@@ -157,7 +157,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="{{ Request::is('machine/jackhammer')? 'active' : '' }}">
+                    <li class="{{ Request::is('machine/jackhammer/*')? 'active' : '' }}">
                         <a href="#">
                             <i class="fa fa-thumb-tack"></i> Jackhammers
                             <span class="pull-right-container">

@@ -39,24 +39,22 @@
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="row">
                             <div class="col-md-11">
-                                <div class="{{ !empty($errors->first('name')) ? 'form-group has-error' : 'form-group' }}">
-                                    <label for="name" class="col-sm-2 control-label"><b style="color: red;">* </b> Name : </label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="name" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}" required>
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-2 control-label"><b style="color: red;">* </b> Machine Name : </label>
+                                    <div class="col-sm-10 {{ !empty($errors->first('name')) ? 'has-error' : '' }}">
+                                        <input type="text" name="name" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}" tabindex="1">
                                         @if(!empty($errors->first('name')))
                                             <p style="color: red;" >{{$errors->first('name')}}</p>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="{{ !empty($errors->first('description')) ? 'form-group has-error' : 'form-group' }}">
+                                <div class="form-group">
                                     <label for="description" class="col-sm-2 control-label">Description : </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-10 {{ !empty($errors->first('description')) ? 'has-error' : '' }}">
                                         @if(!empty(old('description')))
-                                            <textarea class="form-control" name="description" id="description" rows="3" placeholder="Product Description" style="resize: none;">
-                                                {{ old('description') }}
-                                            </textarea>
+                                            <textarea class="form-control" name="description" id="description" rows="3" placeholder="Product Description" style="resize: none;" tabindex="2">{{ old('description') }}</textarea>
                                         @else
-                                            <textarea class="form-control" name="description" id="description" rows="3" placeholder="Product Description" style="resize: none;"></textarea>
+                                            <textarea class="form-control" name="description" id="description" rows="3" placeholder="Product Description" style="resize: none;" tabindex="2"></textarea>
                                         @endif
                                         @if(!empty($errors->first('description')))
                                             <p style="color: red;" >{{$errors->first('description')}}</p>
@@ -64,33 +62,48 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="account_id" class="col-sm-2 control-label"><b style="color: red;">* </b> Owner : </label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" name="account_id" id="account_id" required>
-                                            <option value="" selected="">Select Account</option>
+                                    <label for="contractor_account_id" class="col-sm-2 control-label"><b style="color: red;">* </b> Contractor : </label>
+                                    <div class="col-sm-10 {{ !empty($errors->first('contractor_account_id')) ? 'has-error' : '' }}">
+                                        <select class="form-control" name="contractor_account_id" id="contractor_account_id" tabindex="3">
+                                            <option value="" {{ empty(old('contractor_account_id')) ? 'selected' : '' }}>Select contractor or provider account</option>
+                                            @foreach($accounts as $account)
+                                                <option value="{{ $account->id }}" {{ $account->id == old('contractor_account_id') ? 'selected' : '' }}>{{ $account->account_name }} - ({{ $account->relation }} account)</option>
+                                            @endforeach
                                         </select>
+                                        @if(!empty($errors->first('contractor_account_id')))
+                                            <p style="color: red;" >{{$errors->first('contractor_account_id')}}</p>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="rent_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Rental Type : </label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" name="rent_type" id="rent_type">
-                                            <option value="" selected="">Select Type</option>
-                                            <option value="per_day">Per Day</option>
-                                            <option value="per_feet">Per Feet</option>
+                                    <div class="col-sm-10 {{ !empty($errors->first('rent_type')) ? 'has-error' : '' }}">
+                                        <select class="form-control" name="rent_type" id="rent_type" tabindex="4">
+                                            <option value="" selected="">Select rental type</option>
+                                            <option value="per_day">Rent per day</option>
+                                            <option value="per_feet">Rent per feet</option>
                                         </select>
+                                        @if(!empty($errors->first('rent_type')))
+                                            <p style="color: red;" >{{$errors->first('rent_type')}}</p>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label"><b style="color: red;">* </b> Rent/Day : </label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="rate_daily" id="rate_daily" placeholder="Rate per month" value="{{ old('rate_daily') }}">
+                                    <label for="rate_daily" class="col-sm-2 control-label"><b style="color: red;">* </b> Rent/Day : </label>
+                                    <div class="col-sm-10 {{ !empty($errors->first('rate_daily')) ? 'has-error' : '' }}">
+                                        <input type="text" class="form-control decimal_number_only" name="rate_daily" id="rate_daily" placeholder="Rate per month" value="{{ old('rate_daily') }}" tabindex="5">
+                                        @if(!empty($errors->first('rate_daily')))
+                                            <p style="color: red;" >{{$errors->first('rate_daily')}}</p>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label"><b style="color: red;">* </b> Rate/Feet : </label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="rate_feet" id="rate_feet" placeholder="Rate per feet" value="{{ old('rate_feet') }}">
+                                    <label for="rate_feet" class="col-sm-2 control-label"><b style="color: red;">* </b> Rate/Feet : </label>
+                                    <div class="col-sm-10 {{ !empty($errors->first('rate_feet')) ? 'has-error' : '' }}">
+                                        <input type="text" class="form-control decimal_number_only" name="rate_feet" id="rate_feet" placeholder="Rate per feet" value="{{ old('rate_feet') }}" tabindex="6">
+                                        @if(!empty($errors->first('rate_feet')))
+                                            <p style="color: red;" >{{$errors->first('rate_feet')}}</p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -99,11 +112,11 @@
                             <div class="row">
                                 <div class="col-xs-3"></div>
                                 <div class="col-xs-3">
-                                    <button type="reset" class="btn btn-default btn-block btn-flat">Clear</button>
+                                    <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="8">Clear</button>
                                 </div>
                                 {{-- <div class="col-sm-1"></div> --}}
                                 <div class="col-xs-3">
-                                    <button type="submit" class="btn btn-primary btn-block btn-flat">Submit</button>
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="7">Submit</button>
                                 </div>
                                 <!-- /.col -->
                             </div><br>
