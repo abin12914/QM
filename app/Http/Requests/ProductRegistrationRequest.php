@@ -43,8 +43,8 @@ class ProductRegistrationRequest extends FormRequest
         return [
             'name'          => 'required|max:200|unique:products',
             'description'   => 'nullable|max:200',
-            'rate_feet'     => 'required|numeric',
-            'rate_ton'      => 'required|numeric',
+            'rate_feet'     => 'required|numeric|max:9999',
+            'rate_ton'      => 'required|numeric|max:9999',
         ];
     }
 }

@@ -51,15 +51,15 @@ class ExcavatorRegistrationRequest extends FormRequest
                                             'required',
                                             'integer',
                                             Rule::in(Account::pluck('id')->toArray()),
-                                ],
-            'rent_type'     => [
-                                    'required',
-                                    'max:7',
-                                    Rule::in(['hourly','monthly'])
-                                ],
-            'rate_monthly'  => 'required|numeric',
-            'rate_bucket'   => 'required|numeric',
-            'rate_breaker'  => 'required|numeric'
+                                        ],
+            'rent_type'             => [
+                                            'required',
+                                            'max:7',
+                                            Rule::in(['hourly','monthly'])
+                                        ],
+            'rate_monthly'          => 'required|numeric|max:999999',
+            'rate_bucket'           => 'required|numeric|max:99999',
+            'rate_breaker'          => 'required|numeric|max:99999'
         ];
     }
 }

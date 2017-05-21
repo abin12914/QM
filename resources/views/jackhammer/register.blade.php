@@ -34,7 +34,7 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form action="{{route('product-register-action')}}" method="post" class="form-horizontal" multipart-form-data>
+                    <form action="{{route('jackhammer-register-action')}}" method="post" class="form-horizontal" multipart-form-data>
                         <div class="box-body">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="row">
@@ -79,9 +79,9 @@
                                     <label for="rent_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Rental Type : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('rent_type')) ? 'has-error' : '' }}">
                                         <select class="form-control" name="rent_type" id="rent_type" tabindex="4">
-                                            <option value="" selected="">Select rental type</option>
-                                            <option value="per_day">Rent per day</option>
-                                            <option value="per_feet">Rent per feet</option>
+                                            <option value="" selected="" {{ empty(old('rent_type')) ? 'selected' : '' }}>Select rental type</option>
+                                            <option value="per_day" {{ old('rent_type') == 'per_day' ? 'selected' : '' }}>Rent per day</option>
+                                            <option value="per_feet" {{ old('rent_type') == 'per_feet' ? 'selected' : '' }}>Rent per feet</option>
                                         </select>
                                         @if(!empty($errors->first('rent_type')))
                                             <p style="color: red;" >{{$errors->first('rent_type')}}</p>

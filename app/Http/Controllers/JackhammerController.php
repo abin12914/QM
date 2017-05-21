@@ -23,7 +23,7 @@ class JackhammerController extends Controller
      /**
      * Handle new jackhammer registration
      */
-    public function registerAction()
+    public function registerAction(JackhammerRegistrationRequest $request)
     {
         $name                   = $request->get('name');
         $description            = $request->get('description');

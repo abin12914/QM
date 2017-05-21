@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\VehicleType;
 
 class VehicleController extends Controller
 {
@@ -11,7 +12,10 @@ class VehicleController extends Controller
      */
     public function register()
     {
-    	return view('vehicle.register');
+        $vehicleTypes = VehicleType::orderBy('name')->get();
+    	return view('vehicle.register',[
+                'vehicleTypes' => $vehicleTypes
+            ]);
     }
 
      /**

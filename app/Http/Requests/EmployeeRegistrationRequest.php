@@ -57,7 +57,7 @@ class EmployeeRegistrationRequest extends FormRequest
                                             'max:8',
                                             Rule::in(['none','credit','debit'])
                                         ],
-            'opening_balance'       => 'required|numeric'
+            'opening_balance'       => 'required|numeric|max:9999999'
         ];
     }
 }

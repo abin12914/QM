@@ -103,6 +103,7 @@ $(function () {
             $(this).data("title", "Only numbers and decimal point are allowed!").tooltip("show");
             return false;
         }
+
         $(this).data("title", "").tooltip("destroy");
         return true;
     });

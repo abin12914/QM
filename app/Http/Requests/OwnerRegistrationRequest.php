@@ -53,7 +53,7 @@ class OwnerRegistrationRequest extends FormRequest
                                             Rule::in(['none','credit','debit'])
                                         ],
             'account_name'          => 'required|max:200|unique:accounts',
-            'opening_balance'       => 'required|numeric',
+            'opening_balance'       => 'required|numeric|max:9999999',
             'address'               => 'nullable|max:200'
         ];
     }
