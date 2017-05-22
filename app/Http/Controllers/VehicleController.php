@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\VehicleType;
+use App\Http\Requests\VehicleRegistrationRequest;
+use App\Models\Vehicle;
 
 class VehicleController extends Controller
 {
@@ -21,7 +23,7 @@ class VehicleController extends Controller
      /**
      * Handle new vehicle registration
      */
-    public function registerAction()
+    public function registerAction(VehicleRegistrationRequest $request)
     {
     	
     }

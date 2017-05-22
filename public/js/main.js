@@ -78,6 +78,18 @@ $(function () {
                 $(this).data("title", "Phone number must be between 10 and 13 digits!").tooltip("show");
                 return false;
             }
+        } else if(this.id == 'vehicle_reg_number_region_code') {
+            if(fieldValue.length >=2) {
+                //$(this).data("title", "Maximum two digits are allowed for regional code").tooltip("show");
+                $('#vehicle_reg_number_unique_alphabet').focus();
+                return false;
+            }
+        } else if(this.id == 'vehicle_reg_number_unique_digit') {
+            if(fieldValue.length >=4) {
+                //$(this).data("title", "Maximum four digits are allowed in this section").tooltip("show");
+                $('#description').focus();
+                return false;
+            }
         }
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
             evt.preventDefault();
@@ -106,6 +118,67 @@ $(function () {
 
         $(this).data("title", "").tooltip("destroy");
         return true;
+    });
+
+    //append to another textbox
+    $('body').on("keyup", ".number_only", function () {
+        var stateCode   = $('#vehicle_reg_number_state_code').val();
+        var regionCode  = $('#vehicle_reg_number_region_code').val();
+        var alphaCode   = $('#vehicle_reg_number_unique_alphabet').val();
+        var numerisCode = $('#vehicle_reg_number_unique_digit').val();
+
+        if(alphaCode) {
+            var registrationNumber = stateCode + '-' + regionCode + ' ' + alphaCode + '-' + numerisCode;
+        } else {
+            var registrationNumber = stateCode + '-' + regionCode + ' ' + numerisCode;
+        }
+        $('#vehicle_reg_number').val(registrationNumber);
+    });
+
+    // for checking if the pressed key is a alphabet
+    $('body').on("keypress", ".alpha_only", function (evt) {
+        var fieldValue = this.value;
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if(this.id == 'vehicle_reg_number_state_code') {
+            if(fieldValue.length >= 2) {
+                //$(this).data("title", "Maximum two characters are allowed for state code").tooltip("show");
+                evt.preventDefault();
+                $('#vehicle_reg_number_region_code').focus();
+                return false;
+            }
+        } else if(this.id == 'vehicle_reg_number_unique_alphabet') {
+            if(fieldValue.length >= 2) {
+                evt.preventDefault();
+                //$(this).data("title", "Maximum two characters are allowed in this section").tooltip("show");
+                $('#vehicle_reg_number_unique_digit').focus();
+                return false;
+            }
+        }
+
+        if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122))) {
+            evt.preventDefault();
+            $(this).data("title", "Only alphabets are allowed!").tooltip("show");
+            return false;
+        }
+        $(this).data("title", "").tooltip("destroy");
+        this.value = (this.value).toUpperCase();
+        return true;
+    });
+
+    //convert to uppper case and append to another textbox
+    $('body').on("keyup", ".alpha_only", function (evt) {
+        this.value      = (this.value).toUpperCase();
+        var stateCode   = $('#vehicle_reg_number_state_code').val();
+        var regionCode  = $('#vehicle_reg_number_region_code').val();
+        var alphaCode   = $('#vehicle_reg_number_unique_alphabet').val();
+        var numerisCode = $('#vehicle_reg_number_unique_digit').val();
+
+        if(alphaCode) {
+            var registrationNumber = stateCode + '-' + regionCode + ' ' + alphaCode + '-' + numerisCode;
+        } else {
+            var registrationNumber = stateCode + '-' + regionCode + ' ' + numerisCode;
+        }
+        $('#vehicle_reg_number').val(registrationNumber);
     });
 });
 function dismissAlert() {
