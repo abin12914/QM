@@ -19,7 +19,7 @@ Route::group(['middleware' => 'is.guest'], function() {
 
 Route::group(['middleware' => 'auth.check'], function () {
 	//superadmin routes
-	Route::group(['middleware' => 'user.role:superadmin'], function () {
+	Route::group(['middleware' => ['user.role:superadmin,']], function () {
 		Route::get('/user/register', 'UserController@register')->name('user-register-view');
 		Route::post('/user/register/action', 'UserController@registerAction')->name('user-register-action');
 
@@ -28,26 +28,26 @@ Route::group(['middleware' => 'auth.check'], function () {
 	});
 
 	//admin routes
-	Route::group(['middleware' => 'user.role:admin'], function () {
+	Route::group(['middleware' => ['user.role:admin,']], function () {
+		//product
+		Route::get('/product/register', 'ProductController@register')->name('product-register-view');
+		Route::post('/product/register/action', 'ProductController@registerAction')->name('product-register-action');
+
+		//vehicle type
+		Route::get('/vehicle-type/register', 'VehicleTypeController@register')->name('vehicle-type-register-view');
+		Route::post('/vehicle-type/register/action', 'VehicleTypeController@registerAction')->name('vehicle-type-register-action');
 	});
 
 	//user routes
-	Route::group(['middleware' => 'user.role:superadmin'], function () {
+	Route::group(['middleware' => ['user.role:user,admin']], function () {
 		//account
 		Route::get('/account/register', 'AccountController@register')->name('account-register-view');
 		Route::post('/account/register/action', 'AccountController@registerAction')->name('account-register-action');
+		Route::get('/account/list', 'AccountController@list')->name('account-list');
 
 		//staff
 		Route::get('hr/employee/register', 'EmployeeController@register')->name('employee-register-view');
 		Route::post('hr/employee/register/action', 'EmployeeController@registerAction')->name('employee-register-action');
-
-		//labour
-		/*Route::get('hr/labour/register', 'LabourController@register')->name('labour-register-view');
-		Route::post('hr/labour/register/action', 'LabourController@registerAction')->name('labour-register-action');*/
-
-		//product
-		Route::get('/product/register', 'ProductController@register')->name('product-register-view');
-		Route::post('/product/register/action', 'ProductController@registerAction')->name('product-register-action');
 
 		//machine
 		//excavator
@@ -58,10 +58,6 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/machine/jackhammer/register', 'JackhammerController@register')->name('jackhammer-register-view');
 		Route::post('/machine/jackhammer/register/action', 'JackhammerController@registerAction')->name('jackhammer-register-action');
 
-		//vehicle type
-		Route::get('/vehicle-type/register', 'VehicleTypeController@register')->name('vehicle-type-register-view');
-		Route::post('/vehicle-type/register/action', 'VehicleTypeController@registerAction')->name('vehicle-type-register-action');
-
 		//vehicle
 		Route::get('/vehicle/register', 'VehicleController@register')->name('vehicle-register-view');
 		Route::post('/vehicle/register/action', 'VehicleController@registerAction')->name('vehicle-register-action');
@@ -69,7 +65,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 
 	//common routes
 	Route::get('/dashboard', 'LoginController@dashboard')->name('user-dashboard');
-	Route::get('/user/profile', 'UserController@profileView')->name('user-profile-view');
+	Route::get('/my/profile', 'UserController@profileView')->name('user-profile-view');
 	Route::get('/logout', 'LoginController@logout')->name('logout');
 
 

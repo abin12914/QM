@@ -57,7 +57,7 @@ class AccountController extends Controller
             if($accountDetails->save()) {
                 $saveFlag = 1;
             } else {
-                $saveFlag =0;  
+                $saveFlag = 0;  
             }
         } else {
             $saveFlag = 0;
@@ -69,5 +69,16 @@ class AccountController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the account details. Try after reloading the page.")->with("alert-class","alert-danger");
         }
 
+    }
+
+    /**
+     * Return view for account listing
+     */
+    public function list()
+    {
+        $accounts = Account::paginate(10);/* dd($accounts->accountDetail->name);*/
+        return view('account.list',[
+                'accounts' => $accounts
+            ]);
     }
 }

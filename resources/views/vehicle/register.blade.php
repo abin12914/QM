@@ -1,15 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Excavator Registration')
+@section('title', 'Truck Registration')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Vehicle
+            Truck
             <small>Registartion</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Vehicle</a></li>
+            <li><a href="#"> Truck</a></li>
             <li class="active">Registration</li>
         </ol>
     </section>
@@ -29,7 +29,7 @@
             <div class="col-md-8">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title" style="float: left;">Vehicle Registration</h3>
+                        <h3 class="box-title" style="float: left;">Truck Registration</h3>
                             <p>&nbsp&nbsp&nbsp(Fields marked with <b style="color: red;">* </b>are mandatory.)</p>
                     </div>
                     <!-- /.box-header -->
@@ -41,23 +41,33 @@
                             <div class="col-md-11">
                                 <div class="form-group">
                                     <label for="vehicle_reg_number_state_code" class="col-sm-2 control-label"><b style="color: red;">* </b> Registration Number : </label>
-                                    <div class="col-sm-1 {{ !empty($errors->first('vehicle_reg_number_state_code')) ? 'has-error' : '' }}">
-                                        <input type="text" name="vehicle_reg_number_state_code" class="form-control alpha_only" id="vehicle_reg_number_state_code" placeholder="KL" value="{{ old('vehicle_reg_number_state_code') }}" tabindex="1" maxlength="2">
-                                    </div>
-                                    <div class="col-sm-1 {{ !empty($errors->first('vehicle_reg_number_region_code')) ? 'has-error' : '' }}">
-                                        <input type="text" name="vehicle_reg_number_region_code" class="form-control number_only" id="vehicle_reg_number_region_code" placeholder="00" value="{{ old('vehicle_reg_number_region_code') }}" tabindex="2" maxlength="2">
-                                    </div>
-                                    <div class="col-sm-1 {{ !empty($errors->first('vehicle_reg_number_unique_alphabet')) ? 'has-error' : '' }}">
-                                        <input type="text" name="vehicle_reg_number_unique_alphabet" class="form-control alpha_only" id="vehicle_reg_number_unique_alphabet" placeholder="AA" value="{{ old('vehicle_reg_number_unique_alphabet') }}" tabindex="3" maxlength="2">
-                                    </div>
-                                    <div class="col-sm-2 {{ !empty($errors->first('vehicle_reg_number_unique_digit')) ? 'has-error' : '' }}">
-                                        <input type="text" name="vehicle_reg_number_unique_digit" class="form-control number_only" id="vehicle_reg_number_unique_digit" placeholder="0000" value="{{ old('vehicle_reg_number_unique_digit') }}" tabindex="4" maxlength="4">
-                                    </div>
-                                    <div class="col-sm-5 {{ !empty($errors->first('vehicle_reg_number')) ? 'has-error' : '' }}">
-                                        <input type="text" name="vehicle_reg_number" class="form-control" id="vehicle_reg_number" value="{{ old('vehicle_reg_number') }}" readonly="">
+                                    <div class="col-sm-10">
+                                        <div class="col-sm-2 {{ !empty($errors->first('vehicle_reg_number_state_code')) ? 'has-error' : '' }}">
+                                            <input type="text" name="vehicle_reg_number_state_code" class="form-control alpha_only" id="vehicle_reg_number_state_code" placeholder="" value="{{ !empty(old('vehicle_reg_number_state_code')) ? old('vehicle_reg_number_state_code') : 'KL' }}" tabindex="1" maxlength="2">
+                                        </div>
+                                        <div class="col-sm-2 {{ !empty($errors->first('vehicle_reg_number_region_code')) ? 'has-error' : '' }}">
+                                            <input type="text" name="vehicle_reg_number_region_code" class="form-control number_only" id="vehicle_reg_number_region_code" placeholder="" value="{{ old('vehicle_reg_number_region_code') }}" tabindex="2" maxlength="2">
+                                        </div>
+                                        <div class="col-sm-2 {{ !empty($errors->first('vehicle_reg_number_unique_alphabet')) ? 'has-error' : '' }}">
+                                            <input type="text" name="vehicle_reg_number_unique_alphabet" class="form-control alpha_only" id="vehicle_reg_number_unique_alphabet" placeholder="" value="{{ old('vehicle_reg_number_unique_alphabet') }}" tabindex="3" maxlength="2">
+                                        </div>
+                                        <div class="col-sm-2 {{ !empty($errors->first('vehicle_reg_number_unique_digit')) ? 'has-error' : '' }}">
+                                            <input type="text" name="vehicle_reg_number_unique_digit" class="form-control number_only" id="vehicle_reg_number_unique_digit" placeholder="" value="{{ old('vehicle_reg_number_unique_digit') }}" tabindex="4" maxlength="4">
+                                        </div>
+                                        <div class="col-sm-4 {{ !empty($errors->first('vehicle_reg_number')) ? 'has-error' : '' }}">
+                                            <input type="text" name="vehicle_reg_number" class="form-control" id="vehicle_reg_number" value="{{ old('vehicle_reg_number') }}" readonly="">
+                                        </div>
                                     </div>
                                     @if(!empty($errors->first('vehicle_reg_number')))
                                         <p style="color: red;" >{{$errors->first('vehicle_reg_number')}}</p>
+                                    @elseif(!empty($errors->first('vehicle_reg_number_state_code')))
+                                        <p style="color: red;" >{{$errors->first('vehicle_reg_number_state_code')}}</p>
+                                    @elseif(!empty($errors->first('vehicle_reg_number_region_code')))
+                                        <p style="color: red;" >{{$errors->first('vehicle_reg_number_region_code')}}</p>
+                                    @elseif(!empty($errors->first('vehicle_reg_number_unique_alphabet')))
+                                        <p style="color: red;" >{{$errors->first('vehicle_reg_number_unique_alphabet')}}</p>
+                                    @elseif(!empty($errors->first('vehicle_reg_number_unique_digit')))
+                                        <p style="color: red;" >{{$errors->first('vehicle_reg_number_unique_digit')}}</p>
                                     @endif
                                 </div>
                                 <div class="form-group">
@@ -99,7 +109,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"><b style="color: red;">* </b> Volume In Feet : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('volume')) ? 'has-error' : '' }}">
-                                        <input type="text" class="form-control number_only" name="volume" id="volume" placeholder="Volume in cubic feet" value="{{ old('volume') }}" tabindex="8">
+                                        <input type="text" class="form-control number_only" name="volume" id="volume" placeholder="Volume in cubic feet" value="{{ old('volume') }}" tabindex="8" maxlength="4">
                                         @if(!empty($errors->first('volume')))
                                             <p style="color: red;" >{{$errors->first('volume')}}</p>
                                         @endif

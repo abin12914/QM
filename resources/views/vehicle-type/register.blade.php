@@ -1,15 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Vehicle Type Registration')
+@section('title', 'Truck Type Registration')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Vehicle Type
+            Truck Type
             <small>Registartion</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Vehicle Type</a></li>
+            <li><a href="#"> Truck Type</a></li>
             <li class="active">Registration</li>
         </ol>
     </section>
@@ -29,7 +29,7 @@
             <div class="col-md-8">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title" style="float: left;">Vehicle Type Registration</h3>
+                        <h3 class="box-title" style="float: left;">Truck Type Registration</h3>
                             <p>&nbsp&nbsp&nbsp(Fields marked with <b style="color: red;">* </b>are mandatory.)</p>
                     </div>
                     <!-- /.box-header -->

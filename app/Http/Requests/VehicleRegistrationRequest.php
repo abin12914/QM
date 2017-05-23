@@ -35,6 +35,7 @@ class VehicleRegistrationRequest extends FormRequest
             'vehicle_reg_number_state_code.in'          => "The state code in the registration number is invalid. Use valid code",
             'vehicle_reg_number_region_code.required'   => "The region code in the registration number field is required.",
             'vehicle_reg_number_region_code.max'        => "The region code in the registration number may not be greater than 2 digits. Use valid format",
+            'vehicle_reg_number_region_code.min'        => "The region code in the registration number may not be less than 0001. Use valid format",
             'vehicle_reg_number_region_code.digits'     => "The region code in the registration number may not be greater than 2 digits. Use valid format",
             'vehicle_reg_number_region_code.integer'    => "The region code in the registration number should be an integer. Use valid format",
             'vehicle_reg_number_unique_alphabet.max'    => "The alphabetic code in the registration number may not be greater than 2 characters. Use valid format",
@@ -66,8 +67,9 @@ class VehicleRegistrationRequest extends FormRequest
             'vehicle_reg_number_region_code'        => [
                                                             'required',
                                                             'max:99',
+                                                            'min:1',
                                                             'digits:2',
-                                                            'integer',
+                                                            'numeric',
                                                         ],
             'vehicle_reg_number_unique_alphabet'    => [
                                                             'nullable',
