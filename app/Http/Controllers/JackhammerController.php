@@ -46,4 +46,20 @@ class JackhammerController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the jackhammer details. Try after reloading the page.")->with("alert-class","alert-danger");
         }
     }
+
+    /**
+     * Return view for jackhammer listing
+     */
+    public function list()
+    {
+        $jackhammers = Jackhammer::paginate(10);
+        if(!empty($jackhammers)) {
+            return view('jackhammer.list',[
+                    'jackhammers' => $jackhammers
+                ]);
+        } else {
+            session()->flash('message', 'No jackhammer records available to show!');
+            return view('jackhammer.list');
+        }
+    }
 }

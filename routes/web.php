@@ -10,6 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+//licence
+Route::get('/licence', 'LoginController@licence')->name('licence-view');
+
 Route::group(['middleware' => 'is.guest'], function() {
 	Route::get('/', 'LoginController@publicHome')->name('public-home');
 
@@ -32,10 +36,12 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//product
 		Route::get('/product/register', 'ProductController@register')->name('product-register-view');
 		Route::post('/product/register/action', 'ProductController@registerAction')->name('product-register-action');
+		Route::get('/product/list', 'ProductController@list')->name('product-list');
 
 		//vehicle type
 		Route::get('/vehicle-type/register', 'VehicleTypeController@register')->name('vehicle-type-register-view');
 		Route::post('/vehicle-type/register/action', 'VehicleTypeController@registerAction')->name('vehicle-type-register-action');
+		Route::get('/vehicle-type/list', 'VehicleTypeController@list')->name('vehicle-type-list');		
 	});
 
 	//user routes
@@ -54,14 +60,17 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//excavator
 		Route::get('/machine/excavator/register', 'ExcavatorController@register')->name('excavator-register-view');
 		Route::post('/machine/excavator/register/action', 'ExcavatorController@registerAction')->name('excavator-register-action');
+		Route::get('/machine/excavator/list', 'ExcavatorController@list')->name('excavator-list');
 
 		//jackhammer
 		Route::get('/machine/jackhammer/register', 'JackhammerController@register')->name('jackhammer-register-view');
 		Route::post('/machine/jackhammer/register/action', 'JackhammerController@registerAction')->name('jackhammer-register-action');
+		Route::get('/machine/jackhammer/list', 'JackhammerController@list')->name('jackhammer-list');
 
 		//vehicle
 		Route::get('/vehicle/register', 'VehicleController@register')->name('vehicle-register-view');
 		Route::post('/vehicle/register/action', 'VehicleController@registerAction')->name('vehicle-register-action');
+		Route::get('/vehicle/list', 'VehicleController@list')->name('vehicle-list');
 	});
 
 	//common routes

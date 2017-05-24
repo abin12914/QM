@@ -102,7 +102,7 @@ class EmployeeController extends Controller
     public function list()
     {
         $employees = Employee::paginate(10);
-        if(empty($employees)) {
+        if(!empty($employees)) {
             return view('employee.list',[
                     'employees' => $employees
                 ]);

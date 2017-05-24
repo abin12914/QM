@@ -15,10 +15,10 @@
         </h4>
     </div>
 @endif
-<div class="login-box" {{-- style="background-color: #3c8dbc;" --}}>{{-- height: 400px; --}}
+<div class="login-box">
     <div class="login-logo">
         <div>
-            <b {{-- style="color: white;" --}}>
+            <b>
                 Welcome To Quarry Manager
             </b>
         </div>
@@ -29,6 +29,7 @@
         <a href="{{route('login-view')}}"><button type="submit" class="btn btn-primary btn-block btn-flat">Log In</button></a>
         <br>
         <p class="login-box-msg">Contact the developer team for Signup and details.</p>
+        <div class="pull-right"><a href="{{ route('licence-view') }}">License</a></div>
     </div>
   <!-- /.login-box-body -->
 </div>

@@ -77,7 +77,7 @@ class AccountController extends Controller
     public function list()
     {
         $accounts = Account::paginate(10);
-        if(empty($accounts)) {
+        if(!empty($accounts)) {
             return view('account.list',[
                     'accounts' => $accounts
                 ]);

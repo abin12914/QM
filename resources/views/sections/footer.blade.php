@@ -9,4 +9,5 @@
 	  <b>Version</b> 1.0
 	</div>
 	<strong>Copyleft <span class="copyleft">&copy;</span> No rights reserved.</strong>
+    <a href="{{ route('licence-view') }}"> Licence</a>
 </footer>

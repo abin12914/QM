@@ -64,4 +64,12 @@ class LoginController extends Controller
         Auth::logout();
         return redirect(route('login-view'))->with("message","Logout completed successfully.")->with("alert-class","alert-success");
     }
+
+    /**
+     * Return view for software licence
+     */
+    public function licence()
+    {
+        return view('public.license');
+    }
 }

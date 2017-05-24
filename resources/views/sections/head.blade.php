@@ -26,3 +26,5 @@ folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="/css/plugins/daterangepicker/daterangepicker.css">
 <!-- bootstrap wysihtml5 - text editor -->
 {{-- <link rel="stylesheet" href="/css/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css"> --}}
+<!-- custom css -->
+<link rel="stylesheet" href="/css/main.css">

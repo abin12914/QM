@@ -38,4 +38,20 @@ class ProductController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the product details. Try after reloading the page.")->with("alert-class","alert-danger");
         }
     }
+
+    /**
+     * Return view for product listing
+     */
+    public function list()
+    {
+        $products = Product::paginate(10);
+        if(!empty($products)) {
+            return view('product.list',[
+                    'products' => $products
+                ]);
+        } else {
+            session()->flash('message', 'No product records available to show!');
+            return view('product.list');
+        }
+    }
 }

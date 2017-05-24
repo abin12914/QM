@@ -47,6 +47,7 @@
         </form>
         <br>
         Forgot your password? Click<a href="#"> here </a>to reset password.<br>
+        <a class="pull-right" href="{{ route('licence-view') }}">License</a>
     </div>
   <!-- /.login-box-body -->
 </div>

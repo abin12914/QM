@@ -46,4 +46,20 @@ class VehicleController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the truck details. Try after reloading the page.")->with("alert-class","alert-danger");
         }
     }
+
+    /**
+     * Return view for vehicle listing
+     */
+    public function list()
+    {
+        $vehicles = Vehicle::paginate(10);
+        if(!empty($vehicles)) {
+            return view('vehicle.list',[
+                    'vehicles' => $vehicles
+                ]);
+        } else {
+            session()->flash('message', 'No truck records available to show!');
+            return view('vehicle.list');
+        }
+    }
 }

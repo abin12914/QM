@@ -48,4 +48,20 @@ class ExcavatorController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the excavator details. Try after reloading the page.")->with("alert-class","alert-danger");
         }
     }
+
+    /**
+     * Return view for excavators listing
+     */
+    public function list()
+    {
+        $excavators = Excavator::paginate(10);
+        if(!empty($excavators)) {
+            return view('excavator.list',[
+                    'excavators' => $excavators
+                ]);
+        } else {
+            session()->flash('message', 'No excavator records available to show!');
+            return view('excavators.list');
+        }
+    }
 }

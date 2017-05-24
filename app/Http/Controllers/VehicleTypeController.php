@@ -38,4 +38,20 @@ class VehicleTypeController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the vehicle type details. Try after reloading the page.")->with("alert-class","alert-danger");
         }	
     }
+
+    /**
+     * Return view for vehicle type listing
+     */
+    public function list()
+    {
+        $vehicletypes = VehicleType::paginate(10);
+        if(!empty($vehicletypes)) {
+            return view('vehicle-type.list',[
+                    'vehicletypes' => $vehicletypes
+                ]);
+        } else {
+            session()->flash('message', 'No vehicle type records available to show!');
+            return view('vehicle-type.list');
+        }
+    }
 }

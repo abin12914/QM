@@ -127,8 +127,8 @@
                                         <i class="fa fa-circle-o"></i> Registration
                                     </a>
                                 </li>
-                                <li class="{{ Request::is('machine/excavator/register')? 'active' : '' }}">
-                                    <a href="#">
+                                <li class="{{ Request::is('machine/excavator/list')? 'active' : '' }}">
+                                    <a href="{{ route('excavator-list') }}">
                                         <i class="fa fa-circle-o"></i> List
                                     </a>
                                 </li>
@@ -148,7 +148,7 @@
                                     </a>
                                 </li>
                                 <li class="{{ Request::is('machine/jackhammer/list')? 'active' : '' }}">
-                                    <a href="#">
+                                    <a href="{{route('jackhammer-list') }}">
                                         <i class="fa fa-circle-o"></i> List
                                     </a>
                                 </li>
@@ -171,7 +171,7 @@
                             </a>
                         </li>
                         <li class="{{ Request::is('vehicle/list')? 'active' : '' }}">
-                            <a href="#">
+                            <a href="{{route('vehicle-list') }}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
@@ -194,13 +194,13 @@
                             </a>
                         </li>
                         <li class="{{ Request::is('product/list')? 'active' : '' }}">
-                            <a href="#">
+                            <a href="{{route('product-list') }}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="treeview {{ Request::is('vehicletype/*')? 'active' : '' }}">
+                <li class="treeview {{ Request::is('vehicle-type/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-bus"></i> <span>Truck Type</span>
                         <span class="pull-right-container">
@@ -208,13 +208,13 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ Request::is('vehicletype/register')? 'active' : '' }}">
+                        <li class="{{ Request::is('vehicle-type/register')? 'active' : '' }}">
                             <a href="{{ route('vehicle-type-register-view') }}">
                                 <i class="fa fa-circle-o"></i> Registration
                             </a>
                         </li>
-                        <li class="{{ Request::is('vehicletype/list')? 'active' : '' }}">
-                            <a href="#">
+                        <li class="{{ Request::is('vehicle-type/list')? 'active' : '' }}">
+                            <a href="{{route('vehicle-type-list') }}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
