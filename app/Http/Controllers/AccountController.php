@@ -76,9 +76,14 @@ class AccountController extends Controller
      */
     public function list()
     {
-        $accounts = Account::paginate(10);/* dd($accounts->accountDetail->name);*/
-        return view('account.list',[
-                'accounts' => $accounts
-            ]);
+        $accounts = Account::paginate(10);
+        if(empty($accounts)) {
+            return view('account.list',[
+                    'accounts' => $accounts
+                ]);
+        } else {
+            session()->flash('message', 'No accounts available to show!');
+            return view('account.list');/*->with("message","No account records available!")->with("alert-class","alert-success");*/
+        }
     }
 }

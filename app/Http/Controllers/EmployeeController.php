@@ -95,4 +95,20 @@ class EmployeeController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the staff data. Try after reloading the page. Error code : 00".$flag)->with("alert-class","alert-danger");
         }
     }
+
+    /**
+     * Return view for employee listing
+     */
+    public function list()
+    {
+        $employees = Employee::paginate(10);
+        if(empty($employees)) {
+            return view('employee.list',[
+                    'employees' => $employees
+                ]);
+        } else {
+            session()->flash('message', 'No employee records available to show!');
+            return view('employee.list');/*->with("message","No employee records available!")->with("alert-class","alert-danger");*/
+        }
+    }
 }

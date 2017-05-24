@@ -1,21 +1,21 @@
 @extends('layouts.app')
-@section('title', 'Account Registration')
+@section('title', 'Employees')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Accounts
+            Employess
             {{-- <small>List</small> --}}
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Account</a></li>
+            <li><a href="#"> Employee</a></li>
             <li class="active">List</li>
         </ol>
     </section>
     <!-- Main content -->
     <section class="content">
-        @if(Session::has('message'))
+        @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
                   {{ Session::get('message') }}
@@ -28,7 +28,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Account List</h3>
+                        <h3 class="box-title">Employee List</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -37,28 +37,28 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Account Name</th>
+                                            <th>Name</th>
+                                            <th>Phone</th>
                                             <th>Type</th>
-                                            <th>Relation</th>
-                                            <th>Account Holder/Head</th>
-                                            <th>Credit</th>
-                                            <th>Debit</th>
+                                            <th>Account Name</th>
+                                            <th>Salary</th>
+                                            <th>Wage</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if(!empty($accounts))
-                                            @foreach($accounts as $account)
+                                        @if(!empty($employees))
+                                            @foreach($employees as $employee)
                                                 <tr>
-                                                    <td>{{ $account->account_name }}</td>
-                                                    <td>{{ $account->type }}</td>
-                                                    <td>{{ $account->relation }}</td>
-                                                    <td>{{ $account->accountDetail->name }}</td>
-                                                    @if($account->financial_status == 'debit')
+                                                    <td>{{ $employee->account->accountDetail->name }}</td>
+                                                    <td>{{ $employee->account->accountDetail->phone }}</td>
+                                                    <td>{{ $employee->employee_type }}</td>
+                                                    <td>{{ $employee->account->account_name }}</td>
+                                                    @if($employee->employee_type == 'staff')
+                                                        <td>{{ $employee->salary }}</td>
                                                         <td>0</td>
-                                                        <td>{{ $account->opening_balance }}</td>
-                                                    @elseif($account->financial_status == 'credit')
-                                                        <td>{{ $account->opening_balance }}</td>
+                                                    @elseif($employee->employee_type == 'labour')
                                                         <td>0</td>
+                                                        <td>{{ $employee->wage }}</td>
                                                     @else
                                                         <td>0</td>
                                                         <td>0</td>
@@ -80,8 +80,8 @@
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">
                                     <div class="pull-right">
-                                        @if(!empty($accounts))
-                                            {{ $accounts->links() }}
+                                        @if(!empty($employees))
+                                            {{ $employees->links() }}
                                         @endif
                                     </div>
                                 </div>

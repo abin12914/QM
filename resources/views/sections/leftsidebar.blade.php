@@ -100,7 +100,7 @@
                             </a>
                         </li>
                         <li class="{{ Request::is('hr/employee/list')? 'active' : '' }}">
-                            <a href="#">
+                            <a href="{{route('employee-list')}}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
