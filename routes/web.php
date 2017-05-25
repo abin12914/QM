@@ -26,9 +26,11 @@ Route::group(['middleware' => 'auth.check'], function () {
 	Route::group(['middleware' => ['user.role:superadmin,']], function () {
 		Route::get('/user/register', 'UserController@register')->name('user-register-view');
 		Route::post('/user/register/action', 'UserController@registerAction')->name('user-register-action');
+		Route::get('/user/list', 'UserController@userList')->name('user-list');
 
 		Route::get('/owner/register', 'UserController@ownerRegister')->name('owner-register-view');
 		Route::post('/owner/register/action', 'UserController@ownerRegisterAction')->name('owner-register-action');
+		Route::get('/owner/list', 'UserController@ownerList')->name('owner-list');
 	});
 
 	//admin routes

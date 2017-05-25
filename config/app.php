@@ -176,7 +176,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        // viewcomposer related provider
+        App\Providers\ComposerServiceProvider::class,
     ],
 
     /*

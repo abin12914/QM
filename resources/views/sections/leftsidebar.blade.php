@@ -4,10 +4,10 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{{ Auth::user()->image }}" class="img-circle" alt="User Image">
+                <img src="{{ $currentUser->image }}" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p>{{ Auth::user()->name }}</p>
+                <p>{{ $currentUser->name }}</p>
                 <a><i class="fa fa-circle text-success"></i>Online</a>
             </div>
         </div>
@@ -19,7 +19,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            @if(Auth::user()->role == 'superadmin')
+            @if($currentUser->role == 'superadmin')
                 <li class="treeview {{ Request::is('user/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-user"></i>
@@ -35,7 +35,7 @@
                             </a>
                         </li>
                         <li class="{{ Request::is('user/list')? 'active' : '' }}">
-                            <a href="#">
+                            <a href="{{ route('user-list') }}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>   
@@ -56,14 +56,14 @@
                         </a>
                     </li>
                     <li class="{{ Request::is('owner/list')? 'active' : '' }}">
-                        <a href="#">
+                        <a href="{{ route('owner-list') }}">
                             <i class="fa fa-circle-o"></i> List
                         </a>
                     </li>
                 </ul>
             </li>
             @endif
-            @if(Auth::user()->role == 'admin' || Auth::user()->role == 'user')
+            @if($currentUser->role == 'admin' || $currentUser->role == 'user')
                 <li class="treeview {{ Request::is('account/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-book"></i>
@@ -85,7 +85,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview {{ Request::is('hr/employee') ? 'active' : '' }}">
+                <li class="treeview {{ Request::is('hr/employee/*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-male"></i>
                         <span>Employees</span>
@@ -178,7 +178,7 @@
                     </ul>
                 </li>
             @endif
-            @if(Auth::user()->role == 'admin')
+            @if($currentUser->role == 'admin')
                 <li class="treeview {{ Request::is('product/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-dollar"></i>

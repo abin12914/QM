@@ -177,4 +177,36 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
+    /**
+     * Return view for user listing
+     */
+    public function userList()
+    {
+        $users = User::paginate(10);
+        if(!empty($users)) {
+            return view('user.list',[
+                    'users' => $users
+                ]);
+        } else {
+            session()->flash('message', 'No users available to show!');
+            return view('user.list');
+        }
+    }
+
+    /**
+     * Return view for owner listing
+     */
+    public function ownerList()
+    {
+        $owners = Owner::paginate(10);
+        if(!empty($owners)) {
+            return view('owners.list',[
+                    'owners' => $owners
+                ]);
+        } else {
+            session()->flash('message', 'No owners available to show!');
+            return view('owners.list');
+        }
+    }
 }
