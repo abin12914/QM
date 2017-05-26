@@ -1,10 +1,27 @@
 $(function () {
+    var today = new Date();
     //Date picker
     $('#datepicker').datepicker({
-      autoclose: true,
-      format: 'dd/mm/yyyy'
+        todayHighlight: true,
+        startDate: today,
+        format: 'dd/mm/yyyy',
+        autoclose: true,
     });
+
+    //setting current date as selected
+    $('#datepicker').datepicker('setDate', today);
+
+    //hide flash messages
     dismissAlert();
+
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    //Timepicker
+    $(".timepicker").timepicker({
+        minuteStep : 5,
+        showInputs: false
+    });
 
     $('body').on("change", "#financial_status", function () {
         financialStatus = this.value;

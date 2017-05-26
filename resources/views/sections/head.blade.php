@@ -15,7 +15,7 @@
 folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="/css/dist/css/skins/skin-blue.min.css">
 <!-- iCheck -->
-<link rel="stylesheet" href="/css/plugins/iCheck/flat/blue.css">
+{{-- <link rel="stylesheet" href="/css/plugins/iCheck/flat/blue.css"> --}}
 <!-- Morris chart -->
 {{-- <link rel="stylesheet" href="/css/plugins/morris/morris.css"> --}}
 <!-- jvectormap -->
@@ -26,5 +26,9 @@ folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="/css/plugins/daterangepicker/daterangepicker.css">
 <!-- bootstrap wysihtml5 - text editor -->
 {{-- <link rel="stylesheet" href="/css/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css"> --}}
+<!-- Select-2 -->
+<link rel="stylesheet" href="/css/plugins/select2/select2.min.css">
+<!-- Timepicker -->
+<link rel="stylesheet" href="/css/plugins/timepicker/bootstrap-timepicker.min.css">
 <!-- custom css -->
 <link rel="stylesheet" href="/css/main.css">

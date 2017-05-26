@@ -64,6 +64,27 @@
             </li>
             @endif
             @if($currentUser->role == 'admin' || $currentUser->role == 'user')
+                <li class="treeview {{ Request::is('sales/*')? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-arrow-up"></i>
+                        <span>Sales</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('sales/register')? 'active' : '' }}">
+                            <a href="{{route('sales-register-view')}}">
+                                <i class="fa fa-circle-o"></i> Registration
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('sales/list')? 'active' : '' }}">
+                            <a href="{{route('sales-list')}}">
+                                <i class="fa fa-circle-o"></i> List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="treeview {{ Request::is('account/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-book"></i>

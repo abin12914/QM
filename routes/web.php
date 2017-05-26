@@ -73,6 +73,11 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/vehicle/register', 'VehicleController@register')->name('vehicle-register-view');
 		Route::post('/vehicle/register/action', 'VehicleController@registerAction')->name('vehicle-register-action');
 		Route::get('/vehicle/list', 'VehicleController@list')->name('vehicle-list');
+
+		//sales
+		Route::get('/sales/register', 'SalesController@register')->name('sales-register-view');
+		Route::post('/sales/register/action', 'SalesController@registerAction')->name('sales-register-action');
+		Route::get('/sales/list', 'SalesController@list')->name('sales-list');
 	});
 
 	//common routes
