@@ -1,5 +1,8 @@
 $(function () {
     var today = new Date();
+    //new vehicle registration link
+    vehicleRegistrationLink = "No results found. <a href='/vehicle/register'>Register as new truck</a>";
+
     //Date picker
     $('#datepicker').datepicker({
         todayHighlight: true,
@@ -15,7 +18,16 @@ $(function () {
     dismissAlert();
 
     //Initialize Select2 Elements
-    $(".select2").select2();
+    $(".select2").select2({
+        language: {
+             noResults: function() {
+                return vehicleRegistrationLink;
+            }
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        }
+    });
 
     //Timepicker
     $(".timepicker").timepicker({
@@ -132,7 +144,7 @@ $(function () {
         appendRegistrationNumber();
 
         if(this.id == 'vehicle_reg_number_region_code') {
-            if(fieldValue.length >=2 && !(evt.keyCode == 9 || evt.keyCode == 16)) {console.log(evt.keyCode);
+            if(fieldValue.length >=2 && !(evt.keyCode == 9 || evt.keyCode == 16)) {
                 //$(this).data("title", "Maximum two digits are allowed for regional code").tooltip("show");
                 $('#vehicle_reg_number_unique_alphabet').focus();
                 return false;
@@ -186,7 +198,7 @@ $(function () {
 
     //convert to uppper case
     $('body').on("change", ".alpha_only", function (evt) {
-        this.value      = (this.value).toUpperCase();
+        this.value = (this.value).toUpperCase();
     });
 
     //convert to uppper case and append to another textbox

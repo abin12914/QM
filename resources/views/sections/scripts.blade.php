@@ -15,5 +15,9 @@
 <script src="/js/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- datepicker -->
 <script src="/js/plugins/datepicker/bootstrap-datepicker.js"></script>
+<!-- select2 -->
+<script src="/js/plugins/select2/select2.min.js"></script>
+<!-- Timepicker -->
+<script src="/js/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/js/dist/js/app.min.js"></script>

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Vehicle;
+use App\Models\Account;
+use App\Models\Product;
 
 class SalesController extends Controller
 {
@@ -11,7 +14,15 @@ class SalesController extends Controller
      */
     public function register()
     {
-        return view('sales.register');
+        $vehicles = Vehicle::get();
+        $accounts = Account::get();
+        $products = Product::get();
+
+        return view('sales.register',[
+                'vehicles'  => $vehicles,
+                'accounts'  => $accounts,
+                'products'  => $products
+            ]);
     }
 
      /**
