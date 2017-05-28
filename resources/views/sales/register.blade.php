@@ -175,8 +175,6 @@
     <!-- /.content -->
 </div>
 @endsection
-{{-- @section('scripts')
-@endsection --}}
-{{-- <script type="text/javascript">
-    vehicleRegLink = '{{ route('vehicle-register-view') }}';
-</script> --}}
+@section('scripts')
+    <script src="/js/saleRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
+@endsection

@@ -26,8 +26,8 @@
 </div>
 <!-- ./wrapper -->
 @include('sections.scripts')
+<script src="/js/main.js?rndstr={{ rand(1000,9999) }}"></script>
 @section('scripts')
 @show
-<script src="/js/main.js?rndstr={{ rand(1000,9999) }}"></script>
 </body>
 </html>
