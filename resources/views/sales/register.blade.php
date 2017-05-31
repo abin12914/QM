@@ -136,17 +136,57 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="quantity" class="col-sm-2 control-label">Amount : </label>
-                                        <div class="col-sm-2 {{ !empty($errors->first('quantity')) ? 'has-error' : '' }}">
-                                            <input type="text" class="form-control decimal_number_only" name="quantity" id="quantity" placeholder="Quantity" value="{{ old('quantity') }}" ="" tabindex="4">
+                                        <label for="quantity" class="col-sm-2 control-label">Quantity :</label>
+                                        <div class="col-sm-10 {{ !empty($errors->first('quantity')) ? 'has-error' : '' }}">
+                                            <input type="text" class="form-control decimal_number_only" name="quantity" id="quantity" placeholder="Quantity" value="{{ old('quantity') }}" tabindex="4">
                                         </div>
-                                        <label for="rate" class="col-sm-1 control-label">x</label>
-                                        <div class="col-sm-2 {{ !empty($errors->first('rate')) ? 'has-error' : '' }}">
-                                            <input type="text" class="form-control decimal_number_only" name="rate" id="rate" placeholder="Rate" value="{{ old('rate') }}" ="" tabindex="5">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rate" class="col-sm-2 control-label">Rate :</label>
+                                        <div class="col-sm-10 {{ !empty($errors->first('rate')) ? 'has-error' : '' }}">
+                                            <input type="text" class="form-control decimal_number_only" name="rate" id="rate" placeholder="Rate" value="{{ old('rate') }}" tabindex="5">
                                         </div>
-                                        <label for="amount" class="col-sm-1 control-label">=</label>
+                                    </div>
+                                     {{-- <label for="amount" class="col-sm-1 control-label">=</label>
+                                    <div class="col-sm-4 {{ !empty($errors->first('amount')) ? 'has-error' : '' }}">
+                                        <input type="text" class="form-control decimal_number_only" name="amount" id="amount" placeholder="Amount" value="{{ old('amount') }}" disabled>
+                                    </div> --}}
+                                    <div class="box-header with-border">
+                                    </div><br>
+                                    <div class="form-group">
+                                        <div class="col-sm-2"></div>
+                                        <div class="col-sm-6">
+                                            <div class="col-md-8"></div>
+                                            <div class="col-md-4 control-label">
+                                                <label>Bill Amount : </label>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-4 {{ !empty($errors->first('amount')) ? 'has-error' : '' }}">
-                                            <input type="text" class="form-control decimal_number_only" name="amount" id="amount" placeholder="Amount" value="{{ old('amount') }}" ="" tabindex="6">
+                                            <input type="text" class="form-control decimal_number_only" name="amount" id="amount" placeholder="Amount" value="{{ old('amount') }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2"></div>
+                                        <div class="col-sm-6">
+                                            <div class="col-md-8"></div>
+                                            <div class="col-md-4 control-label">
+                                                <label>Discount : </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 {{ !empty($errors->first('discount')) ? 'has-error' : '' }}">
+                                            <input type="text" class="form-control decimal_number_only" name="discount" id="discount" placeholder="Discount" value="{{ old('discount') }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2"></div>
+                                        <div class="col-sm-6">
+                                            <div class="col-md-8"></div>
+                                            <div class="col-md-4 control-label">
+                                                <label>Total : </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 {{ !empty($errors->first('total')) ? 'has-error' : '' }}">
+                                            <input type="text" class="form-control decimal_number_only" name="total" id="total" placeholder="Total" value="{{ old('total') }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +210,44 @@
             </div>
             </div>
         </div>
-        <!-- /.row (main row) -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Last 5 Sales Records</h3>
+                    </div>
+                    <div class="box-body">
+                        @if(!empty($sales_records))
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Truck Number</th>
+                                        <th>Purchaser</th>
+                                        <th>Product</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($sales_records as $sales_record)
+                                        <tr>
+                                            <td>{{ $sales_record->date_time }}</td>
+                                            <td>{{ $sales_record->truck_number }}</td>
+                                            <td>{{ $sales_record->purchaser }}</td>
+                                            <td>{{ $sales_record->product }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="col-sm-5"></div>
+                            <div class="col-sm-4">
+                                <label>No sales records available to show!!</label>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
     <!-- /.content -->
 </div>

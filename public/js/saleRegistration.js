@@ -54,6 +54,16 @@ $(function () {
 
     //Initialize Select2 Element for vehicler number select box
     $("#product").select2();
+
+    $('body').on("keyup", "#quantity", function () {
+        updateBillDetail();
+    });
+    $('body').on("keyup", "#rate", function () {
+        updateBillDetail();
+    });
+    $('body').on("keyup", "#discount", function () {
+        updateBillDetail();
+    });
 });
 function updateTimepicker() {
     currentDate     = new Date();
@@ -69,4 +79,27 @@ function updateTimepicker() {
 
     currentTime = currentHour + ':' + currentMinute;
     $("#time").val(currentTime);  
+}
+
+//update bill details
+function updateBillDetail() {
+    var quantity    = ($('#quantity').val() > 0 ? $('#quantity').val() : 0 );
+    var rate        = ($('#rate').val() > 0 ? $('#rate').val() : 0 );
+    var discount    = ($('#discount').val() > 0 ? $('#discount').val() : 0 );
+    var amount, total = 0;
+
+    amount  = quantity * rate;
+    if(amount >=0) {
+        if((amount/2) > discount) {
+            total   = amount - discount;
+        } else if(discount > 0){
+            alert("Error !!\nDiscount amount exceeded the limit. Maxium of 50% discount is allowed!");
+            $('#discount').val('');
+            total   = amount;
+        }
+    } else {
+        total   = 0;
+    }
+    $('#amount').val(amount);
+    $('#total').val(total);
 }

@@ -19,9 +19,10 @@ class SalesController extends Controller
         $products = Product::get();
 
         return view('sales.register',[
-                'vehicles'  => $vehicles,
-                'accounts'  => $accounts,
-                'products'  => $products
+                'vehicles'      => $vehicles,
+                'accounts'      => $accounts,
+                'products'      => $products,
+                'sales_records' => []
             ]);
     }
 

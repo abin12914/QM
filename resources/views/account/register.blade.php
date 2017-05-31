@@ -65,17 +65,17 @@
                                         <label for="account_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Account Type : </label>
                                         <div class="col-sm-10 {{ !empty($errors->first('account_type')) ? 'has-error' : '' }}">
                                             <select class="form-control" name="account_type" id="account_type" tabindex="3">
-                                                <option value="" {{ empty(old('account_type')) ? 'selected' : '' }}>Select account type</option>
+                                                <option value="">Select account type</option>
                                                 <option value="real" {{ (old('account_type') == 'real') ? 'selected' : '' }}>Real account</option>
                                                 <option value="nominal" {{ (old('account_type') == 'nominal') ? 'selected' : '' }}>Nominal account</option>
-                                                <option value="personal" {{ (old('account_type') == 'personal') ? 'selected' : '' }}>Personal account</option>
+                                                <option value="personal" {{ (old('account_type') == 'personal' || empty(old('account_type'))) ? 'selected' : '' }}>Personal account</option>
                                             </select>
                                             @if(!empty($errors->first('account_type')))
                                                 <p style="color: red;" >{{$errors->first('account_type')}}</p>
                                             @endif
                                         </div>
                                     </div>
-                                    <div id="personal_account_details" {{ old('account_type') != 'personal' ? 'hidden' : '' }}>
+                                    <div id="personal_account_details" {{ (!(empty(old('account_type'))) && (old('account_type') != 'personal')) ? 'hidden' : '' }}>
                                         <br>
                                         <div class="box-header with-border">
                                             <h3 class="box-title" style="float: left;">Personal Details</h3>
