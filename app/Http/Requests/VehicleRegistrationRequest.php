@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\VehicleType;
 use App\Models\VehicleRegistrationStateCode;
+use App\Models\Account;
 
 class VehicleRegistrationRequest extends FormRequest
 {
@@ -42,6 +43,7 @@ class VehicleRegistrationRequest extends FormRequest
             'vehicle_reg_number_unique_digit.required'  => "The unique number in the registration number field is required.",
             'vehicle_reg_number_unique_digit.max'       => "The unique number in the registration number may not be greater than 4 digits. Use valid format",
             'vehicle_reg_number_unique_digit.integer'   => "The unique number in the registration number should be an integer. Use valid format",
+            //'default_contractor_account_id.*'           => "The selected default contractor account is invalid.",
         ];
     }
 
@@ -80,19 +82,24 @@ class VehicleRegistrationRequest extends FormRequest
                                                             'max:9999',
                                                             'integer',
                                                         ],
-            'description'                   => 'nullable|max:200',
-            'vehicle_type'                  => [
-                                                    'required',
-                                                    'integer',
-                                                    Rule::in(VehicleType::pluck('id')->toArray()),
-                                                ],
-            'owner_name'                    => 'nullable|max:200',
-            'volume'                        => 'required|integer|max:9999',
-            'body_type'                     => [
-                                                    'required',
-                                                    'max:7',
-                                                    Rule::in(['level','extra-1','extra-2']),
-                                                ],
+            'description'                           => 'nullable|max:200',
+            'vehicle_type'                          => [
+                                                            'required',
+                                                            'integer',
+                                                            Rule::in(VehicleType::pluck('id')->toArray()),
+                                                        ],
+            'owner_name'                            => 'nullable|max:200',
+            /*'default_contractor_account_id'         => [
+                                                            'nullable',
+                                                            'integer',
+                                                            Rule::in(Account::pluck('id')->toArray()),
+                                                        ],*/
+            'volume'                                => 'required|integer|max:9999',
+            'body_type'                             => [
+                                                            'required',
+                                                            'max:7',
+                                                            Rule::in(['level','extra-1','extra-2']),
+                                                        ],
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\VehicleType;
+use App\Models\Account;
 use App\Http\Requests\VehicleRegistrationRequest;
 use App\Models\Vehicle;
 
@@ -14,9 +15,11 @@ class VehicleController extends Controller
      */
     public function register()
     {
-        $vehicleTypes = VehicleType::orderBy('name')->get();
+        $vehicleTypes   = VehicleType::orderBy('name')->get();
+        //$accounts       = Account::orderBy('account_name')->get();
     	return view('vehicle.register',[
-                'vehicleTypes' => $vehicleTypes
+                'vehicleTypes'  => $vehicleTypes,
+                //'accounts'      => $accounts
             ]);
     }
 

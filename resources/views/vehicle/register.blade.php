@@ -92,10 +92,24 @@
                                         @endif
                                     </div>
                                 </div>
+                                {{-- <div class="form-group">
+                                    <label for="default_contractor_account_id" class="col-sm-2 control-label" title="Default contractor account for auto selection on this truck" tooltip>Default Contractor : </label>
+                                    <div class="col-sm-10 {{ !empty($errors->first('default_contractor_account_id')) ? 'has-error' : '' }}">
+                                        <select class="form-control" name="default_contractor_account_id" id="default_contractor_account_id" tabindex="7">
+                                            <option value="" {{ empty(old('default_contractor_account_id')) ? 'selected' : '' }}>Select default contractor</option>
+                                            @foreach($accounts as $account)
+                                                <option value="{{ $account->id }}" {{ (old('default_contractor_account_id') == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if(!empty($errors->first('default_contractor_account_id')))
+                                            <p style="color: red;" >{{$errors->first('default_contractor_account_id')}}</p>
+                                        @endif
+                                    </div>
+                                </div> --}}
                                 <div class="form-group">
                                     <label for="vehicle_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Vehicle Type : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('vehicle_type')) ? 'has-error' : '' }}">
-                                        <select class="form-control" name="vehicle_type" id="vehicle_type" tabindex="7">
+                                        <select class="form-control" name="vehicle_type" id="vehicle_type" tabindex="8">
                                             <option value="" {{ empty(old('vehicle_type')) ? 'selected' : '' }}selected>Select vehicle type</option>
                                             @foreach($vehicleTypes as $vehicleType)
                                                 <option value="{{ $vehicleType->id }}" {{ (old('vehicle_type') == $vehicleType->id) ? 'selected' : '' }}>{{ $vehicleType->name }} - {{ $vehicleType->generic_quantity }} cubic unit class</option>
@@ -109,7 +123,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"><b style="color: red;">* </b> Volume In Feet : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('volume')) ? 'has-error' : '' }}">
-                                        <input type="text" class="form-control number_only" name="volume" id="volume" placeholder="Volume in cubic feet" value="{{ old('volume') }}" tabindex="8" maxlength="4">
+                                        <input type="text" class="form-control number_only" name="volume" id="volume" placeholder="Volume in cubic feet" value="{{ old('volume') }}" tabindex="8" maxlength="9">
                                         @if(!empty($errors->first('volume')))
                                             <p style="color: red;" >{{$errors->first('volume')}}</p>
                                         @endif
@@ -118,7 +132,7 @@
                                 <div class="form-group">
                                     <label for="body_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Body Type : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('body_type')) ? 'has-error' : '' }}">
-                                        <select class="form-control" name="body_type" id="body_type" tabindex="9">
+                                        <select class="form-control" name="body_type" id="body_type" tabindex="10">
                                             <option value="" {{ empty(old('body_type')) ? 'selected' : '' }}>Select body type</option>
                                             <option value="level" {{ (old('body_type') == 'level') ? 'selected' : '' }}>Level</option>
                                             <option value="extra-1" {{ (old('body_type') == 'extra-1') ? 'selected' : '' }}>Extended Body</option>
@@ -135,11 +149,11 @@
                             <div class="row">
                                 <div class="col-xs-3"></div>
                                 <div class="col-xs-3">
-                                    <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="11">Clear</button>
+                                    <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="12">Clear</button>
                                 </div>
                                 {{-- <div class="col-sm-1"></div> --}}
                                 <div class="col-xs-3">
-                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="10">Submit</button>
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="11">Submit</button>
                                 </div>
                                 <!-- /.col -->
                             </div><br>

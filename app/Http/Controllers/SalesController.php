@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use App\Models\Account;
 use App\Models\Product;
+use App\Models\Sale;
 
 class SalesController extends Controller
 {
@@ -29,55 +30,9 @@ class SalesController extends Controller
      /**
      * Handle new account registration
      */
-    public function registerAction(AccountRegistrationRequest $request)
+    public function registerAction()
     {
-        $saveFlag = 0;
-        
-        $accountName        = $request->get('account_name');
-        $description        = $request->get('description');
-        $accountType        = $request->get('account_type');
-        $financialStatus    = $request->get('financial_status');
-        $openingBalance     = $request->get('opening_balance');
-        $name               = $request->get('name');
-        $phone              = $request->get('phone');
-        $address            = $request->get('address');
-        $relation           = $request->get('relation_type');
-
-        $account = new Account;
-        $account->account_name      = $accountName;
-        $account->description       = $description;
-        $account->type              = $accountType;
-        $account->relation          = !empty($relation) ? $relation : $accountType;
-        $account->financial_status  = $financialStatus;
-        $account->opening_balance   = $openingBalance;
-        $account->status            = 1;
-        if($account->save()) {
-            $accountDetails = new AccountDetail;
-            $accountDetails->account_id = $account->id;
-            // account type of real accounts does not need to store personal data
-            if($accountType == 'personal') {
-                $accountDetails->name       = $name;
-                $accountDetails->phone      = $phone;
-                $accountDetails->address    = $address;
-            } else {
-                $accountDetails->name       = $accountName;
-            }
-            $accountDetails->status     = 1;
-            if($accountDetails->save()) {
-                $saveFlag = 1;
-            } else {
-                $saveFlag = 0;  
-            }
-        } else {
-            $saveFlag = 0;
-        }
-
-        if($saveFlag == 1) {
-            return redirect()->back()->with("message","Account saved successfully.")->with("alert-class","alert-success");
-        } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the account details. Try after reloading the page.")->with("alert-class","alert-danger");
-        }
-
+        dd('x');
     }
 
     /**
@@ -94,5 +49,14 @@ class SalesController extends Controller
             session()->flash('message', 'No accounts available to show!');
             return view('account.list');/*->with("message","No account records available!")->with("alert-class","alert-success");*/
         }
+    }
+
+    /**
+     * Return sales details for given vehicle id
+     */
+    public function getByVehicleId($vehicleId)
+    {
+        $sale = Sale::where('vehicle_id',$vehicleId)->orderBy('created_at', 'desc')->first();
+        return($sale);
     }
 }

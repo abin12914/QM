@@ -78,6 +78,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/sales/register', 'SalesController@register')->name('sales-register-view');
 		Route::post('/sales/register/action', 'SalesController@registerAction')->name('sales-register-action');
 		Route::get('/sales/list', 'SalesController@list')->name('sales-list');
+		Route::get('/sales/get/vehicle/{id}', 'SalesController@getByVehicleId')->name('sales-get-by-vehicle-id');
 	});
 
 	//common routes
