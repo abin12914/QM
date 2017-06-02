@@ -47,7 +47,7 @@
                                                     <select name="vehicle_number" class="form-control vehicle_number" id="vehicle_number_credit" tabindex="1" style="width: 100%">
                                                         <option value="">Select truck number</option>
                                                         @foreach($vehicles as $vehicle)
-                                                            <option value="{{ $vehicle->id }}" {{ (old('vehicle_number') == $vehicle->id) ? 'selected' : '' }}>{{ $vehicle->reg_number }} - {{ $vehicle->owner_name }}</option>
+                                                            <option value="{{ $vehicle->id }}" {{ (old('vehicle_number') == $vehicle->id) ? 'selected' : '' }} data-volume="{{ $vehicle->volume }}" data-bodytype="{{ $vehicle->body_type }}">{{ $vehicle->reg_number }} - {{ $vehicle->owner_name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @if(!empty($errors->first('vehicle_number')))
@@ -91,7 +91,7 @@
                                                     <select name="product" class="form-control product" id="product_credit" tabindex="3" style="width: 100%">
                                                         <option value="" {{ empty(old('product')) ? 'selected' : '' }}>Select product</option>
                                                         @foreach($products as $product)
-                                                            <option value="{{ $product->id }}" {{ (old('product') == $product->id) ? 'selected' : '' }}>{{ $product->name }}</option>
+                                                            <option value="{{ $product->id }}" {{ (old('product') == $product->id) ? 'selected' : '' }} data-rate-feet="{{ $product->rate_feet }}">{{ $product->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @if(!empty($errors->first('product')))
@@ -123,11 +123,11 @@
                                                 <div class="form-group">
                                                     <label for="quantity_credit" class="col-sm-2 control-label">Quantity * Rate :</label>
                                                     <div class="col-sm-2 {{ !empty($errors->first('quantity')) ? 'has-error' : '' }}">
-                                                        <input type="text" class="form-control decimal_number_only" name="quantity" id="quantity_credit" placeholder="Quantity" value="{{ old('quantity') }}" tabindex="4">
+                                                        <input type="text" class="form-control decimal_number_only quantity" name="quantity" id="quantity_credit" placeholder="Quantity" value="{{ old('quantity') }}" tabindex="4" tooltip>
                                                     </div>
                                                     <label for="rate_credit" class="col-sm-1 control-label">x</label>
                                                     <div class="col-sm-2 {{ !empty($errors->first('rate')) ? 'has-error' : '' }}">
-                                                        <input type="text" class="form-control decimal_number_only" name="rate" id="rate_credit" placeholder="Rate" value="{{ old('rate') }}" tabindex="5">
+                                                        <input type="text" class="form-control decimal_number_only rate" name="rate" id="rate_credit" placeholder="Rate" value="{{ old('rate') }}" tabindex="5">
                                                     </div>
                                                     <label for="bill_amount_credit" class="col-sm-1 control-label">=</label>
                                                     <div class="col-sm-4 {{ !empty($errors->first('bill_amount')) ? 'has-error' : '' }}">
@@ -176,7 +176,7 @@
                                                     <select name="vehicle_number" class="form-control vehicle_number" id="vehicle_number_cash" tabindex="1" style="width: 100%">
                                                         <option value="">Select truck number</option>
                                                         @foreach($vehicles as $vehicle)
-                                                            <option value="{{ $vehicle->id }}" {{ (old('vehicle_number') == $vehicle->id) ? 'selected' : '' }}>{{ $vehicle->reg_number }} - {{ $vehicle->owner_name }}</option>
+                                                            <option value="{{ $vehicle->id }}" {{ (old('vehicle_number') == $vehicle->id) ? 'selected' : '' }} data-volume="{{ $vehicle->volume }}" data-bodytype="{{ $vehicle->body_type }}">{{ $vehicle->reg_number }} - {{ $vehicle->owner_name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @if(!empty($errors->first('vehicle_number')))
@@ -218,9 +218,9 @@
                                                 <label for="product_cash" class="col-sm-2 control-label">Product : </label>
                                                 <div class="col-sm-10 {{ !empty($errors->first('product')) ? 'has-error' : '' }}">
                                                     <select name="product" class="form-control product" id="product_cash" tabindex="3" style="width: 100%">
-                                                        <option value="" {{ empty(old('purchaser_credit')) ? 'selected' : '' }}>Select product</option>
+                                                        <option value="" {{ empty(old('purchaser')) ? 'selected' : '' }}>Select product</option>
                                                         @foreach($products as $product)
-                                                            <option value="{{ $product->id }}" {{ (old('product') == $product->id) ? 'selected' : '' }}>{{ $product->name }}</option>
+                                                            <option value="{{ $product->id }}" {{ (old('product') == $product->id) ? 'selected' : '' }} data-rate-feet="{{ $product->rate_feet }}">{{ $product->name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @if(!empty($errors->first('product')))
@@ -232,11 +232,11 @@
                                             <div class="form-group">
                                                 <label for="quantity_cash" class="col-sm-2 control-label">Quantity * Rate :</label>
                                                 <div class="col-sm-2 {{ !empty($errors->first('quantity')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control decimal_number_only" name="quantity" id="quantity_cash" placeholder="Quantity" value="{{ old('quantity') }}" tabindex="4">
+                                                    <input type="text" class="form-control decimal_number_only quantity" name="quantity" id="quantity_cash" placeholder="Quantity" value="{{ old('quantity') }}" tabindex="4">
                                                 </div>
                                                 <label for="rate" class="col-sm-1 control-label">x</label>
                                                 <div class="col-sm-2 {{ !empty($errors->first('rate')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control decimal_number_only" name="rate" id="rate_cash" placeholder="Rate" value="{{ old('rate') }}" tabindex="5">
+                                                    <input type="text" class="form-control decimal_number_only rate" name="rate" id="rate_cash" placeholder="Rate" value="{{ old('rate') }}" tabindex="5">
                                                 </div>
                                                 <label for="bill_amount" class="col-sm-1 control-label">=</label>
                                                 <div class="col-sm-4 {{ !empty($errors->first('bill_amount')) ? 'has-error' : '' }}">

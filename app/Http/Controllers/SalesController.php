@@ -54,9 +54,25 @@ class SalesController extends Controller
     /**
      * Return sales details for given vehicle id
      */
-    public function getByVehicleId($vehicleId)
+    public function getLastSaleByVehicleId($vehicleId)
     {
         $sale = Sale::where('vehicle_id',$vehicleId)->orderBy('created_at', 'desc')->first();
-        return($sale);
+        
+        if(!empty($sale)) {
+            $productId          = $sale->product_id;
+            $purchaserAccountId = $sale->transaction->credit_account_id;
+            $measureType        = $sale->measure_type;
+
+            return([
+                    'flag'                  => true,
+                    'productId'             => $productId,
+                    'purchaserAccountId'    => $purchaserAccountId,
+                    'measureType'           => $measureType
+                ]);
+        } else {
+            return([
+                    'flag' => false
+                ]);
+        }
     }
 }

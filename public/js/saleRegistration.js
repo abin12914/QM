@@ -53,21 +53,97 @@ $(function () {
     //Initialize Select2 Element for vehicler number select box
     $(".product").select2();
 
-    //select default contractor for the selected vehicle(last sale contractor is the default contractor)
+    //select default values for the selected vehicle based on last sale
     $('body').on("change", ".vehicle_number", function () {
-        var vehicleId = $(this).val();
+        var elementId = $(this).attr('id');
+        var vehicleId = $('#'+elementId).val();
+        var volume    = $('#'+elementId).find(':selected').data('volume');
+        var bodyType  = $('#'+elementId).find(':selected').data('bodytype');
+
+        switch(bodyType) {
+            case 'level':
+                bodyType = 'Level';
+                break;
+            case 'extra-1':
+                bodyType = 'Extended';
+                break;
+            case 'extra-2':
+                bodyType = 'Extra Extended';
+                break;
+            default :
+                bodyType = 'Body Type : Unknown';
+                break;
+        }
+
+        if(elementId == 'vehicle_number_credit') {
+            $('#quantity_credit').val(volume);
+        } else if(elementId == 'vehicle_number_cash') {
+            $('#quantity_cash').val(volume);
+        } else {
+            $('.quantity').val('');
+        }
         
         if(vehicleId) {
-            console.log(vehicleId);
             $.ajax({
-                url: "/sales/get/vehicle/" + vehicleId,
+                url: "/sales/get/last/vehicle/" + vehicleId,
                 method: "get",
-                success: function(result){
-                    console.log(result);
+                success: function(result) {
+                    if(result && result.flag) {
+                        productId           = result.productId;
+                        purchaserAccountId  = result.purchaserAccountId;
+                        measureType         = result.measureType;
+
+                        if(elementId == 'vehicle_number_credit') {
+                            $('#product_credit').val(productId);
+                            $('#purchaser_credit').val(purchaserAccountId);
+
+                            if(measureType == 1) {
+                                $('#measure_type_volume_credit').prop('checked',true);
+                            } else {
+                                $('#measure_type_weighment_credit').prop('checked',true);
+                            }
+                        } else if(elementId == 'vehicle_number_cash') {
+                            $('#product_cash').val(productId);
+                            $('#purchaser_cash').val(purchaserAccountId);
+                        } else {
+                            $('#measure_type_volume_credit').prop('checked',true);
+                            $('.product').val('');
+                            $('.purchaser').val('');
+                        }
+                    } else {
+                        $('#measure_type_volume_credit').prop('checked',true);
+                        $('.product').val('');
+                        $('.purchaser').val('');
+                    }
+
+                    $('.purchaser').trigger('change');
+                    $('.product').trigger('change');
+                    $('.measure_type').trigger('change');
+                },
+                error: function () {
+                    $('#measure_type_volume_credit').prop('checked',true);
+                    $('.product').val('');
+                    $('.purchaser').val('');
+
+                    $('.purchaser').trigger('change');
+                    $('.product').trigger('change');
+                    $('.measure_type').trigger('change');
                 }
             });
+        }
+    });
+
+    //set rate for the selected product
+    $('body').on("change", ".product", function () {
+        var elementId   = $(this).attr('id');
+        var ratePerFeet = $('#'+elementId).find(':selected').data('rate-feet');
+
+        if(elementId == 'product_credit') {
+            $('#rate_credit').val(ratePerFeet);
+        } else if(elementId == 'product_cash') {
+            $('#rate_cash').val(ratePerFeet);
         } else {
-            console.log('x');
+            $('.quantity').val('');
         }
     });
 
