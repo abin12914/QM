@@ -187,7 +187,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('vehicle/register')? 'active' : '' }}">
-                            <a href="{{ route('vehicle-register-view') }}">
+                            <a href="{{ route('vehicle-register-view') }}" target="#">
                                 <i class="fa fa-circle-o"></i> Registration
                             </a>
                         </li>

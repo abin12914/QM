@@ -7,6 +7,7 @@ use App\Models\Vehicle;
 use App\Models\Account;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Http\Requests\SaleRegistrationRequest;
 
 class SalesController extends Controller
 {
@@ -18,19 +19,20 @@ class SalesController extends Controller
         $vehicles = Vehicle::get();
         $accounts = Account::get();
         $products = Product::get();
+        $sales[]  = Sale::orderBy('created_at', 'desc')->first();
 
         return view('sales.register',[
                 'vehicles'      => $vehicles,
                 'accounts'      => $accounts,
                 'products'      => $products,
-                'sales_records' => []
+                'sales_records' => $sales,
             ]);
     }
 
      /**
      * Handle new account registration
      */
-    public function registerAction()
+    public function registerAction(SaleRegistrationRequest $request)
     {
         dd('x');
     }
@@ -60,7 +62,7 @@ class SalesController extends Controller
         
         if(!empty($sale)) {
             $productId          = $sale->product_id;
-            $purchaserAccountId = $sale->transaction->credit_account_id;
+            $purchaserAccountId = $sale->transaction->debit_account_id;
             $measureType        = $sale->measure_type;
 
             return([

@@ -30,42 +30,43 @@
                 <!-- nav-tabs-custom -->
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#credit_sale_tab" data-toggle="tab">Credit Sale</a></li>
-                        <li><a href="#cash_sale_tab" data-toggle="tab">Cash Sale</a></li>
+                        <li class="{{ (empty(old('transaction_type')) || old('transaction_type') == 'credit') ? 'active' : '' }}"><a href="#credit_sale_tab" data-toggle="tab">Credit Sale</a></li>
+                        <li class="{{ (!empty(old('transaction_type')) && old('transaction_type') == 'cash') ? 'active' : '' }}"><a href="#cash_sale_tab" data-toggle="tab">Cash Sale</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div class="active tab-pane" id="credit_sale_tab">
+                        <div class="{{ (empty(old('transaction_type')) || old('transaction_type') == 'credit') ? 'active' : '' }} tab-pane" id="credit_sale_tab">
                             <!-- form start -->
                             <form action="{{route('sales-register-action')}}" id="credit_sale_form" method="post" class="form-horizontal" multipart-form-data>
                                 <div class="box-body">
                                     <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                    <input type="hidden" name="transaction_type" value="credit">
                                     <div class="row">
                                         <div class="col-md-11">
                                             <div class="form-group">
                                                 <label for="vehicle_number_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Truck Number : </label>
-                                                <div class="col-sm-10 {{ !empty($errors->first('vehicle_number')) ? 'has-error' : '' }}">
-                                                    <select name="vehicle_number" class="form-control vehicle_number" id="vehicle_number_credit" tabindex="1" style="width: 100%">
+                                                <div class="col-sm-10 {{ !empty($errors->first('vehicle_id')) ? 'has-error' : '' }}">
+                                                    <select name="vehicle_id" class="form-control vehicle_number" id="vehicle_number_credit" tabindex="1" style="width: 100%">
                                                         <option value="">Select truck number</option>
                                                         @foreach($vehicles as $vehicle)
-                                                            <option value="{{ $vehicle->id }}" {{ (old('vehicle_number') == $vehicle->id) ? 'selected' : '' }} data-volume="{{ $vehicle->volume }}" data-bodytype="{{ $vehicle->body_type }}">{{ $vehicle->reg_number }} - {{ $vehicle->owner_name }}</option>
+                                                            <option value="{{ $vehicle->id }}" {{ (old('vehicle_id') == $vehicle->id) ? 'selected' : '' }} data-volume="{{ $vehicle->volume }}" data-bodytype="{{ $vehicle->body_type }}">{{ $vehicle->reg_number }} - {{ $vehicle->vehicleType->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @if(!empty($errors->first('vehicle_number')))
-                                                        <p style="color: red;" >{{$errors->first('vehicle_number')}}</p>
+                                                    @if(!empty($errors->first('vehicle_id')))
+                                                        <p style="color: red;" >{{$errors->first('vehicle_id')}}</p>
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="purchaser_credit" class="col-sm-2 control-label">Purchaser : </label>
-                                                <div class="col-sm-10 {{ !empty($errors->first('purchaser')) ? 'has-error' : '' }}">
-                                                    <select name="purchaser" class="form-control purchaser" id="purchaser_credit" tabindex="2" style="width: 100%">
-                                                        <option value="" {{ empty(old('purchaser')) ? 'selected' : '' }}>Select purchaser</option>
+                                                <label for="purchaser_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Purchaser : </label>
+                                                <div class="col-sm-10 {{ !empty($errors->first('purchaser_account_id')) ? 'has-error' : '' }}">
+                                                    <select name="purchaser_account_id" class="form-control purchaser" id="purchaser_credit" tabindex="2" style="width: 100%">
+                                                        <option value="" {{ empty(old('purchaser_account_id')) ? 'selected' : '' }}>Select purchaser</option>
                                                         @foreach($accounts as $account)
-                                                            <option value="{{ $account->id }}" {{ (old('purchaser') == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
+                                                            <option value="{{ $account->id }}" {{ (old('purchaser_account_id') == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @if(!empty($errors->first('purchaser')))
-                                                        <p style="color: red;" >{{$errors->first('purchaser')}}</p>
+                                                    @if(!empty($errors->first('purchaser_account_id')))
+                                                        <p style="color: red;" >{{$errors->first('purchaser_account_id')}}</p>
                                                     @endif
                                                 </div>
                                             </div>
@@ -73,6 +74,9 @@
                                                 <label for="date_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Date and Time : </label>
                                                 <div class="col-sm-5 {{ !empty($errors->first('date')) ? 'has-error' : '' }}">
                                                     <input type="text" class="form-control decimal_number_only datepicker" name="date" id="date_credit" placeholder="Date" value="{{ old('date') }}" tabindex="22">
+                                                    @if(!empty($errors->first('date')))
+                                                        <p style="color: red;" >{{$errors->first('date')}}</p>
+                                                    @endif
                                                 </div>
                                                 <div class="col-sm-5 {{ !empty($errors->first('time')) ? 'has-error' : '' }}">
                                                     <div class="bootstrap-timepicker">
@@ -80,22 +84,20 @@
                                                     </div>
                                                     @if(!empty($errors->first('time')))
                                                         <p style="color: red;" >{{$errors->first('time')}}</p>
-                                                    @elseif(!empty($errors->first('date')))
-                                                        <p style="color: red;" >{{$errors->first('date')}}</p>
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="product_credit" class="col-sm-2 control-label">Product : </label>
-                                                <div class="col-sm-10 {{ !empty($errors->first('product')) ? 'has-error' : '' }}">
-                                                    <select name="product" class="form-control product" id="product_credit" tabindex="3" style="width: 100%">
-                                                        <option value="" {{ empty(old('product')) ? 'selected' : '' }}>Select product</option>
+                                                <label for="product_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Product : </label>
+                                                <div class="col-sm-10 {{ !empty($errors->first('product_id')) ? 'has-error' : '' }}">
+                                                    <select name="product_id" class="form-control product" id="product_credit" tabindex="3" style="width: 100%">
+                                                        <option value="" {{ empty(old('product_id')) ? 'selected' : '' }}>Select product</option>
                                                         @foreach($products as $product)
-                                                            <option value="{{ $product->id }}" {{ (old('product') == $product->id) ? 'selected' : '' }} data-rate-feet="{{ $product->rate_feet }}">{{ $product->name }}</option>
+                                                            <option value="{{ $product->id }}" {{ (old('product_id') == $product->id) ? 'selected' : '' }} data-rate-feet="{{ $product->rate_feet }}">{{ $product->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @if(!empty($errors->first('product')))
-                                                        <p style="color: red;" >{{$errors->first('product')}}</p>
+                                                    @if(!empty($errors->first('product_id')))
+                                                        <p style="color: red;" >{{$errors->first('product_id')}}</p>
                                                     @endif
                                                 </div>
                                             </div>
@@ -104,7 +106,7 @@
                                                 <div class="col-lg-5">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_volume_credit" value="volume" checked="">
+                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_volume_credit" value="1" checked="">
                                                         </span>
                                                         <label for="measure_type_volume_credit" class="form-control" tabindex="20">Volume</label>
                                                     </div>
@@ -112,7 +114,7 @@
                                                 <div class="col-lg-5">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_weighment_credit" value="weighment">
+                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_weighment_credit" value="2">
                                                         </span>
                                                         <label for="measure_type_weighment_credit" class="form-control" tabindex="21">Weighment</label>
                                                     </div>
@@ -121,27 +123,36 @@
                                             <div id="measure_volume_details">
                                                 <div class="box-header with-border"></div><br>
                                                 <div class="form-group">
-                                                    <label for="quantity_credit" class="col-sm-2 control-label">Quantity * Rate :</label>
+                                                    <label for="quantity_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Quantity * Rate :</label>
                                                     <div class="col-sm-2 {{ !empty($errors->first('quantity')) ? 'has-error' : '' }}">
-                                                        <input type="text" class="form-control decimal_number_only quantity" name="quantity" id="quantity_credit" placeholder="Quantity" value="{{ old('quantity') }}" tabindex="4" tooltip>
+                                                        <input type="text" class="form-control decimal_number_only quantity" name="quantity" id="quantity_credit" placeholder="Quantity" value="{{ !empty(old('quantity')) ? old('quantity') : '0' }}" tabindex="4">
+                                                        @if(!empty($errors->first('quantity')))
+                                                            <p style="color: red;" >{{$errors->first('quantity')}}</p>
+                                                        @endif
                                                     </div>
                                                     <label for="rate_credit" class="col-sm-1 control-label">x</label>
                                                     <div class="col-sm-2 {{ !empty($errors->first('rate')) ? 'has-error' : '' }}">
-                                                        <input type="text" class="form-control decimal_number_only rate" name="rate" id="rate_credit" placeholder="Rate" value="{{ old('rate') }}" tabindex="5">
+                                                        <input type="text" class="form-control decimal_number_only rate" name="rate" id="rate_credit" placeholder="Rate" value="{{ !empty(old('rate')) ? old('rate') : '0' }}" tabindex="5">
+                                                        @if(!empty($errors->first('rate')))
+                                                            <p style="color: red;" >{{$errors->first('rate')}}</p>
+                                                        @endif
                                                     </div>
                                                     <label for="bill_amount_credit" class="col-sm-1 control-label">=</label>
                                                     <div class="col-sm-4 {{ !empty($errors->first('bill_amount')) ? 'has-error' : '' }}">
-                                                        <input type="text" class="form-control" name="bill_amount" id="bill_amount_credit" placeholder="Bill amount" value="{{ old('bill_amount') }}" readonly>
+                                                        <input type="text" class="form-control" name="bill_amount" id="bill_amount_credit" placeholder="Bill amount" value="{{ !empty(old('bill_amount')) ? old('bill_amount') : '0' }}" readonly>
+                                                        @if(!empty($errors->first('bill_amount')))
+                                                            <p style="color: red;" >{{$errors->first('bill_amount')}}</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="discount_credit" class="col-sm-2 control-label">Discount :</label>
+                                                    <label for="discount_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Discount :</label>
                                                     <div class="col-sm-5 {{ !empty($errors->first('discount')) ? 'has-error' : '' }}">
-                                                        <input type="text" class="form-control decimal_number_only" name="discount" id="discount_credit" placeholder="Discount" value="{{ old('discount') }}" tabindex="6">
+                                                        <input type="text" class="form-control decimal_number_only discount" name="discount" id="discount_credit" placeholder="Discount" value="{{ !empty(old('discount')) ? old('discount') : '0' }}" tabindex="6">
                                                     </div>
                                                     <label for="deducted_total_credit" class="col-sm-1 control-label">=</label>
                                                     <div class="col-sm-4 {{ !empty($errors->first('deducted_total')) ? 'has-error' : '' }}">
-                                                        <input type="text" class="form-control" name="deducted_total" id="deducted_total_credit" placeholder="Deducted balance" value="{{ old('deducted_total') }}" readonly>
+                                                        <input type="text" class="form-control" name="deducted_total" id="deducted_total_credit" placeholder="Deducted balance" value="{{ !empty(old('deducted_total')) ? old('deducted_total') : '0' }}" readonly>
                                                     </div>
                                                 </div>
                                             </div>
@@ -163,115 +174,142 @@
                             <!-- /.form end -->
                         </div>
                         <!-- /.tab-pane -->
-                        <div class="tab-pane" id="cash_sale_tab">
+                        <div class="{{ (!empty(old('transaction_type')) && old('transaction_type') == 'cash') ? 'active' : '' }} tab-pane" id="cash_sale_tab">
                             <!-- form start -->
                             <form action="{{route('sales-register-action')}}" id="cash_sale_form" method="post" class="form-horizontal" multipart-form-data>
                                 <div class="box-body">
                                     <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                    <input type="hidden" name="transaction_type" value="cash">
+                                    <input type="hidden" name="measure_type" value="1">
                                     <div class="row">
                                         <div class="col-md-11">
                                             <div class="form-group">
                                                 <label for="vehicle_number_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Truck Number : </label>
-                                                <div class="col-sm-10 {{ !empty($errors->first('vehicle_number')) ? 'has-error' : '' }}">
-                                                    <select name="vehicle_number" class="form-control vehicle_number" id="vehicle_number_cash" tabindex="1" style="width: 100%">
+                                                <div class="col-sm-10 {{ !empty($errors->first('vehicle_id_cash')) ? 'has-error' : '' }}">
+                                                    <select name="vehicle_id_cash" class="form-control vehicle_number" id="vehicle_number_cash" tabindex="1" style="width: 100%">
                                                         <option value="">Select truck number</option>
                                                         @foreach($vehicles as $vehicle)
-                                                            <option value="{{ $vehicle->id }}" {{ (old('vehicle_number') == $vehicle->id) ? 'selected' : '' }} data-volume="{{ $vehicle->volume }}" data-bodytype="{{ $vehicle->body_type }}">{{ $vehicle->reg_number }} - {{ $vehicle->owner_name }}</option>
+                                                            <option value="{{ $vehicle->id }}" {{ (old('vehicle_id_cash') == $vehicle->id) ? 'selected' : '' }} data-volume="{{ $vehicle->volume }}" data-bodytype="{{ $vehicle->body_type }}">{{ $vehicle->reg_number }} - {{ $vehicle->vehicleType->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @if(!empty($errors->first('vehicle_number')))
-                                                        <p style="color: red;" >{{$errors->first('vehicle_number')}}</p>
+                                                    @if(!empty($errors->first('vehicle_id_cash')))
+                                                        <p style="color: red;" >{{$errors->first('vehicle_id_cash')}}</p>
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="purchaser_cash" class="col-sm-2 control-label">Purchaser : </label>
-                                                <div class="col-sm-10 {{ !empty($errors->first('purchaser')) ? 'has-error' : '' }}">
-                                                    <select name="purchaser" class="form-control purchaser" id="purchaser_cash" tabindex="2" style="width: 100%">
-                                                        <option value="" {{ empty(old('purchaser')) ? 'selected' : '' }}>Select purchaser</option>
+                                                <label for="purchaser_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Purchaser : </label>
+                                                <div class="col-sm-10 {{ !empty($errors->first('purchaser_account_id_cash')) ? 'has-error' : '' }}">
+                                                    <select name="purchaser_account_id_cash" class="form-control purchaser" id="purchaser_cash" tabindex="2" style="width: 100%">
+                                                        <option value="" {{ empty(old('purchaser_account_id_cash')) ? 'selected' : '' }}>Select purchaser</option>
                                                         @foreach($accounts as $account)
-                                                            <option value="{{ $account->id }}" {{ (old('purchaser') == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
+                                                            <option value="{{ $account->id }}" {{ (old('purchaser_account_id_cash') == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @if(!empty($errors->first('purchaser')))
-                                                        <p style="color: red;" >{{$errors->first('purchaser')}}</p>
+                                                    @if(!empty($errors->first('purchaser_account_id_cash')))
+                                                        <p style="color: red;" >{{$errors->first('purchaser_account_id_cash')}}</p>
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="date_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Date and Time : </label>
-                                                <div class="col-sm-5 {{ !empty($errors->first('date')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control decimal_number_only datepicker" name="date" id="date_cash" placeholder="Date" value="{{ old('date') }}" tabindex="22">
+                                                <div class="col-sm-5 {{ !empty($errors->first('date_cash')) ? 'has-error' : '' }}">
+                                                    <input type="text" class="form-control decimal_number_only datepicker" name="date_cash" id="date_cash" placeholder="Date" value="{{ old('date_cash') }}" tabindex="22">
+                                                    @if(!empty($errors->first('date_cash')))
+                                                        <p style="color: red;" >{{$errors->first('date_cash')}}</p>
+                                                    @endif
                                                 </div>
-                                                <div class="col-sm-5 {{ !empty($errors->first('time')) ? 'has-error' : '' }}">
+                                                <div class="col-sm-5 {{ !empty($errors->first('time_cash')) ? 'has-error' : '' }}">
                                                     <div class="bootstrap-timepicker">
-                                                        <input type="text" class="form-control timepicker" name="time" id="time_cash" placeholder="Time" value="{{ old('time') }}" tabindex="23">
+                                                        <input type="text" class="form-control timepicker" name="time_cash" id="time_cash" placeholder="Time" value="{{ old('time_cash') }}" tabindex="23">
                                                     </div>
-                                                    @if(!empty($errors->first('time')))
-                                                        <p style="color: red;" >{{$errors->first('time')}}</p>
-                                                    @elseif(!empty($errors->first('date')))
-                                                        <p style="color: red;" >{{$errors->first('date')}}</p>
+                                                    @if(!empty($errors->first('time_cash')))
+                                                        <p style="color: red;" >{{$errors->first('time_cash')}}</p>
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="product_cash" class="col-sm-2 control-label">Product : </label>
-                                                <div class="col-sm-10 {{ !empty($errors->first('product')) ? 'has-error' : '' }}">
-                                                    <select name="product" class="form-control product" id="product_cash" tabindex="3" style="width: 100%">
-                                                        <option value="" {{ empty(old('purchaser')) ? 'selected' : '' }}>Select product</option>
+                                                <label for="product_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Product : </label>
+                                                <div class="col-sm-10 {{ !empty($errors->first('product_id_cash')) ? 'has-error' : '' }}">
+                                                    <select name="product_id_cash" class="form-control product" id="product_cash" tabindex="3" style="width: 100%">
+                                                        <option value="" {{ empty(old('product_id_cash')) ? 'selected' : '' }}>Select product</option>
                                                         @foreach($products as $product)
-                                                            <option value="{{ $product->id }}" {{ (old('product') == $product->id) ? 'selected' : '' }} data-rate-feet="{{ $product->rate_feet }}">{{ $product->name }}</option>
+                                                            <option value="{{ $product->id }}" {{ (old('product_id_cash') == $product->id) ? 'selected' : '' }} data-rate-feet="{{ $product->rate_feet }}">{{ $product->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @if(!empty($errors->first('product')))
-                                                        <p style="color: red;" >{{$errors->first('product')}}</p>
+                                                    @if(!empty($errors->first('product_id_cash')))
+                                                        <p style="color: red;" >{{$errors->first('product_id_cash')}}</p>
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="box-header with-border"></div><br>
                                             <div class="form-group">
-                                                <label for="quantity_cash" class="col-sm-2 control-label">Quantity * Rate :</label>
-                                                <div class="col-sm-2 {{ !empty($errors->first('quantity')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control decimal_number_only quantity" name="quantity" id="quantity_cash" placeholder="Quantity" value="{{ old('quantity') }}" tabindex="4">
+                                                <label for="quantity_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Quantity * Rate :</label>
+                                                <div class="col-sm-2 {{ !empty($errors->first('quantity_cash')) ? 'has-error' : '' }}">
+                                                    <input type="text" class="form-control decimal_number_only quantity" name="quantity_cash" id="quantity_cash" placeholder="Quantity" value="{{ !empty(old('quantity_cash')) ? old('quantity_cash') : '0' }}" tabindex="4">
                                                 </div>
                                                 <label for="rate" class="col-sm-1 control-label">x</label>
-                                                <div class="col-sm-2 {{ !empty($errors->first('rate')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control decimal_number_only rate" name="rate" id="rate_cash" placeholder="Rate" value="{{ old('rate') }}" tabindex="5">
+                                                <div class="col-sm-2 {{ !empty($errors->first('rate_cash')) ? 'has-error' : '' }}">
+                                                    <input type="text" class="form-control decimal_number_only rate" name="rate_cash" id="rate_cash" placeholder="Rate" value="{{ !empty(old('rate_cash')) ? old('rate_cash') : '0' }}" tabindex="5">
                                                 </div>
                                                 <label for="bill_amount" class="col-sm-1 control-label">=</label>
-                                                <div class="col-sm-4 {{ !empty($errors->first('bill_amount')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control" name="bill_amount" id="bill_amount_cash" placeholder="Bill amount" value="{{ old('bill_amount') }}" readonly>
+                                                <div class="col-sm-4 {{ !empty($errors->first('bill_amount_cash')) ? 'has-error' : '' }}">
+                                                    <input type="text" class="form-control" name="bill_amount_cash" id="bill_amount_cash" placeholder="Bill amount" value="{{ !empty(old('bill_amount_cash')) ? old('bill_amount_cash') : '0' }}" readonly>
                                                 </div>
+                                                @if(!empty($errors->first('quantity_cash')))
+                                                    <p style="color: red;" >{{$errors->first('quantity_cash')}}</p>
+                                                @endif
+                                                @if(!empty($errors->first('rate_cash')))
+                                                    <p style="color: red;" >{{$errors->first('rate_cash')}}</p>
+                                                @endif
+                                                @if(!empty($errors->first('bill_amount_cash')))
+                                                    <p style="color: red;" >{{$errors->first('bill_amount_cash')}}</p>
+                                                @endif
                                             </div>
                                             <div class="form-group">
-                                                <label for="discount_cash" class="col-sm-2 control-label">Discount :</label>
-                                                <div class="col-sm-5 {{ !empty($errors->first('discount')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control decimal_number_only" name="discount" id="discount_cash" placeholder="Discount" value="{{ old('discount') }}" tabindex="6">
+                                                <label for="discount_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Discount :</label>
+                                                <div class="col-sm-5 {{ !empty($errors->first('discount_cash')) ? 'has-error' : '' }}">
+                                                    <input type="text" class="form-control decimal_number_only discount" name="discount_cash" id="discount_cash" placeholder="Discount" value="{{ !empty(old('discount_cash')) ? old('discount_cash') : '0' }}" tabindex="6">
                                                 </div>
                                                 <label for="deducted_total_cash" class="col-sm-1 control-label">=</label>
-                                                <div class="col-sm-4 {{ !empty($errors->first('deducted_total')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control" name="deducted_total" id="deducted_total_cash" placeholder="Deducted balance" value="{{ old('deducted_total') }}" readonly>
+                                                <div class="col-sm-4 {{ !empty($errors->first('deducted_total_cash')) ? 'has-error' : '' }}">
+                                                    <input type="text" class="form-control" name="deducted_total_cash" id="deducted_total_cash" placeholder="Deducted balance" value="{{ !empty(old('deducted_total_cash')) ? old('deducted_total_cash') : '0' }}" readonly>
                                                 </div>
+                                                @if(!empty($errors->first('discount_cash')))
+                                                    <p style="color: red;" >{{$errors->first('discount_cash')}}</p>
+                                                @elseif(!empty($errors->first('deducted_total_cash')))
+                                                    <p style="color: red;" >{{$errors->first('deducted_total_cash')}}</p>
+                                                @endif
                                             </div>
                                             <div class="form-group">
                                                 <label for="old_balance" class="col-sm-2 control-label">Old Balance :</label>
                                                 <div class="col-sm-5 {{ !empty($errors->first('old_balance')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control decimal_number_only" name="old_balance" id="old_balance" placeholder="Old balance" value="{{ old('old_balance') }}" readonly>
+                                                    <input type="text" class="form-control decimal_number_only" name="old_balance" id="old_balance" placeholder="Old balance" value="{{ !empty(old('old_balance')) ? old('old_balance') : '0' }}" readonly>
                                                 </div>
                                                 <label for="total" class="col-sm-1 control-label">=</label>
                                                 <div class="col-sm-4 {{ !empty($errors->first('total')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control" name="total" id="total" placeholder="Total amount" value="{{ old('total') }}" readonly>
+                                                    <input type="text" class="form-control" name="total" id="total" placeholder="Total amount" value="{{ !empty(old('total')) ? old('total') : '0' }}" readonly>
                                                 </div>
+                                                @if(!empty($errors->first('old_balance')))
+                                                    <p style="color: red;" >{{$errors->first('old_balance')}}</p>
+                                                @elseif(!empty($errors->first('total')))
+                                                    <p style="color: red;" >{{$errors->first('total')}}</p>
+                                                @endif
                                             </div>
                                             <div class="form-group">
-                                                <label for="paid_amount" class="col-sm-2 control-label">Paid Amount :</label>
+                                                <label for="paid_amount" class="col-sm-2 control-label"><b style="color: red;">* </b> Paid Amount :</label>
                                                 <div class="col-sm-5 {{ !empty($errors->first('paid_amount')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control decimal_number_only" name="paid_amount" id="paid_amount" placeholder="Paid amount" value="{{ old('paid_amount') }}" tabindex="7">
+                                                    <input type="text" class="form-control decimal_number_only" name="paid_amount" id="paid_amount" placeholder="Paid amount" value="{{ !empty(old('paid_amount')) ? old('paid_amount') : '0' }}" tabindex="7">
                                                 </div>
                                                 <label for="balance" class="col-sm-1 control-label">=</label>
                                                 <div class="col-sm-4 {{ !empty($errors->first('balance')) ? 'has-error' : '' }}">
-                                                    <input type="text" class="form-control" name="balance" id="balance" placeholder="Balance amount" value="{{ old('balance') }}" readonly>
+                                                    <input type="text" class="form-control" name="balance" id="balance" placeholder="Balance amount" value="{{ !empty(old('balance')) ? old('balance') : '0' }}" readonly>
                                                 </div>
+                                                @if(!empty($errors->first('paid_amount')))
+                                                    <p style="color: red;" >{{$errors->first('paid_amount')}}</p>
+                                                @elseif(!empty($errors->first('balance')))
+                                                    <p style="color: red;" >{{$errors->first('balance')}}</p>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -300,8 +338,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">Last 5 Sales Records</h3>
@@ -321,9 +359,9 @@
                                     @foreach($sales_records as $sales_record)
                                         <tr>
                                             <td>{{ $sales_record->date_time }}</td>
-                                            <td>{{ $sales_record->truck_number }}</td>
-                                            <td>{{ $sales_record->purchaser }}</td>
-                                            <td>{{ $sales_record->product }}</td>
+                                            <td>{{ $sales_record->vehicle->reg_number }}</td>
+                                            <td>{{ $sales_record->transaction->debitAccount->account_name }}</td>
+                                            <td>{{ $sales_record->product->name }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -350,33 +388,34 @@
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Total Credit Amount :</label>
+                            <label class="col-sm-4 control-label">Total Credit Amount<p class="pull-right">:</p></label>
                             <div class="col-sm-7">
                                 <span id="modal_total_credit_amount"></span>
                             </div>
                         </div><br>
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Paid Amount :</label>
+                            <label class="col-sm-4 control-label">Paid Amount<p class="pull-right">:</p></label>
                             <div class="col-sm-7">
                                 <span id="modal_payment"></span>
                             </div>
                         </div><br>
                         <div class="form-group">
-                            <label class="col-sm-4 control-label modal_balance_over">Balance Amount :</label>
+                            <label class="col-sm-4 control-label modal_balance_over">Balance Amount<p class="pull-right">:</p></label>
                             <div class="col-sm-7">
                                 <span id="modal_balance"></span>
                             </div>
                         </div><br><br>
                         <div id="modal_warning">
                             <div class="row">
-                                <div class="col-sm-2"></div>
+                                <div class="col-sm-1"></div>
                                 <div class="col-sm-10">
-                                    <p style="color: red;"><b>Balance amount handling responsibility is allotted to the operator.</b></p>
+                                    <p style="color: red;"><b>Credits given by the user are strictly under the responsibility of the user.</b></p>
                                 </div>
+                                <div class="col-sm-1"><i id="modal_warning_more_button" class="fa fa-chevron-down"></i></div>
                             </div>
-                            <div class="row">
+                            <div class="row" id="modal_warning_more" hidden>
                                 <div class="col-sm-12">
-                                    <p style="color: blue;">&emsp;The original bill amount will be debited to the sales account regardless of the cash payment. <b class="modal_balance_over">Balance amount</b> is <b class="modal_debit_credit">credited from</b> a temporary account until the next day closing. If the amount did not cleared with in this time period, then it would be <b class="modal_debit_credit">credited from</b> the operator account;</p>
+                                    <p style="color: blue;">&emsp;The original bill amount will be debited to the sales account regardless of the cash payment. Credits issued by the user for cash transactions are maintained seperately and those are strictly under the responsibility of the user.</p>
                                 </div>
                             </div>
                         </div>

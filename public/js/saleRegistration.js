@@ -77,10 +77,14 @@ $(function () {
 
         if(elementId == 'vehicle_number_credit') {
             $('#quantity_credit').val(volume);
+            updateCreditBillDetail();
         } else if(elementId == 'vehicle_number_cash') {
             $('#quantity_cash').val(volume);
+            updateCashBillDetail();
         } else {
             $('.quantity').val('');
+            updateCreditBillDetail();
+            updateCashBillDetail();
         }
         
         if(vehicleId) {
@@ -140,10 +144,14 @@ $(function () {
 
         if(elementId == 'product_credit') {
             $('#rate_credit').val(ratePerFeet);
+            updateCreditBillDetail();
         } else if(elementId == 'product_cash') {
             $('#rate_cash').val(ratePerFeet);
+            updateCashBillDetail();
         } else {
-            $('.quantity').val('');
+            $('.rate').val('');
+            updateCreditBillDetail();
+            updateCashBillDetail();
         }
     });
 
@@ -172,17 +180,28 @@ $(function () {
 
         if(payment > totalCredit) {
             $('#modal_warning').show();
-            $('.modal_balance_label').html('Over :');
-            $('.modal_debit_credit').html('debited to');
+            $('.modal_balance_over').html('Advance Amount<p class="pull-right">:</p>');
         } else if(payment < totalCredit) {
             $('#modal_warning').show();
-            $('.modal_balance_label').html('Balance amount :');
-            $('.modal_debit_credit').html('credited from');
+            $('.modal_balance_over').html('Balance Amount<p class="pull-right">:</p>');
         } else {
             $('#modal_warning').hide();
         }
 
         $('#payment_with_sale_modal').modal('show');
+    });
+
+    //show warning details on modal
+    $('body').on("click", "#modal_warning_more_button", function (e) {
+        if($('#modal_warning_more_button').hasClass('fa-chevron-down')) {
+            $('#modal_warning_more_button').removeClass('fa-chevron-down');
+            $('#modal_warning_more_button').addClass('fa-chevron-up');
+            $('#modal_warning_more').show();
+        } else {
+            $('#modal_warning_more_button').removeClass('fa-chevron-up');
+            $('#modal_warning_more_button').addClass('fa-chevron-down');
+            $('#modal_warning_more').hide();
+        }
     });
 
     //invoke modal for cash transactions
@@ -191,16 +210,118 @@ $(function () {
         $("#cash_sale_form").submit();
     });
 
-    $('body').on("keyup", "#quantity", function () {
-        //updateBillDetail();
+    $('body').on("keyup", ".quantity", function () {
+        var elementId   = $(this).attr('id');
+        if(elementId == 'quantity_credit') {
+            updateCreditBillDetail();
+        } else {
+            updateCashBillDetail();
+        }
     });
-    $('body').on("keyup", "#rate", function () {
-        //updateBillDetail();
+
+    $('body').on("keyup", ".rate", function () {
+        var elementId   = $(this).attr('id');
+        if(elementId == 'rate_credit') {
+            updateCreditBillDetail();
+        } else {
+            updateCashBillDetail();
+        }
     });
-    $('body').on("keyup", "#discount", function () {
-        //updateBillDetail();
+
+    $('body').on("keyup", ".discount", function () {
+        var elementId   = $(this).attr('id');
+        if(elementId == 'discount_credit') {
+            updateCreditBillDetail();
+        } else {
+            updateCashBillDetail();
+        }
+    });
+
+    $('body').on("keyup", "#paid_amount", function () {
+        updateCashBillDetail();
     });
 });
+//update credit bill details fields
+function updateCreditBillDetail() {
+    var quantity    = ($('#quantity_credit').val() > 0 ? $('#quantity_credit').val() : 0 );
+    var rate        = ($('#rate_credit').val() > 0 ? $('#rate_credit').val() : 0 );
+    var discount    = ($('#discount_credit').val() > 0 ? $('#discount_credit').val() : 0 );
+    var billAmount, deductedTotal = 0;
+
+    billAmount  = quantity * rate;
+    if(billAmount >=0) {
+        if((billAmount/2) > discount) {
+            deductedTotal   = billAmount - discount;
+        } else if(discount > 0){
+            alert("Error !!\nDiscount amount exceeded the limit. Maxium of 50% discount is allowed!");
+            $('#discount_credit').val('');
+            deductedTotal   = billAmount;
+        }
+    } else {
+        deductedTotal   = 0;
+    }
+    if(!($('#discount_credit').val())) {
+        $('#discount_credit').val(0);
+    } else {
+        //for removing the preceding zero
+        discount = discount * 1;
+        $('#discount_credit').val(discount);
+    }
+    $('#bill_amount_credit').val(billAmount);
+    $('#deducted_total_credit').val(deductedTotal);
+}
+
+//update cash bill details fields
+function updateCashBillDetail() {
+    var quantity    = ($('#quantity_cash').val() > 0 ? $('#quantity_cash').val() : 0 );
+    var rate        = ($('#rate_cash').val() > 0 ? $('#rate_cash').val() : 0 );
+    var discount    = ($('#discount_cash').val() > 0 ? $('#discount_cash').val() : 0 );
+    var oldBalance  = ($('#old_balance').val() > 0 ? $('#old_balance').val() : 0 );
+    var paidAmount  = ($('#paid_amount').val() > 0 ? $('#paid_amount').val() : 0 );
+    var billAmount, deductedTotal = 0, total, balance;
+
+    billAmount  = quantity * rate;
+    if(billAmount >=0) {
+        if((billAmount/2) > discount) {
+            deductedTotal   = billAmount - discount;
+        } else if(discount > 0){
+            alert("Error !!\nDiscount amount exceeded the limit. Maxium of 50% discount is allowed!");
+            $('#discount_cash').val('');
+            deductedTotal   = billAmount;
+        }
+    } else {
+        deductedTotal   = 0;
+    }
+    if(!($('#discount_cash').val())) {
+        $('#discount_cash').val(0);
+    } else {
+        //for removing the preceding zero
+        discount = discount * 1;
+        $('#discount_cash').val(discount);
+    }
+    
+    total   = deductedTotal + oldBalance;
+    balance = total - paidAmount;
+
+    if(!($('#paid_amount').val())) {
+        $('#paid_amount').val(0);
+    } else {
+        //for removing the preceding zero
+        paidAmount = paidAmount * 1;
+        $('#paid_amount').val(paidAmount);
+    }
+
+    if(!($('#old_balance').val())) {
+        $('#old_balance').val(0);
+    }
+
+    $('#bill_amount_cash').val(billAmount);
+    $('#deducted_total_cash').val(deductedTotal);
+    $('#total').val(total);
+    $('#balance').val(balance);
+}
+
+// timepicker value updation
 function updateTimepicker() {
     currentDate     = new Date();
     currentHour     = currentDate.getHours();
@@ -215,27 +336,4 @@ function updateTimepicker() {
 
     currentTime = currentHour + ':' + currentMinute;
     $(".timepicker").val(currentTime);  
-}
-
-//update bill details
-function updateBillDetail() {
-    var quantity    = ($('#quantity').val() > 0 ? $('#quantity').val() : 0 );
-    var rate        = ($('#rate').val() > 0 ? $('#rate').val() : 0 );
-    var discount    = ($('#discount').val() > 0 ? $('#discount').val() : 0 );
-    var amount, total = 0;
-
-    amount  = quantity * rate;
-    if(amount >=0) {
-        if((amount/2) > discount) {
-            total   = amount - discount;
-        } else if(discount > 0){
-            alert("Error !!\nDiscount amount exceeded the limit. Maxium of 50% discount is allowed!");
-            $('#discount').val('');
-            total   = amount;
-        }
-    } else {
-        total   = 0;
-    }
-    $('#amount').val(amount);
-    $('#total').val(total);
 }
