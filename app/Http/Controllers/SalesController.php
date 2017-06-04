@@ -7,7 +7,8 @@ use App\Models\Vehicle;
 use App\Models\Account;
 use App\Models\Product;
 use App\Models\Sale;
-use App\Http\Requests\SaleRegistrationRequest;
+use App\Http\Requests\CreditSaleRegistrationRequest;
+use App\Http\Requests\CashSaleRegistrationRequest;
 
 class SalesController extends Controller
 {
@@ -29,12 +30,20 @@ class SalesController extends Controller
             ]);
     }
 
-     /**
-     * Handle new account registration
+    /**
+     * Handle new credit sale registration
      */
-    public function registerAction(SaleRegistrationRequest $request)
+    public function creditSaleRegisterAction(CreditSaleRegistrationRequest $request)
     {
         dd('x');
+    }
+
+    /**
+     * Handle new cash sale registration
+     */
+    public function cashSaleRegisterAction(CashSaleRegistrationRequest $request)
+    {
+        dd('Y');
     }
 
     /**
