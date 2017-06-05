@@ -158,9 +158,19 @@ $(function () {
     //show cash payment options for cash transaction only
     $('body').on("change", ".measure_type", function () {
         if($('#measure_type_weighment_credit').is(':checked')) {
+            $('#quantity_credit').prop('disabled',true);
+            $('#rate_credit').prop('disabled',true);
+            $('#bill_amount_credit').prop('disabled',true);
+            $('#discount_credit').prop('disabled',true);
+            $('#deducted_total_credit').prop('disabled',true);
             $('#measure_volume_details').hide();
         } else {
             $('#measure_volume_details').show();
+            $('#quantity_credit').prop('disabled',false);
+            $('#rate_credit').prop('disabled',false);
+            $('#bill_amount_credit').prop('disabled',false);
+            $('#discount_credit').prop('disabled',false);
+            $('#deducted_total_credit').prop('disabled',false);
         }
     });
 

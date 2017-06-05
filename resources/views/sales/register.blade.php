@@ -31,7 +31,7 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li class="{{ (empty(old('transaction_type')) || old('transaction_type') == 'credit') ? 'active' : '' }}"><a href="#credit_sale_tab" data-toggle="tab">Credit Sale</a></li>
-                        <li class="{{ (!empty(old('transaction_type')) && old('transaction_type') == 'cash') ? 'active' : '' }}"><a href="#cash_sale_tab" data-toggle="tab">Cash Sale</a></li>
+                        <li class="{{ (old('transaction_type') == 'cash') ? 'active' : '' }}"><a href="#cash_sale_tab" data-toggle="tab">Cash Sale</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="{{ (empty(old('transaction_type')) || old('transaction_type') == 'credit') ? 'active' : '' }} tab-pane" id="credit_sale_tab">
@@ -106,7 +106,7 @@
                                                 <div class="col-lg-5 {{ !empty($errors->first('measure_type')) ? 'has-error' : '' }}">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_volume_credit" value="1" checked>
+                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_volume_credit" value="1" {{ old('measure_type') == '1' ? 'checked' : ''}}>
                                                         </span>
                                                         <label for="measure_type_volume_credit" class="form-control" tabindex="20">Volume</label>
                                                     </div>
@@ -117,13 +117,13 @@
                                                 <div class="col-lg-5 {{ !empty($errors->first('measure_type')) ? 'has-error' : '' }}">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_weighment_credit" value="2">
+                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_weighment_credit" value="2" {{ old('measure_type') == '2' ? 'checked' : ''}}>
                                                         </span>
                                                         <label for="measure_type_weighment_credit" class="form-control" tabindex="21">Weighment</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div id="measure_volume_details">
+                                            <div id="measure_volume_details" {{ old('measure_type') == '2' ? 'hidden' : ''}}>
                                                 <div class="box-header with-border"></div><br>
                                                 <div class="form-group">
                                                     <label for="quantity_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Quantity * Rate :</label>
@@ -183,7 +183,7 @@
                             <!-- /.form end -->
                         </div>
                         <!-- /.tab-pane -->
-                        <div class="{{ (!empty(old('transaction_type')) && old('transaction_type') == 'cash') ? 'active' : '' }} tab-pane" id="cash_sale_tab">
+                        <div class="{{ (old('transaction_type') == 'cash') ? 'active' : '' }} tab-pane" id="cash_sale_tab">
                             <!-- form start -->
                             <form action="{{route('cash-sales-register-action')}}" id="cash_sale_form" method="post" class="form-horizontal" multipart-form-data>
                                 <div class="box-body">

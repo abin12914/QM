@@ -42,17 +42,29 @@ class CashSaleRegistrationRequest extends FormRequest
             'quantity_cash.integer'                 => "Invalid data",
             'quantity_cash.max'                     => "Maximum value exceeded",
             'rate_cash.required'                    => "Required field.",
-            'rate_cash.integer'                     => "Invalid data",
+            'rate_cash.numeric'                     => "Invalid data",
             'rate_cash.max'                         => "Maximum value exceeded",
             'bill_amount_cash.required'             => "Required field.",
-            'bill_amount_cash.integer'              => "Invalid data",
+            'bill_amount_cash.numeric'              => "Invalid data",
             'bill_amount_cash.max'                  => "Maximum value exceeded",
             'discount_cash.required'                => "Required field.",
-            'discount_cash.integer'                 => "Invalid data",
+            'discount_cash.numeric'                 => "Invalid data",
             'discount_cash.max'                     => "Maximum value exceeded",
             'deducted_total_cash.required'          => "Required field.",
-            'deducted_total_cash.integer'           => "Invalid data",
+            'deducted_total_cash.numeric'           => "Invalid data",
             'deducted_total_cash.max'               => "Maximum value exceeded",
+            'old_balance.required'                  => "Required field.",
+            'old_balance.numeric'                   => "Invalid data",
+            'old_balance.max'                       => "Maximum value exceeded",
+            'total.required'                        => "Required field.",
+            'total.numeric'                         => "Invalid data",
+            'total.max'                             => "Maximum value exceeded",
+            'paid_amount.required'                  => "Required field.",
+            'paid_amount.numeric'                   => "Invalid data",
+            'paid_amount.max'                       => "Maximum value exceeded",
+            'balance.required'                      => "Required field.",
+            'balance.numeric'                       => "Invalid data",
+            'balance.max'                           => "Maximum value exceeded",
         ];
     }
 
@@ -89,7 +101,8 @@ class CashSaleRegistrationRequest extends FormRequest
             'measure_type_cash'         => [
                                                 'required',
                                                 'integer',
-                                                Rule::in(['1', '2']),
+                                                'same:1'
+                                                //Rule::in(['1', '2']),
                                             ],
             'quantity_cash'             => [
                                                 'required',

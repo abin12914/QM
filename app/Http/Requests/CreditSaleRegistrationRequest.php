@@ -42,7 +42,7 @@ class CreditSaleRegistrationRequest extends FormRequest
             'quantity.integer'              => "Invalid data",
             'quantity.max'                  => "Maximum value exceeded",
             'rate.required'                 => "Required field.",
-            'rate.integer'                  => "Invalid data",
+            'rate.numeric'                  => "Invalid data",
             'rate.max'                      => "Maximum value exceeded",
             'bill_amount.required'          => "Required field.",
             'bill_amount.integer'           => "Invalid data",
@@ -92,27 +92,27 @@ class CreditSaleRegistrationRequest extends FormRequest
                                             Rule::in(['1', '2']),
                                         ],
             'quantity'              => [
-                                            'required',
+                                            'required_if:measure_type,1',
                                             'integer',
                                             'max:2000'
                                         ],
             'rate'                  => [
-                                            'required',
+                                            'required_if:measure_type,1',
                                             'numeric',
                                             'max:9999'
                                         ],
             'bill_amount'           => [
-                                            'required',
+                                            'required_if:measure_type,1',
                                             'numeric',
                                             'max:99999'
                                         ],
             'discount'              => [
-                                            'required',
+                                            'required_if:measure_type,1',
                                             'numeric',
                                             'max:9999'
                                         ],
             'deducted_total'        => [
-                                            'required',
+                                            'required_if:measure_type,1',
                                             'numeric',
                                             'max:99999'
                                         ]
