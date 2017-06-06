@@ -35,7 +35,52 @@ class SalesController extends Controller
      */
     public function creditSaleRegisterAction(CreditSaleRegistrationRequest $request)
     {
-        dd('x');
+        $vehicleId          = $request->get('vehicle_id');
+        $purchaserAccountId = $request->get('purchaser_account_id');
+        $date               = $request->get('date');
+        $time               = $request->get('time');
+        $productId          = $request->get('product_id');
+        $measureType        = $request->get('measure_type');
+        $quantity           = $request->get('quantity');
+        $rate               = $request->get('rate');
+        $billAmount         = $request->get('bill_amount');
+        $discount           = $request->get('discount');
+        $deductedTotal      = $request->get('deducted_total');
+
+        $transaction = new Transaction;
+        $transaction->debit_account_id  = $purchaserAccountId;
+        $transaction->credit_account_id = 0;//sale account id
+        $transaction->amount            = $deductedTotal;
+        $transaction->date_time         = $date.' '.$time;
+        $transaction->particulars       = "Credit sale";
+        $transaction->status            = 1;
+        $transaction->created_user_id   = Auth::user()->id;
+        //save transaction
+
+        $sale = new Sale;
+        $sale->transaction_id   = 0;
+        $sale->vehicle_id       = $vehicleId;
+        $sale->date_time        = $date.' '.$time;
+        $sale->product_id       = $productId;
+        $sale->measure_type     = $measureType;
+        if($measureType == 1) {
+            $sale->quantity         = $quantity;
+            $sale->rate             = $rate;
+            $sale->discount         = $discount;
+            $sale->total_amount     = $deductedTotal;
+        } else {
+            $sale->quantity         = 0;
+            $sale->rate             = 0;
+            $sale->discount         = 0;
+            $sale->total_amount     = 0;
+        }
+        $sale->status           = 1;
+        
+        if($sale->save()) {
+            return redirect()->back()->with("message","Sale saved successfully.")->with("alert-class","alert-success");
+        } else {
+            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the sale details. Try after reloading the page.")->with("alert-class","alert-danger");
+        }
     }
 
     /**

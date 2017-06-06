@@ -118,4 +118,23 @@ class CreditSaleRegistrationRequest extends FormRequest
                                         ]
         ];
     }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $input = $validator->input;
+            if (($input->quantity * $input->rate) == $input->bill_amount) {
+                $validator->errors()->add('bill_amount', 'Invalid data!!');
+            }
+            if ($input->bill_amount - $input->discount == $input->deducted_total) {
+                $validator->errors()->add('deducted_total', 'Invalid data!!');
+            }
+        });
+    }
 }
