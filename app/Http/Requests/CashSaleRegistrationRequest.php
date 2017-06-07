@@ -101,8 +101,7 @@ class CashSaleRegistrationRequest extends FormRequest
             'measure_type_cash'         => [
                                                 'required',
                                                 'integer',
-                                                'same:1'
-                                                //Rule::in(['1', '2']),
+                                                Rule::in(['1']),
                                             ],
             'quantity_cash'             => [
                                                 'required',

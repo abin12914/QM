@@ -76,7 +76,7 @@ class CreditSaleRegistrationRequest extends FormRequest
                                         ],
             'date'                  => [
                                             'required',
-                                            'date',
+                                            'date_format:d/m/Y',
                                         ],
             'time'                  => [
                                             'required',
@@ -125,7 +125,7 @@ class CreditSaleRegistrationRequest extends FormRequest
      * @param  \Illuminate\Validation\Validator  $validator
      * @return void
      */
-    public function withValidator($validator)
+    /*public function withValidator($validator)
     {
         $validator->after(function ($validator) {
             $input = $validator->input;
@@ -136,5 +136,5 @@ class CreditSaleRegistrationRequest extends FormRequest
                 $validator->errors()->add('deducted_total', 'Invalid data!!');
             }
         });
-    }
+    }*/
 }
