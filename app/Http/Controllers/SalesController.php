@@ -8,6 +8,7 @@ use App\Models\Account;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Transaction;
+use App\Models\UserIssuedCreditSale;
 use Auth;
 use App\Http\Requests\CreditSaleRegistrationRequest;
 use App\Http\Requests\CashSaleRegistrationRequest;
@@ -22,7 +23,7 @@ class SalesController extends Controller
         $vehicles = Vehicle::get();
         $accounts = Account::get();
         $products = Product::get();
-        $sales    = Sale::orderBy('date_time', 'desc')->get();
+        $sales    = Sale::orderBy('date_time', 'desc')->take(5)->get();
 
         return view('sales.register',[
                 'vehicles'      => $vehicles,
@@ -56,11 +57,13 @@ class SalesController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Sales account not found.")->with("alert-class","alert-danger");
         }
 
-        if(($quantity * $rate) != $billAmount) {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Bill calculation error.")->with("alert-class","alert-danger");
-        }
-        if(($billAmount - $discount) != $deductedTotal) {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Discount deduction error.")->with("alert-class","alert-danger");
+        if($measureType == 1) {
+            if(($quantity * $rate) != $billAmount) {
+                return redirect()->back()->withInput()->with("message","Something went wrong! Bill calculation error.")->with("alert-class","alert-danger");
+            }
+            if(($billAmount - $discount) != $deductedTotal) {
+                return redirect()->back()->withInput()->with("message","Something went wrong! Discount deduction error.")->with("alert-class","alert-danger");
+            }
         }
 
         //converting date and time to sql datetime format
@@ -95,7 +98,7 @@ class SalesController extends Controller
             $sale->status           = 1;
             
             if($sale->save()) {
-                return redirect()->back()->with("message","Sale saved successfully.")->with("alert-class","alert-success");
+                return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
             } else {
                 return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the sale details. Try after reloading the page.")->with("alert-class","alert-danger");
             }
@@ -125,6 +128,8 @@ class SalesController extends Controller
         $payment            = $request->get('paid_amount');
         $balance            = $request->get('balance');
 
+        $userId = Auth::user()->id;
+
         $cashAccount = Account::where('account_name','Cash')->first();
         if($cashAccount) {
             $cashAccountId = $cashAccount->id;
@@ -138,18 +143,19 @@ class SalesController extends Controller
         } else {
             return redirect()->back()->withInput()->with("message","Something went wrong! Sales account not found.!")->with("alert-class","alert-danger");
         }
-
-        if(($quantity * $rate) != $billAmount) {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Bill calculation error.")->with("alert-class","alert-danger");
-        }
-        if(($billAmount - $discount) != $deductedTotal) {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Discount deduction error.")->with("alert-class","alert-danger");
-        }
-        if(($deductedTotal + $oldBalance) != $total) {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Total bill calculation error.")->with("alert-class","alert-danger");
-        }
-        if(($total - $payment) != $balance) {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Balance calculation error.")->with("alert-class","alert-danger");
+        if($measureType == 1) {
+            if(($quantity * $rate) != $billAmount) {
+                return redirect()->back()->withInput()->with("message","Something went wrong! Bill calculation error.")->with("alert-class","alert-danger");
+            }
+            if(($billAmount - $discount) != $deductedTotal) {
+                return redirect()->back()->withInput()->with("message","Something went wrong! Discount deduction error.")->with("alert-class","alert-danger");
+            }
+            if(($deductedTotal + $oldBalance) != $total) {
+                return redirect()->back()->withInput()->with("message","Something went wrong! Total bill calculation error.")->with("alert-class","alert-danger");
+            }
+            if(($total - $payment) != $balance) {
+                return redirect()->back()->withInput()->with("message","Something went wrong! Balance calculation error.")->with("alert-class","alert-danger");
+            }
         }
 
         //converting date and time to sql datetime format
@@ -162,7 +168,7 @@ class SalesController extends Controller
         $transaction->date_time         = $dateTime;
         $transaction->particulars       = "Cash sale";
         $transaction->status            = 1;
-        $transaction->created_user_id   = Auth::user()->id;
+        $transaction->created_user_id   = $userId;
         if($transaction->save()) {
             $sale = new Sale;
             $sale->transaction_id   = $transaction->id;
@@ -177,7 +183,20 @@ class SalesController extends Controller
             $sale->status           = 1;
             
             if($sale->save()) {
-                return redirect()->back()->with("message","Sale saved successfully.")->with("alert-class","alert-success");
+                $userIssuedCreditSale = new UserIssuedCreditSale;
+                $userIssuedCreditSale->vehicle_id         = $vehicleId;
+                $userIssuedCreditSale->debit_amount       = $payment;
+                $userIssuedCreditSale->credit_amount      = $deductedTotal;
+                $userIssuedCreditSale->date_time          = $dateTime;
+                $userIssuedCreditSale->transaction_id     = $transaction->id;
+                $userIssuedCreditSale->created_user_id    = $userId;
+                $userIssuedCreditSale->status             = 1;
+                if($userIssuedCreditSale->save()) {
+                    return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
+                }
+                else {
+                    return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the sale details. Try after reloading the page.")->with("alert-class","alert-danger");    
+                }
             } else {
                 return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the sale details. Try after reloading the page.")->with("alert-class","alert-danger");
             }
@@ -191,24 +210,35 @@ class SalesController extends Controller
      */
     public function list()
     {
-        $accounts = Account::paginate(10);
-        if(!empty($accounts)) {
-            return view('account.list',[
-                    'accounts' => $accounts
+        $sales = Sale::paginate(15);
+        if(!empty($sales)) {
+            return view('sales.list',[
+                    'sales' => $sales
                 ]);
         } else {
-            session()->flash('message', 'No accounts available to show!');
-            return view('account.list');/*->with("message","No account records available!")->with("alert-class","alert-success");*/
+            session()->flash('message', 'No sale record available to show!');
+            return view('sales.list');
         }
     }
 
     /**
-     * Return sales details for given vehicle id
+     * /Return sales details for given vehicle id
+     * /Return old balance for user issued credit on cash transactions
      */
     public function getLastSaleByVehicleId($vehicleId)
     {
+        $oldBalance = $totalDebit = $totalCredit = 0;
+
         $sale = Sale::where('vehicle_id',$vehicleId)->orderBy('created_at', 'desc')->first();
-        
+        $userIssuedCreditSales = UserIssuedCreditSale::where('vehicle_id',$vehicleId)->get();
+
+        if(!empty($userIssuedCreditSales)) {
+            foreach ($userIssuedCreditSales as $userIssuedCreditSale) {
+                $totalCredit    = $totalCredit + $userIssuedCreditSale->credit_amount;
+                $totalDebit     = $totalDebit + $userIssuedCreditSale->debit_amount;
+            }
+            $oldBalance = $totalCredit - $totalDebit;
+        }
         if(!empty($sale)) {
             $productId          = $sale->product_id;
             $purchaserAccountId = $sale->transaction->debit_account_id;
@@ -218,11 +248,13 @@ class SalesController extends Controller
                     'flag'                  => true,
                     'productId'             => $productId,
                     'purchaserAccountId'    => $purchaserAccountId,
-                    'measureType'           => $measureType
+                    'measureType'           => $measureType,
+                    'oldBalance'            => $oldBalance
                 ]);
         } else {
             return([
-                    'flag' => false
+                    'flag'          => false,
+                    'oldBalance'    => $oldBalance
                 ]);
         }
     }

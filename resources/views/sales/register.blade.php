@@ -106,7 +106,7 @@
                                                 <div class="col-lg-5 {{ !empty($errors->first('measure_type')) ? 'has-error' : '' }}">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_volume_credit" value="1" {{ old('measure_type') == '1' ? 'checked' : ''}}>
+                                                            <input type="radio" name="measure_type" class="measure_type" id="measure_type_volume_credit" value="1" {{ empty(old('measure_type')) || old('measure_type') == '1' ? 'checked' : ''}}>
                                                         </span>
                                                         <label for="measure_type_volume_credit" class="form-control" tabindex="20">Volume</label>
                                                     </div>
@@ -318,6 +318,7 @@
                                                 <label for="balance" class="col-sm-1 control-label">=</label>
                                                 <div class="col-sm-4 {{ !empty($errors->first('balance')) ? 'has-error' : '' }}">
                                                     <input type="text" class="form-control" name="balance" id="balance" placeholder="Balance amount" value="{{ !empty(old('balance')) ? old('balance') : '0' }}" readonly>
+                                                    <label id="balance_over_label"></label>
                                                     @if(!empty($errors->first('balance')))
                                                         <p style="color: red;" >{{$errors->first('balance')}}</p>
                                                     @endif
@@ -412,9 +413,9 @@
                             </div>
                         </div><br>
                         <div class="form-group">
-                            <label class="col-sm-4 control-label modal_balance_over">Balance Amount<p class="pull-right">:</p></label>
+                            <label class="col-sm-4 control-label" id="modal_balance_over">Balance Amount<p class="pull-right">:</p></label>
                             <div class="col-sm-7">
-                                <span id="modal_balance"></span>
+                                <span id="modal_balance"></span>&emsp;&emsp;&emsp;<span id="modal_balance_icon"></span>
                             </div>
                         </div><br><br>
                         <div id="modal_warning">

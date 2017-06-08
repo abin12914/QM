@@ -38,21 +38,26 @@ class CreditSaleRegistrationRequest extends FormRequest
             'product_id.in'                 => "Something went wrong. Please try again after reloading the page.",
             'measure_type.integer'          => "Something went wrong. Please try again after reloading the page.",
             'measure_type.in'               => "Something went wrong. Please try again after reloading the page.",
-            'quantity.required'             => "Required field.",
+            'quantity.required_if'          => "Required field.",
             'quantity.integer'              => "Invalid data",
             'quantity.max'                  => "Maximum value exceeded",
-            'rate.required'                 => "Required field.",
+            'quantity.min'                  => "Minimum value expected",
+            'rate.required_if'              => "Required field.",
             'rate.numeric'                  => "Invalid data",
             'rate.max'                      => "Maximum value exceeded",
-            'bill_amount.required'          => "Required field.",
+            'rate.min'                      => "Minimum value expected",
+            'bill_amount.required_if'       => "Required field.",
             'bill_amount.integer'           => "Invalid data",
             'bill_amount.max'               => "Maximum value exceeded",
-            'discount.required'             => "Required field.",
+            'bill_amount.min'               => "Minimum value expected",
+            'discount.required_if'          => "Required field.",
             'discount.integer'              => "Invalid data",
             'discount.max'                  => "Maximum value exceeded",
-            'deducted_total.required'       => "Required field.",
+            'discount.min'                  => "Minimum value expected",
+            'deducted_total.required_if'       => "Required field.",
             'deducted_total.integer'        => "Invalid data",
             'deducted_total.max'            => "Maximum value exceeded",
+            'deducted_total.min'            => "Minimum value expected",
         ];
     }
 
@@ -94,27 +99,32 @@ class CreditSaleRegistrationRequest extends FormRequest
             'quantity'              => [
                                             'required_if:measure_type,1',
                                             'integer',
-                                            'max:2000'
+                                            'max:2000',
+                                            'min:0'
                                         ],
             'rate'                  => [
                                             'required_if:measure_type,1',
                                             'numeric',
-                                            'max:9999'
+                                            'max:9999',
+                                            'min:0'
                                         ],
             'bill_amount'           => [
                                             'required_if:measure_type,1',
                                             'numeric',
-                                            'max:99999'
+                                            'max:99999',
+                                            'min:0'
                                         ],
             'discount'              => [
                                             'required_if:measure_type,1',
                                             'numeric',
-                                            'max:9999'
+                                            'max:9999',
+                                            'min:0',
                                         ],
             'deducted_total'        => [
                                             'required_if:measure_type,1',
                                             'numeric',
-                                            'max:99999'
+                                            'max:99999',
+                                            'min:0'
                                         ]
         ];
     }

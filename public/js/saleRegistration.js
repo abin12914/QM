@@ -109,12 +109,18 @@ $(function () {
                         } else if(elementId == 'vehicle_number_cash') {
                             $('#product_cash').val(productId);
                             $('#purchaser_cash').val(purchaserAccountId);
+                            $('#old_balance').val(result.oldBalance);
                         } else {
                             $('#measure_type_volume_credit').prop('checked',true);
                             $('.product').val('');
                             $('.purchaser').val('');
                         }
                     } else {
+                        if(result.oldBalance) {
+                            $('#old_balance').val(result.oldBalance);
+                        } else {
+                            $('#old_balance').val(0);
+                        }
                         $('#measure_type_volume_credit').prop('checked',true);
                         $('.product').val('');
                         $('.purchaser').val('');
@@ -180,22 +186,38 @@ $(function () {
         var totalCredit = $('#total').val();
         var payment     = $('#paid_amount').val();
         var balance     = $('#balance').val();
+        var difference  = totalCredit - payment;
+
         if(!totalCredit || !payment || !balance) {
             alert('Fill all fields');
             return false;
         }
+        //recalculate field values if any mismatch
+        if(difference != balance) {
+            updateCashBillDetail();
+        }
+
         $('#modal_total_credit_amount').html(totalCredit);
         $('#modal_payment').html(payment);
-        $('#modal_balance').html(balance);
+        $('#modal_balance').html(Math.abs(balance));
 
-        if(payment > totalCredit) {
+        if(difference < 0) {
             $('#modal_warning').show();
-            $('.modal_balance_over').html('Advance Amount<p class="pull-right">:</p>');
-        } else if(payment < totalCredit) {
+            $('#modal_balance_over').css('color','blue');
+            $('#modal_balance_over').html('Advance Amount<p class="pull-right">:</p>');
+            $('#modal_balance_icon').html('<i class="fa fa-exclamation-circle" style="color:blue;"></i>');
+            $('#modal_balance').css('color','blue');
+        } else if(difference > 0) {
             $('#modal_warning').show();
-            $('.modal_balance_over').html('Balance Amount<p class="pull-right">:</p>');
+            $('#modal_balance_over').html('Balance Amount<p class="pull-right">:</p>');
+            $('#modal_balance_over').css('color','red');
+            $('#modal_balance_icon').html('<i class="fa fa-exclamation" style="color:red;"></i>');
+            $('#modal_balance').css('color','red');
         } else {
             $('#modal_warning').hide();
+            $('#modal_balance').css('color','green');
+            $('#modal_balance_over').css('color','green');
+            $('#modal_balance_icon').html('<i class="fa fa-check" style="color:green;"></i>');
         }
 
         $('#payment_with_sale_modal').modal('show');
@@ -286,9 +308,9 @@ function updateCashBillDetail() {
     var quantity    = ($('#quantity_cash').val() > 0 ? $('#quantity_cash').val() : 0 );
     var rate        = ($('#rate_cash').val() > 0 ? $('#rate_cash').val() : 0 );
     var discount    = ($('#discount_cash').val() > 0 ? $('#discount_cash').val() : 0 );
-    var oldBalance  = ($('#old_balance').val() > 0 ? $('#old_balance').val() : 0 );
+    var oldBalance  = ($('#old_balance').val() ? $('#old_balance').val() : 0 );
     var paidAmount  = ($('#paid_amount').val() > 0 ? $('#paid_amount').val() : 0 );
-    var billAmount, deductedTotal = 0, total, balance;
+    var billAmount = 0, deductedTotal = 0, total = 0, balance = 0;
 
     billAmount  = quantity * rate;
     if(billAmount >=0) {
@@ -309,8 +331,9 @@ function updateCashBillDetail() {
         discount = discount * 1;
         $('#discount_cash').val(discount);
     }
-    
-    total   = deductedTotal + oldBalance;
+
+    //multiplying by 1 for typecasting
+    total   = (deductedTotal * 1) + (oldBalance * 1); console.log(oldBalance);
     balance = total - paidAmount;
 
     if(!($('#paid_amount').val())) {
@@ -323,6 +346,18 @@ function updateCashBillDetail() {
 
     if(!($('#old_balance').val())) {
         $('#old_balance').val(0);
+    }
+    if(balance > 0) {
+        $('#balance').css('color','red');
+        $('#balance_over_label').html("Balance");
+        $('#balance_over_label').css('color','red');
+    } else if(balance < 0) {
+        $('#balance').css('color','blue');
+        $('#balance_over_label').html("Advance");
+        $('#balance_over_label').css('color','blue');
+    } else {
+        $('#balance').css('color','green');
+        $('#balance_over_label').html("");
     }
 
     $('#bill_amount_cash').val(billAmount);
