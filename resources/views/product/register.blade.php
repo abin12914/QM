@@ -81,6 +81,22 @@
                                         @endif
                                     </div>
                                 </div>
+                                @if(!empty($vehicleTypes))
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title" style="float: left;">Royalty Details</h3>
+                                    </div><br>
+                                    @foreach($vehicleTypes as $vehicleType)
+                                        <div class="form-group">
+                                            <label for="royalty{{ $vehicleType->id }}" class="col-sm-2 control-label"><b style="color: red;">* </b> {{ $vehicleType->name}}: </label>
+                                            <div class="col-sm-10 {{ !empty($errors->first('royalty.'.$vehicleType->id)) ? 'has-error' : '' }}">
+                                                <input type="text" class="form-control decimal_number_only" name="royalty[{{ $vehicleType->id }}]" id="royalty{{ $vehicleType->id }}" placeholder="Royalty amount for {{ $vehicleType->name }}" value="{{ old('royalty.'.$vehicleType->id) }}" tabindex="4">
+                                            @if(!empty($errors->first('royalty.'.$vehicleType->id)))
+                                                <p style="color: red;" >{{$errors->first('royalty.'.$vehicleType->id)}}</p>
+                                            @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                             </div>
                             <div class="clearfix"> </div><br>

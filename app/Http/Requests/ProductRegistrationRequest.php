@@ -30,6 +30,9 @@ class ProductRegistrationRequest extends FormRequest
             'rate_feet.numeric'     => "The rate per cubic feet field should be a number.",
             'rate_feet.required'    => "The rate per metric ton field is required.",
             'rate_feet.numeric'     => "The rate per metric ton field should be a number.",
+            'royalty.*.required'    => "Required field",
+            'royalty.*.numeric'     => "This field must be integer",
+            'royalty.*.max'         => "Maximum value exceeded",
         ];
     }
 
@@ -45,6 +48,7 @@ class ProductRegistrationRequest extends FormRequest
             'description'   => 'nullable|max:200',
             'rate_feet'     => 'required|numeric|max:9999',
             'rate_ton'      => 'required|numeric|max:9999',
+            'royalty.*'     => 'required|numeric|max:9999',
         ];
     }
 }

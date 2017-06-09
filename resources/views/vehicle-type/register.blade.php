@@ -70,15 +70,22 @@
                                         @endif
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="scenerage" class="col-sm-2 control-label"><b style="color: red;">* </b> Scenerage : </label>
-                                        <div class="col-sm-10 {{ !empty($errors->first('scenerage')) ? 'has-error' : '' }}">
-                                            <input type="text" class="form-control decimal_number_only" name="scenerage" id="scenerage" placeholder="Scenerage amount for this type of vehicle" value="{{ old('scenerage') }}" tabindex="4">
-                                        @if(!empty($errors->first('scenerage')))
-                                            <p style="color: red;" >{{$errors->first('scenerage')}}</p>
-                                        @endif
-                                        </div>
-                                    </div>
+                                    @if(!empty($products))
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title" style="float: left;">Royalty Details</h3>
+                                        </div><br>
+                                        @foreach($products as $product)
+                                            <div class="form-group">
+                                                <label for="royalty{{ $product->id }}" class="col-sm-2 control-label"><b style="color: red;">* </b> {{ $product->name}}: </label>
+                                                <div class="col-sm-10 {{ !empty($errors->first('royalty.'.$product->id)) ? 'has-error' : '' }}">
+                                                    <input type="text" class="form-control decimal_number_only" name="royalty[{{ $product->id }}]" id="royalty{{ $product->id }}" placeholder="Royalty amount for {{ $product->name }}" value="{{ old('royalty.'.$product->id) }}" tabindex="4">
+                                                @if(!empty($errors->first('royalty.'.$product->id)))
+                                                    <p style="color: red;" >{{$errors->first('royalty.'.$product->id)}}</p>
+                                                @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                             <div class="clearfix"> </div><br>

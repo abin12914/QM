@@ -31,15 +31,15 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/owner/register', 'UserController@ownerRegister')->name('owner-register-view');
 		Route::post('/owner/register/action', 'UserController@ownerRegisterAction')->name('owner-register-action');
 		Route::get('/owner/list', 'UserController@ownerList')->name('owner-list');
+
+		//product
+		Route::get('/product/register', 'ProductController@register')->name('product-register-view');
+		Route::post('/product/register/action', 'ProductController@registerAction')->name('product-register-action');
+		Route::get('/product/list/superadmin', 'ProductController@list')->name('product-list-superadmin');
 	});
 
 	//admin routes
 	Route::group(['middleware' => ['user.role:admin,']], function () {
-		//product
-		Route::get('/product/register', 'ProductController@register')->name('product-register-view');
-		Route::post('/product/register/action', 'ProductController@registerAction')->name('product-register-action');
-		Route::get('/product/list', 'ProductController@list')->name('product-list');
-
 		//vehicle type
 		Route::get('/vehicle-type/register', 'VehicleTypeController@register')->name('vehicle-type-register-view');
 		Route::post('/vehicle-type/register/action', 'VehicleTypeController@registerAction')->name('vehicle-type-register-action');
@@ -80,6 +80,9 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/sales/cash/register/action', 'SalesController@cashSaleRegisterAction')->name('cash-sales-register-action');
 		Route::get('/sales/list', 'SalesController@list')->name('sales-list');
 		Route::get('/sales/get/last/vehicle/{id}', 'SalesController@getLastSaleByVehicleId')->name('sale-get-last-by-vehicle-id');
+
+		//product
+		Route::get('/product/list', 'ProductController@list')->name('product-list');
 	});
 
 	//common routes

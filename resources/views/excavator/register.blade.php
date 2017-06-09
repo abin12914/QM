@@ -81,7 +81,7 @@
                                         <select class="form-control" name="rent_type" id="rent_type" tabindex="4">
                                             <option value="" selected="">Select rental type</option>
                                             <option value="hourly">Hourly rent</option>
-                                            <option value="monthly">Monthly rental</option>
+                                            <option value="monthly">Monthly rent</option>
                                         </select>
                                         @if(!empty($errors->first('rent_type')))
                                             <p style="color: red;" >{{$errors->first('rent_type')}}</p>

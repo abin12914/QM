@@ -21,7 +21,7 @@ class SalesController extends Controller
     public function register()
     {
         $vehicles = Vehicle::get();
-        $accounts = Account::get();
+        $accounts = Account::where('type','personal')->get();
         $products = Product::get();
         $sales    = Sale::orderBy('date_time', 'desc')->take(5)->get();
 

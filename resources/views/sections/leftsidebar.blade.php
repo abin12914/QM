@@ -62,6 +62,27 @@
                     </li>
                 </ul>
             </li>
+             <li class="treeview {{ Request::is('product/*')? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-dollar"></i>
+                        <span>Products</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('product/register')? 'active' : '' }}">
+                            <a href="{{route('product-register-view')}}">
+                                <i class="fa fa-circle-o"></i> Registration
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('product/list/superadmin')? 'active' : '' }}">
+                            <a href="{{route('product-list-superadmin') }}">
+                                <i class="fa fa-circle-o"></i> List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             @endif
             @if($currentUser->role == 'admin' || $currentUser->role == 'user')
                 <li class="treeview {{ Request::is('sales/*')? 'active' : '' }}">
@@ -187,7 +208,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('vehicle/register')? 'active' : '' }}">
-                            <a href="{{ route('vehicle-register-view') }}" target="#">
+                            <a href="{{ route('vehicle-register-view') }}">
                                 <i class="fa fa-circle-o"></i> Registration
                             </a>
                         </li>
@@ -209,11 +230,6 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ Request::is('product/register')? 'active' : '' }}">
-                            <a href="{{route('product-register-view')}}">
-                                <i class="fa fa-circle-o"></i> Registration
-                            </a>
-                        </li>
                         <li class="{{ Request::is('product/list')? 'active' : '' }}">
                             <a href="{{route('product-list') }}">
                                 <i class="fa fa-circle-o"></i> List
@@ -223,7 +239,7 @@
                 </li>
                 <li class="treeview {{ Request::is('vehicle-type/*')? 'active' : '' }}">
                     <a href="#">
-                        <i class="fa fa-bus"></i> <span>Truck Type</span>
+                        <i class="fa fa-bus"></i> <span>Truck Type And Royalty</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>

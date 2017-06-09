@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRegistrationRequest;
 use App\Models\Product;
+use App\Models\VehicleType;
+use App\Models\RoyaltyChart;
 
 class ProductController extends Controller
 {
@@ -13,7 +15,15 @@ class ProductController extends Controller
      */
     public function register()
     {
-    	return view('product.register');
+        $vehicleTypes = VehicleType::where('status', '1')->get();
+
+        if(count($vehicleTypes)) {
+            return view('product.register', [
+                    'vehicleTypes' => $vehicleTypes 
+                ]);
+        } else {
+            return view('product.register');
+        }
     }
 
      /**
@@ -25,6 +35,7 @@ class ProductController extends Controller
         $description    = $request->get('description');
         $ratePerFeet    = $request->get('rate_feet');
         $ratePerton     = $request->get('rate_ton');
+        $royalty            = $request->get('royalty');
 
         $product = new Product;
         $product->name          = $name;
@@ -33,7 +44,26 @@ class ProductController extends Controller
         $product->rate_ton      = $ratePerton;
         $product->status        = 1;
         if($product->save()) {
-            return redirect()->back()->with("message","Product details saved successfully.")->with("alert-class","alert-success");
+            if(!empty($royalty)) {
+                foreach ($royalty as $vehicleTypeId => $amount) {
+                    $royaltyArray[] = [
+                                        'vehicle_type_id'   => $vehicleTypeId,
+                                        'product_id'        => $product->id,
+                                        'amount'            => $amount,
+                                        'status'            => 1,
+                                        'created_at'        => date('Y-m-d H:i:s'),
+                                        'updated_at'        => date('Y-m-d H:i:s')
+                                    ];
+                }
+            
+                if(RoyaltyChart::insert($royaltyArray)) {
+                    return redirect()->back()->with("message","Product details saved successfully.")->with("alert-class","alert-success");
+                } else {
+                    return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the product details. Try after reloading the page.")->with("alert-class","alert-danger");   
+                }
+            } else {
+                return redirect()->back()->with("message","Product details saved successfully.")->with("alert-class","alert-success");
+            }
         } else {
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the product details. Try after reloading the page.")->with("alert-class","alert-danger");
         }

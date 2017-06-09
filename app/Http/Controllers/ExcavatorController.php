@@ -14,7 +14,7 @@ class ExcavatorController extends Controller
      */
     public function register()
     {   
-        $accounts = Account::where('type','personal')->where('relation','contractor')->orderBy('account_name')->get();
+        $accounts = Account::where('type','personal')->orderBy('account_name')->get();
     	return view('excavator.register',[
             'accounts' => $accounts,
         ]);
