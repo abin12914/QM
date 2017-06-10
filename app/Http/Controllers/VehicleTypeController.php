@@ -45,13 +45,13 @@ class VehicleTypeController extends Controller
             if(!empty($royalty)) {
                 foreach ($royalty as $productId => $amount) {
                     $royaltyArray[] = [
-                                        'vehicle_type_id'   => $vehicleType->id,
-                                        'product_id'        => $productId,
-                                        'amount'            => $amount,
-                                        'status'            => 1,
-                                        'created_at'        => date('Y-m-d H:i:s'),
-                                        'updated_at'        => date('Y-m-d H:i:s')
-                                    ];
+                            'vehicle_type_id'   => $vehicleType->id,
+                            'product_id'        => $productId,
+                            'amount'            => $amount,
+                            'status'            => 1,
+                            'created_at'        => date('Y-m-d H:i:s'),
+                            'updated_at'        => date('Y-m-d H:i:s')
+                        ];
                 }
             
                 if(RoyaltyChart::insert($royaltyArray)) {

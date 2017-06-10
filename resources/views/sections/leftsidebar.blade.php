@@ -106,6 +106,27 @@
                         </li>
                     </ul>
                 </li>
+                <li class="treeview {{ Request::is('purchases/*')? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-arrow-down"></i>
+                        <span>Purchases</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('purchases/register')? 'active' : '' }}">
+                            <a href="{{route('purchases-register-view')}}">
+                                <i class="fa fa-circle-o"></i> Registration
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('purchases/list')? 'active' : '' }}">
+                            <a href="{{route('purchases-list')}}">
+                                <i class="fa fa-circle-o"></i> List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="treeview {{ Request::is('account/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-book"></i>
@@ -223,7 +244,7 @@
             @if($currentUser->role == 'admin')
                 <li class="treeview {{ Request::is('product/*')? 'active' : '' }}">
                     <a href="#">
-                        <i class="fa fa-dollar"></i>
+                        <i class="fa fa-industry"></i>
                         <span>Products</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -239,7 +260,7 @@
                 </li>
                 <li class="treeview {{ Request::is('vehicle-type/*')? 'active' : '' }}">
                     <a href="#">
-                        <i class="fa fa-bus"></i> <span>Truck Type And Royalty</span>
+                        <i class="fa fa-pie-chart"></i> <span>Royalty</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>

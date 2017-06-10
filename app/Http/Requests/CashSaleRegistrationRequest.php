@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Vehicle;
-use App\Models\Account;
+//use App\Models\Account;
 use App\Models\Product;
 
 class CashSaleRegistrationRequest extends FormRequest
@@ -30,9 +30,9 @@ class CashSaleRegistrationRequest extends FormRequest
             'vehicle_id_cash.required'              => "The truck number field is required.",
             'vehicle_id_cash.integer'               => "Something went wrong. Please try again after reloading the page.",
             'vehicle_id_cash.in'                    => "Something went wrong. Please try again after reloading the page.",
-            'purchaser_account_id_cash.required'    => "The purchaser field is required.",
+            /*'purchaser_account_id_cash.required'    => "The purchaser field is required.",
             'purchaser_account_id_cash.integer'     => "Something went wrong. Please try again after reloading the page.",
-            'purchaser_account_id_cash.in'          => "Something went wrong. Please try again after reloading the page.",
+            'purchaser_account_id_cash.in'          => "Something went wrong. Please try again after reloading the page.",*/
             'product_id_cash.required'              => "The product field is required.",
             'product_id_cash.integer'               => "Something went wrong. Please try again after reloading the page.",
             'product_id_cash.in'                    => "Something went wrong. Please try again after reloading the page.",
@@ -88,11 +88,11 @@ class CashSaleRegistrationRequest extends FormRequest
                                                 'integer',
                                                 Rule::in(Vehicle::pluck('id')->toArray()),
                                             ],
-            'purchaser_account_id_cash' => [
+            /*'purchaser_account_id_cash' => [
                                                 'required',
                                                 'integer',
                                                 Rule::in(Account::pluck('id')->toArray()),
-                                            ],
+                                            ],*/
             'date_cash'                 => [
                                                 'required',
                                                 'date_format:d/m/Y',

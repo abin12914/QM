@@ -35,7 +35,7 @@ class ProductController extends Controller
         $description    = $request->get('description');
         $ratePerFeet    = $request->get('rate_feet');
         $ratePerton     = $request->get('rate_ton');
-        $royalty            = $request->get('royalty');
+        $royalty        = $request->get('royalty');
 
         $product = new Product;
         $product->name          = $name;
@@ -47,13 +47,13 @@ class ProductController extends Controller
             if(!empty($royalty)) {
                 foreach ($royalty as $vehicleTypeId => $amount) {
                     $royaltyArray[] = [
-                                        'vehicle_type_id'   => $vehicleTypeId,
-                                        'product_id'        => $product->id,
-                                        'amount'            => $amount,
-                                        'status'            => 1,
-                                        'created_at'        => date('Y-m-d H:i:s'),
-                                        'updated_at'        => date('Y-m-d H:i:s')
-                                    ];
+                            'vehicle_type_id'   => $vehicleTypeId,
+                            'product_id'        => $product->id,
+                            'amount'            => $amount,
+                            'status'            => 1,
+                            'created_at'        => date('Y-m-d H:i:s'),
+                            'updated_at'        => date('Y-m-d H:i:s')
+                        ];
                 }
             
                 if(RoyaltyChart::insert($royaltyArray)) {

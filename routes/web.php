@@ -81,6 +81,11 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/sales/list', 'SalesController@list')->name('sales-list');
 		Route::get('/sales/get/last/vehicle/{id}', 'SalesController@getLastSaleByVehicleId')->name('sale-get-last-by-vehicle-id');
 
+		//sales
+		Route::get('/purchases/register', 'PurchasesController@register')->name('purchases-register-view');
+		Route::post('/purchases/register/action', 'PurchasesController@registerAction')->name('purchases-register-action');
+		Route::get('/purchases/list', 'PurchasesController@list')->name('purchases-list');
+
 		//product
 		Route::get('/product/list', 'ProductController@list')->name('product-list');
 	});

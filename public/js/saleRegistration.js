@@ -108,7 +108,7 @@ $(function () {
                             }
                         } else if(elementId == 'vehicle_number_cash') {
                             $('#product_cash').val(productId);
-                            $('#purchaser_cash').val(purchaserAccountId);
+                            /*$('#purchaser_cash').val(purchaserAccountId);*/
                             $('#old_balance').val(result.oldBalance);
                         } else {
                             $('#measure_type_volume_credit').prop('checked',true);
@@ -333,7 +333,7 @@ function updateCashBillDetail() {
     }
 
     //multiplying by 1 for typecasting
-    total   = (deductedTotal * 1) + (oldBalance * 1); console.log(oldBalance);
+    total   = (deductedTotal * 1) + (oldBalance * 1);
     balance = total - paidAmount;
 
     if(!($('#paid_amount').val())) {

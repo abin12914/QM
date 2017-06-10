@@ -113,7 +113,6 @@ class SalesController extends Controller
     public function cashSaleRegisterAction(CashSaleRegistrationRequest $request)
     {
         $vehicleId          = $request->get('vehicle_id_cash');
-        $purchaserAccountId = $request->get('purchaser_account_id_cash');
         $date               = $request->get('date_cash');
         $time               = $request->get('time_cash');
         $productId          = $request->get('product_id_cash');

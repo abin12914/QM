@@ -206,7 +206,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            {{-- <div class="form-group">
                                                 <label for="purchaser_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Purchaser : </label>
                                                 <div class="col-sm-10 {{ !empty($errors->first('purchaser_account_id_cash')) ? 'has-error' : '' }}">
                                                     <select name="purchaser_account_id_cash" class="form-control purchaser" id="purchaser_cash" tabindex="2" style="width: 100%">
@@ -219,7 +219,7 @@
                                                         <p style="color: red;" >{{$errors->first('purchaser_account_id_cash')}}</p>
                                                     @endif
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                             <div class="form-group">
                                                 <label for="date_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Date and Time : </label>
                                                 <div class="col-sm-5 {{ !empty($errors->first('date_cash')) ? 'has-error' : '' }}">
