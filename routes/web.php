@@ -88,6 +88,10 @@ Route::group(['middleware' => 'auth.check'], function () {
 
 		//product
 		Route::get('/product/list', 'ProductController@list')->name('product-list');
+
+		//daily statement
+		Route::get('/daily-statement/register', 'DailyStatementController@register')->name('daily-statement-register-view');
+		Route::post('/daily-statement/labour/action', 'DailyStatementController@labourRegisterAction')->name('daily-statement-labour-action');
 	});
 
 	//common routes

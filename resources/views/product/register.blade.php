@@ -52,9 +52,7 @@
                                     <label for="description" class="col-sm-2 control-label">Description : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('description')) ? 'has-error' : '' }}">
                                         @if(!empty(old('description')))
-                                            <textarea class="form-control" name="description" id="description" rows="3" placeholder="Product description" style="resize: none;" tabindex="2">
-                                                {{ old('description') }}
-                                            </textarea>
+                                            <textarea class="form-control" name="description" id="description" rows="3" placeholder="Product description" style="resize: none;" tabindex="2">{{ old('description') }}</textarea>
                                         @else
                                             <textarea class="form-control" name="description" id="description" rows="3" placeholder="Product description" style="resize: none;" tabindex="2"></textarea>
                                         @endif

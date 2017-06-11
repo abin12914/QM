@@ -1,15 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Truck Type Registration')
+@section('title', 'Truck Type And Royalty')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Truck Type
+            Truck Type And Royalty
             <small>Registartion</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Truck Type</a></li>
+            <li><a href="#"> Truck Type And Royalty</a></li>
             <li class="active">Registration</li>
         </ol>
     </section>

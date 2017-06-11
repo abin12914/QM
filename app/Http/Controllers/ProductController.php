@@ -46,17 +46,13 @@ class ProductController extends Controller
         if($product->save()) {
             if(!empty($royalty)) {
                 foreach ($royalty as $vehicleTypeId => $amount) {
-                    $royaltyArray[] = [
-                            'vehicle_type_id'   => $vehicleTypeId,
-                            'product_id'        => $product->id,
+                    $royaltyArray[$vehicleTypeId] = [
                             'amount'            => $amount,
                             'status'            => 1,
-                            'created_at'        => date('Y-m-d H:i:s'),
-                            'updated_at'        => date('Y-m-d H:i:s')
                         ];
                 }
             
-                if(RoyaltyChart::insert($royaltyArray)) {
+                if($product->vehicleTypes()->sync($royaltyArray)) {
                     return redirect()->back()->with("message","Product details saved successfully.")->with("alert-class","alert-success");
                 } else {
                     return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the product details. Try after reloading the page.")->with("alert-class","alert-danger");   

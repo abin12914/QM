@@ -1,14 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Vehicle Types')
+@section('title', 'Vehicle Types And Royalty')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Vehicle Types
+            Vehicle Types And Royalty
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Vehicle Types</a></li>
+            <li><a href="#"> Vehicle Types And Royalty</a></li>
             <li class="active">List</li>
         </ol>
     </section>
@@ -27,7 +27,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Vehicle Types List</h3>
+                        <h3 class="box-title">Royalty Chart</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -36,29 +36,28 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Generic Name</th>
-                                            <th>Generic Quantity</th>
-                                            <th>Description</th>
-                                            <th>Scenerage</th>
+                                            @if(!empty($vehicletypes))
+                                                <th>#</th>
+                                                <th>Generic Name</th>
+                                                <th>Product</th>
+                                                <th>Royalty Amount</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if(!empty($vehicletypes))
-                                            @foreach($vehicletypes as $vehicletype)
-                                                <tr>
-                                                    <td>{{ $vehicletype->name }}</td>
-                                                    <td>{{ $vehicletype->generic_quantity }}</td>
-                                                    <td>{{ $vehicletype->description }}</td>
-                                                    <td>{{ $vehicletype->scenerage }}</td>
-                                                </tr>
+                                            @foreach($vehicletypes as $index => $vehicletype)
+                                                @foreach($vehicletype->products as $product)
+                                                    <tr>
+                                                        <td>{{ $index + $vehicletypes->firstItem() }}</td>
+                                                        <td>{{ $vehicletype->name }} ({{ $vehicletype->generic_quantity }} feet unit)</td>
+                                                        <td>{{ $product->name }}</td>
+                                                        <td>{{ $product->pivot->amount }}</td>
+                                                    </tr>
+                                                @endforeach
                                             @endforeach
                                         @endif
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th><th></th><th></th><th></th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>

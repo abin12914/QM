@@ -127,6 +127,27 @@
                         </li>
                     </ul>
                 </li>
+                <li class="treeview {{ Request::is('daily-statement/*')? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-arrow-up"></i>
+                        <span>Daily Statement</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('daily-statement/register')? 'active' : '' }}">
+                            <a href="{{route('daily-statement-register-view')}}">
+                                <i class="fa fa-circle-o"></i> Registration
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('daily-statement/list')? 'active' : '' }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="treeview {{ Request::is('account/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-book"></i>
