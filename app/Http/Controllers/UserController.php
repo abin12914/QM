@@ -55,9 +55,12 @@ class UserController extends Controller
         }
         $user->role         = $role;
         $user->status       = 1;
-        // appending time to validtill
-        $validTill          = DateTime::createFromFormat('d/m/Y H:i:s',$validTill.' 23:59:00');
-        $user->valid_till   = $validTill->format('Y-m-d H:i:s');
+
+        if(!empty($validTill)) {
+            //converting date and time to sql datetime format
+            $validTill = date('Y-m-d H:i:s', strtotime($validTill.' '.'23:59:00'));
+            $user->valid_till = $validTill;
+        }
         if($user->save()) {
             return redirect()->back()->with("message","User saved successfully.")->with("alert-class","alert-success");
         } else {
@@ -112,9 +115,14 @@ class UserController extends Controller
         }
         $user->role         = 'admin';
         $user->status       = 1;
-        // appending time to validtill
-        $validTill          = DateTime::createFromFormat('d/m/Y H:i:s',$validTill.' 23:59:00');
-        $user->valid_till   = $validTill->format('Y-m-d H:i:s');
+
+        if(!empty($validTill)) {
+            //converting date and time to sql datetime format
+            $validTill = date('Y-m-d H:i:s', strtotime($validTill.' '.'23:59:00'));
+            $user->valid_till = $validTill;
+        }
+        /*$validTill          = DateTime::createFromFormat('d/m/Y H:i:s',$validTill.' 23:59:00');
+        $user->valid_till   = $validTill->format('Y-m-d H:i:s');*/
 
         if($user->save()) {
             $account = new Account;

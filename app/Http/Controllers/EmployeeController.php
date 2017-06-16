@@ -51,7 +51,7 @@ class EmployeeController extends Controller
             $account->description       = "Category : Labour.  Payment mode : Daily";
         }
         $account->type              = "personal";
-        $account->relation          = "employee";
+        $account->relation          = 'employee';
         $account->financial_status  = $financialStatus;
         $account->opening_balance   = $openingBalance;
         $account->status            = 1;
@@ -109,6 +109,25 @@ class EmployeeController extends Controller
         } else {
             session()->flash('message', 'No employee records available to show!');
             return view('employee.list');/*->with("message","No employee records available!")->with("alert-class","alert-danger");*/
+        }
+    }
+
+    /**
+     * Return employee for given account id
+     */
+    public function getEmployeeByaccountId($accountId)
+    {
+        $employee = Employee::where('account_id', $accountId)->first();
+        if(!empty($employee)) {
+            return ([
+                    'flag'          => true,
+                    'employeeName'  => $employee->account->accountDetail->name,
+                    'wage'          => ($employee->employee_type == 'labour') ? $employee->wage : $salary->salary
+                ]);
+        } else {
+            return ([
+                    'flag'      => false
+                ]);            
         }
     }
 }

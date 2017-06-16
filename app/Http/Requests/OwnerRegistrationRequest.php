@@ -44,7 +44,7 @@ class OwnerRegistrationRequest extends FormRequest
             'user_name'             => 'required|unique:users|max:145',
             'email'                 => 'nullable|email|unique:users|unique:account_details|max:145',
             'phone'                 => 'required|numeric|digits_between:10,13|unique:users|unique:account_details',
-            'valid_till'            => 'nullable|date_format:d/m/Y',
+            'valid_till'            => 'nullable|date_format:d-m-Y',
             'password'              => 'required|min:6|max:25|confirmed',
             'image_file'            => 'nullable|mimes:jpeg,jpg,bmp,png|max:3000',
             'financial_status'      => [

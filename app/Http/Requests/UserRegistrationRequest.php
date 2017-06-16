@@ -47,7 +47,7 @@ class UserRegistrationRequest extends FormRequest
                                             'required',
                                             Rule::in(['superadmin','admin','user'])
                                         ],
-            'valid_till'            => 'nullable|date_format:d/m/Y',
+            'valid_till'            => 'nullable|date_format:d-m-Y',
             'password'              => 'required|min:6|max:25|confirmed',
             'image_file'            => 'nullable|mimes:jpeg,jpg,bmp,png|max:3000'
         ];

@@ -60,7 +60,7 @@ class PurchaseRegistrationRequest extends FormRequest
                                         ],
             'date'                  => [
                                             'required',
-                                            'date_format:d/m/Y',
+                                            'date_format:d-m-Y',
                                             'max:10',
                                         ],
             'time'                  => [

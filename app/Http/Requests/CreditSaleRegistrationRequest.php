@@ -54,7 +54,7 @@ class CreditSaleRegistrationRequest extends FormRequest
             'discount.integer'              => "Invalid data",
             'discount.max'                  => "Maximum value exceeded",
             'discount.min'                  => "Minimum value expected",
-            'deducted_total.required_if'       => "Required field.",
+            'deducted_total.required_if'    => "Required field.",
             'deducted_total.integer'        => "Invalid data",
             'deducted_total.max'            => "Maximum value exceeded",
             'deducted_total.min'            => "Minimum value expected",
@@ -81,7 +81,7 @@ class CreditSaleRegistrationRequest extends FormRequest
                                         ],
             'date'                  => [
                                             'required',
-                                            'date_format:d/m/Y',
+                                            'date_format:d-m-Y',
                                         ],
             'time'                  => [
                                             'required',

@@ -24,8 +24,8 @@ class AccountsTableSeeder extends Seeder
             [
                 'account_name'      => 'Sales',
                 'description'       => 'Sales account',
-                'type'              => 'real',
-                'relation'          => 'real',
+                'type'              => 'nominal',
+                'relation'          => 'nominal',
                 'financial_status'  => 'none',
                 'opening_balance'   => '0',
                 'status'            => '1'  
@@ -33,8 +33,17 @@ class AccountsTableSeeder extends Seeder
             [
                 'account_name'      => 'Purchases',
                 'description'       => 'Purchases account',
-                'type'              => 'real',
-                'relation'          => 'real',
+                'type'              => 'nominal',
+                'relation'          => 'nominal',
+                'financial_status'  => 'none',
+                'opening_balance'   => '0',
+                'status'            => '1'  
+            ],
+            [
+                'account_name'      => 'Labour Attendance',
+                'description'       => 'Labour attendance account',
+                'type'              => 'nominal',
+                'relation'          => 'nominal',
                 'financial_status'  => 'none',
                 'opening_balance'   => '0',
                 'status'            => '1'  
@@ -45,21 +54,28 @@ class AccountsTableSeeder extends Seeder
             [
                 'account_id'    => '01',
                 'name'          => 'Cash account',
-                'address'       => 'Cash account',
+                'address'       => '',
                 'image'         => '/images/real.jpg',
                 'status'        => '1'
             ],
             [
                 'account_id'    => '02',
                 'name'          => 'Sales account',
-                'address'       => 'Sales account',
+                'address'       => '',
                 'image'         => '/images/real.jpg',
                 'status'        => '1'
             ],
             [
                 'account_id'    => '03',
                 'name'          => 'Purchases account',
-                'address'       => 'Purchases account',
+                'address'       => '',
+                'image'         => '/images/real.jpg',
+                'status'        => '1'  
+            ],
+            [
+                'account_id'    => '04',
+                'name'          => 'Labour attendance account',
+                'address'       => '',
                 'image'         => '/images/real.jpg',
                 'status'        => '1'  
             ]

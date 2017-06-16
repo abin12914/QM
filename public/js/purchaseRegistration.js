@@ -7,7 +7,7 @@ $(function () {
     $('.datepicker').datepicker({
         todayHighlight: true,
         startDate: today,
-        format: 'dd/mm/yyyy',
+        format: 'dd-mm-yyyy',
         autoclose: true,
     });
 

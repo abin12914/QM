@@ -95,7 +95,7 @@ class CashSaleRegistrationRequest extends FormRequest
                                             ],*/
             'date_cash'                 => [
                                                 'required',
-                                                'date_format:d/m/Y',
+                                                'date_format:d-m-Y',
                                             ],
             'time_cash'                 => [
                                                 'required',

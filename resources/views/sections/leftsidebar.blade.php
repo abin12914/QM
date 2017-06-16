@@ -129,7 +129,7 @@
                 </li>
                 <li class="treeview {{ Request::is('daily-statement/*')? 'active' : '' }}">
                     <a href="#">
-                        <i class="fa fa-arrow-up"></i>
+                        <i class="fa fa-calendar-plus-o"></i>
                         <span>Daily Statement</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>

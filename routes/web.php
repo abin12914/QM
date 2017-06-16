@@ -54,9 +54,10 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/account/list', 'AccountController@list')->name('account-list');
 
 		//staff
-		Route::get('hr/employee/register', 'EmployeeController@register')->name('employee-register-view');
-		Route::post('hr/employee/register/action', 'EmployeeController@registerAction')->name('employee-register-action');
-		Route::get('hr/employee/list', 'EmployeeController@list')->name('employee-list');
+		Route::get('/hr/employee/register', 'EmployeeController@register')->name('employee-register-view');
+		Route::post('/hr/employee/register/action', 'EmployeeController@registerAction')->name('employee-register-action');
+		Route::get('/hr/employee/list', 'EmployeeController@list')->name('employee-list');
+		Route::get('/employee/get/account/{id}', 'EmployeeController@getEmployeeByaccountId')->name('employee-get-by-account-id');
 
 		//machine
 		//excavator
@@ -81,7 +82,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/sales/list', 'SalesController@list')->name('sales-list');
 		Route::get('/sales/get/last/vehicle/{id}', 'SalesController@getLastSaleByVehicleId')->name('sale-get-last-by-vehicle-id');
 
-		//sales
+		//purchases
 		Route::get('/purchases/register', 'PurchasesController@register')->name('purchases-register-view');
 		Route::post('/purchases/register/action', 'PurchasesController@registerAction')->name('purchases-register-action');
 		Route::get('/purchases/list', 'PurchasesController@list')->name('purchases-list');
@@ -91,7 +92,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 
 		//daily statement
 		Route::get('/daily-statement/register', 'DailyStatementController@register')->name('daily-statement-register-view');
-		Route::post('/daily-statement/labour/action', 'DailyStatementController@labourRegisterAction')->name('daily-statement-labour-action');
+		Route::post('/daily-statement/employee/attendance/action', 'DailyStatementController@employeeAttendanceAction')->name('daily-statement-employee-attendance-action');
 	});
 
 	//common routes
