@@ -93,6 +93,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//daily statement
 		Route::get('/daily-statement/register', 'DailyStatementController@register')->name('daily-statement-register-view');
 		Route::post('/daily-statement/employee/attendance/action', 'DailyStatementController@employeeAttendanceAction')->name('daily-statement-employee-attendance-action');
+		Route::post('/daily-statement/excavator/readings/action', 'DailyStatementController@excavatorReadingsAction')->name('daily-statement-excavator-readings-action');
 	});
 
 	//common routes

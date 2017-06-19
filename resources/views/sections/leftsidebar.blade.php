@@ -138,7 +138,7 @@
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('daily-statement/register')? 'active' : '' }}">
                             <a href="{{route('daily-statement-register-view')}}">
-                                <i class="fa fa-circle-o"></i> Registration
+                                <i class="fa fa-circle-o"></i> Resources
                             </a>
                         </li>
                         <li class="{{ Request::is('daily-statement/list')? 'active' : '' }}">
