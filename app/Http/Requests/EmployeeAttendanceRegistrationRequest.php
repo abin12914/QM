@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Account;
+use App\Models\Employee;
 
 class EmployeeAttendanceRegistrationRequest extends FormRequest
 {
@@ -25,9 +26,12 @@ class EmployeeAttendanceRegistrationRequest extends FormRequest
     public function messages()
     {
         return [
-            'account_id.required'   => 'The account name field is required.',
-            'account_id.integer'    => 'Something went wrong. Please try again after reloading the page.',
-            'account_id.in'         => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_account_id.required'   => 'The account name field is required.',
+            'attendance_account_id.integer'    => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_account_id.in'         => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_employee_id.required'  => 'The employee name field is required.',
+            'attendance_employee_id.integer'   => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_employee_id.in'        => 'Something went wrong. Please try again after reloading the page.',
         ];
     }
 
@@ -39,19 +43,24 @@ class EmployeeAttendanceRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'date'          => [
-                                    'required',
-                                    'date_format:d-m-Y'
-                                ],
-            'account_id'    => [
-                                    'required',
-                                    'integer',
-                                    Rule::in(Account::pluck('id')->toArray())
-                                ],
-            'wage'          => [
-                                    'required',
-                                    'numeric'
-                                ],
+            'attendance_date'           => [
+                                                'required',
+                                                'date_format:d-m-Y'
+                                            ],
+            'attendance_account_id'     => [
+                                                'required',
+                                                'integer',
+                                                Rule::in(Account::pluck('id')->toArray())
+                                            ],
+            'attendance_employee_id'    => [
+                                                'required',
+                                                'integer',
+                                                Rule::in(Employee::pluck('id')->toArray())
+                                            ],
+            'attendance_wage'           => [
+                                                'required',
+                                                'numeric'
+                                            ],
         ];
     }
 }

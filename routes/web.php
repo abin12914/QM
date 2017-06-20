@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/hr/employee/register/action', 'EmployeeController@registerAction')->name('employee-register-action');
 		Route::get('/hr/employee/list', 'EmployeeController@list')->name('employee-list');
 		Route::get('/employee/get/account/{id}', 'EmployeeController@getEmployeeByaccountId')->name('employee-get-by-account-id');
+		Route::get('/employee/get/employee/{id}', 'EmployeeController@getEmployeeByEmployeeId')->name('employee-get-by-employee-id');
 
 		//machine
 		//excavator

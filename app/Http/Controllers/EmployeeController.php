@@ -121,8 +121,27 @@ class EmployeeController extends Controller
         if(!empty($employee)) {
             return ([
                     'flag'          => true,
-                    'employeeName'  => $employee->account->accountDetail->name,
+                    'employeeId'    => $employee->id,//account->accountDetail->name,
                     'wage'          => ($employee->employee_type == 'labour') ? $employee->wage : $salary->salary
+                ]);
+        } else {
+            return ([
+                    'flag'      => false
+                ]);            
+        }
+    }
+
+    /**
+     * Return employee account for given employee id
+     */
+    public function getEmployeeByEmployeeId($employeeId)
+    {
+        $employee = Employee::where('id', $employeeId)->first();
+        if(!empty($employee)) {
+            return ([
+                    'flag'      => true,
+                    'accountId' => $employee->account_id,
+                    'wage'      => ($employee->employee_type == 'labour') ? $employee->wage : $salary->salary
                 ]);
         } else {
             return ([

@@ -19,19 +19,22 @@ class DailyStatementController extends Controller
     public function register()
     {
         $presentEmployeeAccounts = [];
+        $presentEmployees        = [];
         $today = Carbon::now('Asia/Kolkata');
         $employeeAttendance = EmployeeAttendance::where('date',$today->format('Y-m-d'))->get();
 
         foreach ($employeeAttendance as $attendance) {
-            $presentEmployeeAccounts[] = $attendance->employee->account->id;
+            $presentEmployees[]         = $attendance->employee_id;
+            $presentEmployeeAccounts[]  = $attendance->employee->account->id;
         }
-
-        $employeeAccounts           = Account::where('relation','employee')->whereNotIn('id', $presentEmployeeAccounts)->get();
+        $employees = Employee::whereNotIn('id', $presentEmployees)->get();
+        $employeeAccounts = Account::where('relation','employee')->whereNotIn('id', $presentEmployeeAccounts)->get();
         if($employeeAccounts) {
             return view('daily-statement.register',[
                     'today' => $today,
                     'employeeAccounts'    => $employeeAccounts,
-                    'employeeAttendance'  => $employeeAttendance
+                    'employeeAttendance'  => $employeeAttendance,
+                    'employees'           => $employees,
                 ]);
         } else {
             return view('daily-statement.register',[
@@ -45,18 +48,17 @@ class DailyStatementController extends Controller
      */
     public function employeeAttendanceAction(EmployeeAttendanceRegistrationRequest $request)
     {
-        $date               = $request->get('date');
-        $employeeAccountId  = $request->get('account_id');
-        $wage               = $request->get('wage');
+        $date               = $request->get('attendance_date');
+        $employeeId         = $request->get('attendance_employee_id');
+        $employeeAccountId  = $request->get('attendance_account_id');
+        $wage               = $request->get('attendance_wage');
 
         //converting date and time to sql datetime format
         $dateTime = date('Y-m-d H:i:s', strtotime($date.' '.'00:00:00'));
         $date = date('Y-m-d', strtotime($date.' '.'00:00:00'));
 
         $employee = Employee::where('account_id', $employeeAccountId)->first();
-        if(!empty($employee)) {
-            $employeeId = $employee->id;
-        } else {
+        if(empty($employee) || $employeeId != $employee->id) {
             return redirect()->back()->with("message","Something went wrong! Employee not found.")->with("alert-class","alert-danger");
         }
 

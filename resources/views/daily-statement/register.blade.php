@@ -50,42 +50,45 @@
                                     <form action="{{ route('daily-statement-employee-attendance-action') }}" method="post" class="form-horizontal" multipart-form-data>
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <div class="row">
-                                            <div class="col-md-1"></div>
-                                            <div class="col-md-10">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('date')) ? 'has-error' : '' }}">
-                                                        <label for="date_credit" class="control-label">Date : </label>
-                                                        <input type="text" class="form-control decimal_number_only datepicker" name="date" id="date" placeholder="Date" value="{{ old('date') }}" tabindex="1">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('attendance_date')) ? 'has-error' : '' }}">
+                                                        <label for="attendance_date" class="control-label">Date : </label>
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="attendance_date" id="attendance_date" placeholder="Date" value="{{ old('attendance_date') }}" tabindex="1">
                                                     </div>
-                                                    <div class="col-sm-6">
-                                                        <label for="date_credit" class="control-label">Employee Name : </label>
-                                                        <select class="form-control account" name="account_id" id="attendance_account_id" tabindex="2" style="width: 100%">
-                                                            <option value="">Select employee name</option>
-                                                            @foreach($employeeAccounts as $employeeAccount)
-                                                                <option value="{{ $employeeAccount->id }}">{{ $employeeAccount->account_name }}</option>
-                                                            @endforeach
+                                                    <div class="col-sm-6 {{ !empty($errors->first('attendance_employee_id')) ? 'has-error' : '' }}">
+                                                        <label for="attendance_employee_id" class="control-label">Employee Name : </label>
+                                                        <select class="form-control" name="attendance_employee_id" id="attendance_employee_id" tabindex="2" style="width: 100%">
+                                                            @if(count($employees))
+                                                                <option value="">Select employee name</option>
+                                                                @foreach($employees as $employee)
+                                                                    <option value="{{ $employee->id }}" {{ (old('attendance_employee_id') == $employee->id ) ? 'selected' : '' }}>{{ $employee->account->accountDetail->name }}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
-                                                        <label for="date_credit" class="control-label">Employee Account Name : </label>
-                                                        <select class="form-control account" name="account_id" id="attendance_account_id" tabindex="3" style="width: 100%">
-                                                            <option value="">Select employee account</option>
-                                                            @foreach($employeeAccounts as $employeeAccount)
-                                                                <option value="{{ $employeeAccount->id }}">{{ $employeeAccount->account_name }}</option>
-                                                            @endforeach
+                                                    <div class="col-sm-6 {{ !empty($errors->first('attendance_account_id')) ? 'has-error' : '' }}">
+                                                        <label for="attendance_account_id" class="control-label">Employee Account : </label>
+                                                        <select class="form-control" name="attendance_account_id" id="attendance_account_id" tabindex="3" style="width: 100%">
+                                                            @if(count($employeeAccounts) > 0)
+                                                                <option value="">Select employee account</option>
+                                                                @foreach($employeeAccounts as $employeeAccount)
+                                                                    <option value="{{ $employeeAccount->id }}" {{ (old('attendance_account_id') == $employeeAccount->id ) ? 'selected' : '' }}>{{ $employeeAccount->account_name }}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('wage')) ? 'has-error' : '' }}">
-                                                        <label for="date_credit" class="control-label">Wage : </label>
-                                                        <input type="text" class="form-control" name="wage" id="wage" value="" tabindex="3">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('attendance_wage')) ? 'has-error' : '' }}">
+                                                        <label for="attendance_wage" class="control-label">Wage : </label>
+                                                        <input type="text" class="form-control decimal_number_only" name="attendance_wage" id="attendance_wage" tabindex="3">
                                                     </div>
                                                 </div>
-                                                <div class="form-group" hidden>
+                                                {{-- <div class="form-group" hidden>
                                                     <div class="col-sm-6"></div>
                                                     <div class="col-sm-6"></div>
-                                                </div>
+                                                </div> --}}
                                                 <div class="clearfix"></div><br>
                                                 <div class="row">
                                                     <div class="col-xs-2"></div>
@@ -134,7 +137,7 @@
                             <div class="tab-pane" id="excavators_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('daily-statement-employee-attendance-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('daily-statement-excavator-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <div class="row">
                                             <div class="col-md-1"></div>
