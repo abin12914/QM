@@ -39,16 +39,17 @@
                     <!-- nav-tabs-custom -->
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#employee_tab" data-toggle="tab">Employee Attendance</a></li>
-                            <li><a href="#excavators_tab" data-toggle="tab">Excavators</a></li>
-                            <li><a href="#jack_hammers_tab" data-toggle="tab">Jack-Hammers</a></li>
+                            <li class="{{ (empty(old('tab_flag')) || old('tab_flag') == 'employee') ? 'active' : '' }}"><a href="#employee_tab" data-toggle="tab">Employee Attendance</a></li>
+                            <li class="{{ (old('tab_flag') == 'excavator') ? 'active' : '' }}"><a href="#excavators_tab" data-toggle="tab">Excavators</a></li>
+                            <li class="{{ (old('tab_flag') == 'jack_hammer') ? 'active' : '' }}"><a href="#jack_hammers_tab" data-toggle="tab">Jack-Hammers</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="active tab-pane" id="employee_tab">
+                            <div class="{{ (empty(old('tab_flag')) || old('tab_flag') == 'employee') ? 'active' : '' }} tab-pane" id="employee_tab">
                                 <div class="box-body">
                                     <!-- form start -->
                                     <form action="{{ route('daily-statement-employee-attendance-action') }}" method="post" class="form-horizontal" multipart-form-data>
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                        <input type="hidden" name="tab_flag" value="employee">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -134,42 +135,56 @@
                                 </div>
                             </div>
                             <!-- /.tab-pane -->
-                            <div class="tab-pane" id="excavators_tab">
+                            <div class="{{ (old('tab_flag') == 'excavator') ? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <div class="box-body">
                                     <!-- form start -->
                                     <form action="{{ route('daily-statement-excavator-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                        <input type="hidden" name="tab_flag" value="excavator">
                                         <div class="row">
-                                            <div class="col-md-1"></div>
-                                            <div class="col-md-10">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('date')) ? 'has-error' : '' }}">
-                                                        <label for="date_credit" class="control-label">Date : </label>
-                                                        <input type="text" class="form-control decimal_number_only datepicker" name="date" id="date" placeholder="Date" value="{{ old('date') }}" tabindex="1">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_date')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_date" class="control-label">Date : </label>
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="excavator_date" id="excavator_date" placeholder="Date" value="{{ old('excavator_date') }}" tabindex="1">
                                                     </div>
-                                                    <div class="col-sm-6">
-                                                        <label for="date_credit" class="control-label">Exavator : </label>
-                                                        <select class="form-control account" name="account_id" id="attendance_account_id" tabindex="2" style="width: 100%">
-                                                            <option value="">Select excavator</option>
-                                                            @foreach($employeeAccounts as $employeeAccount)
-                                                                <option value="{{ $employeeAccount->id }}">{{ $employeeAccount->account_name }}</option>
-                                                            @endforeach
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_id')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_id" class="control-label">Excavator : </label>
+                                                        <select class="form-control" name="excavator_id" id="excavator_id" tabindex="2" style="width: 100%">
+                                                            @if(count($excavators))
+                                                                <option value="">Select excavator</option>
+                                                                @foreach($excavators as $excavator)
+                                                                    <option value="{{ $excavator->id }}" {{ (old('excavator_id') == $excavator->id ) ? 'selected' : '' }}>{{ $excavator->name }} / Contractor : {{ $excavator->account->accountDetail->name }}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
-                                                        <label for="bucket_reading" class="control-label">Bucket Running Hour: </label>
-                                                        <input type="text" class="form-control" name="bucket_reading" id="bucket_reading" value="" tabindex="3">
+                                                {{-- <div class="form-group">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_contractor_name')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_contractor_name" class="control-label">Contractor Name : </label>
+                                                        <input type="text" class="form-control" name="excavator_contractor_name" id="excavator_contractor_name" tabindex="3" readonly>
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('wage')) ? 'has-error' : '' }}">
-                                                        <label for="date_credit" class="control-label">Breaker Running Hour : </label>
-                                                        <input type="text" class="form-control" name="breaker_reading" id="breaker_reading" value="" tabindex="3">
+                                                </div> --}}
+                                                <div class="form-group">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_bucket_hour')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_bucket_hour" class="control-label">Bucket Running Hour : </label>
+                                                        <input type="text" class="form-control decimal_number_only" name="excavator_bucket_hour" id="excavator_bucket_hour" tabindex="3">
+                                                    </div>
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_breaker_hour')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_breaker_hour" class="control-label">breaker Running Hour : </label>
+                                                        <input type="text" class="form-control decimal_number_only" name="excavator_breaker_hour" id="excavator_breaker_hour" tabindex="3">
                                                     </div>
                                                 </div>
-                                                <div class="form-group" hidden>
-                                                    <div class="col-sm-6"></div>
-                                                    <div class="col-sm-6"></div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_operator')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_operator" class="control-label">Operator Name : </label>
+                                                        <input type="text" class="form-control" name="excavator_operator" id="excavator_operator" tabindex="3">
+                                                    </div>
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_operator_bata')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_operator_bata" class="control-label">Operator Bata : </label>
+                                                        <input type="text" class="form-control decimal_number_only" name="excavator_operator_bata" id="excavator_operator_bata" tabindex="3">
+                                                    </div>
                                                 </div>
                                                 <div class="clearfix"></div><br>
                                                 <div class="row">
@@ -190,27 +205,25 @@
                                     <!-- /.form end -->
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <h4>Excavator working list : {{ $today->format('d-m-Y') }}</h4>
+                                            <h4>Attendance list : {{ $today->format('d-m-Y') }}</h4>
                                         </div>
                                     </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Excavator</th>
-                                                <th>Contractor</th>
-                                                <th>Bucket Reading</th>
-                                                <th>Breaker Reading</th>
+                                                <th>Employee Name</th>
+                                                <th>Account Name</th>
+                                                <th>Wage</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($employeeAttendance as $index => $attendance)
+                                            @foreach($excavatorReadings as $index => $excavatorReading)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{ $excavatorReading->id }}</td>
+                                                    <td>{{ $excavatorReading->id }}</td>
+                                                    <td>{{ $excavatorReadings->id }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -218,42 +231,50 @@
                                 </div>
                             </div>
                             <!-- /.tab-pane -->
-                            <div class="tab-pane" id="jack_hammers_tab">
+                            <div class="{{ (old('tab_flag') == 'jack_hammer') ? 'active' : '' }} tab-pane" id="jack_hammers_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('daily-statement-employee-attendance-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('daily-statement-jackhammer-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                        <input type="hidden" name="tab_flag" value="jackhammer">
                                         <div class="row">
-                                            <div class="col-md-1"></div>
-                                            <div class="col-md-10">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('date')) ? 'has-error' : '' }}">
-                                                        <label for="date_credit" class="control-label">Date : </label>
-                                                        <input type="text" class="form-control decimal_number_only datepicker" name="date" id="date" placeholder="Date" value="{{ old('date') }}" tabindex="1">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('jackhammer_date')) ? 'has-error' : '' }}">
+                                                        <label for="jackhammer_date" class="control-label">Date : </label>
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="jackhammer_date" id="jackhammer_date" placeholder="Date" value="{{ old('jackhammer_date') }}" tabindex="1">
                                                     </div>
-                                                    <div class="col-sm-6">
-                                                        <label for="date_credit" class="control-label">JackHammer : </label>
-                                                        <select class="form-control account" name="account_id" id="attendance_account_id" tabindex="2" style="width: 100%">
-                                                            <option value="">Select excavator</option>
-                                                            @foreach($employeeAccounts as $employeeAccount)
-                                                                <option value="{{ $employeeAccount->id }}">{{ $employeeAccount->account_name }}</option>
-                                                            @endforeach
+                                                    <div class="col-sm-6 {{ !empty($errors->first('jackhammer_id')) ? 'has-error' : '' }}">
+                                                        <label for="jackhammer_id" class="control-label">JackHammer : </label>
+                                                        <select class="form-control" name="jackhammer_id" id="jackhammer_id" tabindex="2" style="width: 100%">
+                                                            @if(count($jackhammers))
+                                                                <option value="">Select jackhammer</option>
+                                                                @foreach($jackhammers as $jackhammer)
+                                                                    <option value="{{ $jackhammer->id }}" {{ (old('jackhammer_id') == $jackhammer->id ) ? 'selected' : '' }}>{{ $jackhammer->name }}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6">
-                                                        <label for="bucket_reading" class="control-label"> Contractor : </label>
-                                                        <input type="text" class="form-control" name="contractor_jackhammer" id="contractor_jackhammer" value="" tabindex="3" readonly>
+                                                    <div class="col-sm-6 {{ !empty($errors->first('jackhammer_contractor_account')) ? 'has-error' : '' }}">
+                                                        <label for="jackhammer_contractor_account" class="control-label">Contractor : </label>
+                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_contractor_account" id="jackhammer_contractor_account" tabindex="3">
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
-                                                        <label for="bucket_reading" class="control-label"> Total Depth Of Pockets In Feet : </label>
-                                                        <input type="text" class="form-control" name="bucket_reading" id="bucket_reading" value="" tabindex="3">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('jackhammer_depth_per_pit')) ? 'has-error' : '' }}">
+                                                        <label for="jackhammer_depth_per_pit" class="control-label">Depth Per Pit : </label>
+                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_depth_per_pit" id="jackhammer_depth_per_pit" tabindex="3">
                                                     </div>
                                                 </div>
-                                                <div class="form-group" hidden>
-                                                    <div class="col-sm-6"></div>
-                                                    <div class="col-sm-6"></div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('jackhammer_no_of_pit')) ? 'has-error' : '' }}">
+                                                        <label for="jackhammer_no_of_pit" class="control-label">No Of Pits : </label>
+                                                        <input type="text" class="form-control" name="jackhammer_no_of_pit" id="jackhammer_no_of_pit" tabindex="3">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="jackhammer_total_pit_depth" class="control-label">Total Pit Depth : </label>
+                                                        <input type="text" class="form-control" name="jackhammer_total_pit_depth" id="jackhammer_total_pit_depth" tabindex="3">
+                                                    </div>
                                                 </div>
                                                 <div class="clearfix"></div><br>
                                                 <div class="row">
@@ -274,25 +295,25 @@
                                     <!-- /.form end -->
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <h4>Jackhammer working list : {{ $today->format('d-m-Y') }}</h4>
+                                            <h4>Attendance list : {{ $today->format('d-m-Y') }}</h4>
                                         </div>
                                     </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Jackhammer</th>
-                                                <th>Contractor</th>
-                                                <th>Depth Drilled</th>
+                                                <th>Employee Name</th>
+                                                <th>Account Name</th>
+                                                <th>Wage</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($employeeAttendance as $index => $attendance)
+                                            @foreach($excavatorReadings as $index => $excavatorReading)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{ $excavatorReading->id }}</td>
+                                                    <td>{{ $excavatorReading->id }}</td>
+                                                    <td>{{ $excavatorReadings->id }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

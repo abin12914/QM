@@ -3,7 +3,11 @@ $(function () {
     selectTriggerFlag = 0;
 
     //new employee registration link for select2
-    employeeRegistrationLink = "No employees found. <a href='/employee/register'>Register new employee</a>";
+    employeeRegistrationLink    = "No employees found. <a href='/hr/employee/register'>Register new employee</a>";
+    //new excavator registration link for select2
+    excavatorRegistrationLink   = "No excavator found. <a href='/machine/excavator/register'>Register new excavator</a>";
+    //new jackhammer registration link for select2
+    jackhammerRegistrationLink  = "No jackhammer found. <a href='/machine/excavator/register'>Register new jackhammer</a>";
     
     //Date picker
     $('.datepicker').datepicker({
@@ -19,6 +23,7 @@ $(function () {
 
     //Initialize Select2 Element for employee name select box
     $("#attendance_employee_id").select2({
+        minimumResultsForSearch: 5,
         language: {
              noResults: function() {
                 return employeeRegistrationLink;
@@ -31,9 +36,36 @@ $(function () {
 
     //Initialize Select2 Element for employee account select box
     $("#attendance_account_id").select2({
+        minimumResultsForSearch: 5,
         language: {
              noResults: function() {
                 return employeeRegistrationLink;
+            }
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        }
+    });
+
+    //Initialize Select2 Element for excavator select box
+    $("#excavator_id").select2({
+        minimumResultsForSearch: 5,
+        language: {
+             noResults: function() {
+                return excavatorRegistrationLink;
+            }
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        }
+    });
+
+    //Initialize Select2 Element for jackhammer select box
+    $("#jackhammer_id").select2({
+        minimumResultsForSearch: 5,
+        language: {
+             noResults: function() {
+                return jackhammerRegistrationLink;
             }
         },
         escapeMarkup: function (markup) {
@@ -50,7 +82,7 @@ $(function () {
     // Change hash for page-reload
     $('.nav-tabs-custom a').on('shown.bs.tab', function (e) {
         window.location.hash = e.target.hash;
-    })
+    });
 
     //select employee name for the selected account
     $('body').on("change", "#attendance_account_id", function () {
@@ -120,6 +152,36 @@ $(function () {
             }
         } else {
             selectTriggerFlag = 0;
+        }
+    });
+
+    //select excavator details for the selected excavator
+    $('body').on("change", "#excavator_id", function () {
+        var excavatorId = $('#excavator_id').val();
+        
+        $('#excavator_contractor_name').val('');
+        if(excavatorId) {
+            $.ajax({
+                url: "/employee/get/employee/" + excavatorId,
+                method: "get",
+                success: function(result) {
+                    if(result && result.flag) {
+                        var accountId   = result.accountId;
+                        var wage        = result.wage;
+                        
+                        $('#attendance_account_id').val(accountId);
+                        $('#attendance_wage').val(wage);
+                    } else {
+                        $('#attendance_employee_id').val('');
+                    }
+                    $('#attendance_account_id').trigger('change');
+                },
+                error: function () {
+                    $('#attendance_employee_id').val('');
+                }
+            });
+        } else {
+           $('#attendance_account_id').trigger('change'); 
         }
     });
 });
