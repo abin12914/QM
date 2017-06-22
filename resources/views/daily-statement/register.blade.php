@@ -122,14 +122,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($employeeAttendance as $index => $attendance)
-                                                <tr>
-                                                    <td>{{ $index+1 }}</td>
-                                                    <td>{{ $attendance->employee->account->accountDetail->name }}</td>
-                                                    <td>{{ $attendance->employee->account->account_name }}</td>
-                                                    <td>{{ $attendance->wage }}</td>
-                                                </tr>
-                                            @endforeach
+                                            @if(count($employeeAttendance) > 0)
+                                                @foreach($employeeAttendance as $index => $attendance)
+                                                    <tr>
+                                                        <td>{{ $index+1 }}</td>
+                                                        <td>{{ $attendance->employee->account->accountDetail->name }}</td>
+                                                        <td>{{ $attendance->employee->account->account_name }}</td>
+                                                        <td>{{ $attendance->wage }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -223,7 +225,7 @@
                                                     <td>{{ $index+1 }}</td>
                                                     <td>{{ $excavatorReading->id }}</td>
                                                     <td>{{ $excavatorReading->id }}</td>
-                                                    <td>{{ $excavatorReadings->id }}</td>
+                                                    <td>{{ $excavatorReading->id }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -308,14 +310,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($excavatorReadings as $index => $excavatorReading)
+                                            {{-- @foreach($excavatorReadings as $index => $excavatorReading)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
                                                     <td>{{ $excavatorReading->id }}</td>
                                                     <td>{{ $excavatorReading->id }}</td>
-                                                    <td>{{ $excavatorReadings->id }}</td>
+                                                    <td>{{ $excavatorReading->id }}</td>
                                                 </tr>
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
