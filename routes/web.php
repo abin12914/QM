@@ -70,6 +70,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/machine/jackhammer/register', 'JackhammerController@register')->name('jackhammer-register-view');
 		Route::post('/machine/jackhammer/register/action', 'JackhammerController@registerAction')->name('jackhammer-register-action');
 		Route::get('/machine/jackhammer/list', 'JackhammerController@list')->name('jackhammer-list');
+		Route::get('/get/account/by/jackhammer/{id}', 'JackhammerController@getAccountByJackhammerId')->name('get-account-by-jackhammer-id');
 
 		//vehicle
 		Route::get('/vehicle/register', 'VehicleController@register')->name('vehicle-register-view');

@@ -62,4 +62,23 @@ class JackhammerController extends Controller
             return view('jackhammer.list');
         }
     }
+
+    /**
+     * Return contractor account for jackhammer id
+     */
+    public function getAccountByJackhammerId($jackhammerId)
+    {
+        $jackhammer = Jackhammer::where('id', $jackhammerId)->first();
+        if(!empty($jackhammer)) {
+            $accountName = $jackhammer->account->account_name;
+            return ([
+                    'flag'          => true,
+                    'accountName'   => $accountName
+                ]);
+        } else {
+            return ([
+                    'flag'          => false
+                ]);
+        }
+    }
 }

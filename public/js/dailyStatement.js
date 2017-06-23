@@ -7,7 +7,7 @@ $(function () {
     //new excavator registration link for select2
     excavatorRegistrationLink   = "No excavator found. <a href='/machine/excavator/register'>Register new excavator</a>";
     //new jackhammer registration link for select2
-    jackhammerRegistrationLink  = "No jackhammer found. <a href='/machine/excavator/register'>Register new jackhammer</a>";
+    jackhammerRegistrationLink  = "No jackhammer found. <a href='/machine/jackhammer/register'>Register new jackhammer</a>";
     
     //Date picker
     $('.datepicker').datepicker({
@@ -155,33 +155,59 @@ $(function () {
         }
     });
 
-    //select excavator details for the selected excavator
-    $('body').on("change", "#excavator_id", function () {
-        var excavatorId = $('#excavator_id').val();
+    //select contractor details for the selected jackhammer
+    $('body').on("change", "#jackhammer_id", function () {
+        var jackhammerId = $('#jackhammer_id').val();
         
-        $('#excavator_contractor_name').val('');
-        if(excavatorId) {
+        $('#jackhammer_contractor_account').val('');
+        if(jackhammerId) {
             $.ajax({
-                url: "/employee/get/employee/" + excavatorId,
+                url: "/get/account/by/jackhammer/" + jackhammerId,
                 method: "get",
                 success: function(result) {
                     if(result && result.flag) {
-                        var accountId   = result.accountId;
-                        var wage        = result.wage;
-                        
-                        $('#attendance_account_id').val(accountId);
-                        $('#attendance_wage').val(wage);
+                        var accountName   = result.accountName;
+                        $('#jackhammer_contractor_account').val(accountName);
                     } else {
-                        $('#attendance_employee_id').val('');
+                        $('#jackhammer_id').val('');
                     }
-                    $('#attendance_account_id').trigger('change');
                 },
                 error: function () {
-                    $('#attendance_employee_id').val('');
+                    $('#jackhammer_id').val('');
                 }
             });
         } else {
-           $('#attendance_account_id').trigger('change'); 
+           $('#jackhammer_id').val('');
         }
     });
+
+    //total pit depth calculation
+    $('body').on("change", "#jackhammer_depth_per_pit", function () {
+        calculateTotalPitDepth();
+    });
+
+    //total pit depth calculation
+    $('body').on("keyup", "#jackhammer_depth_per_pit", function () {
+        calculateTotalPitDepth();
+    });
+
+    //total pit depth calculation
+    $('body').on("change", "#jackhammer_no_of_pit", function () {
+        calculateTotalPitDepth();
+    });
+
+    //total pit depth calculation
+    $('body').on("keyup", "#jackhammer_no_of_pit", function () {
+        calculateTotalPitDepth();
+    });
 });
+
+function calculateTotalPitDepth() {
+    var depthPerPit     = $('#jackhammer_depth_per_pit').val();
+    var noOfPit         = $('#jackhammer_no_of_pit').val();
+    var totalPitDepth   = 0;
+    if(depthPerPit > 0 && noOfPit > 0) {
+        totalPitDepth = depthPerPit * noOfPit;
+    }
+    $('#jackhammer_total_pit_depth').val(totalPitDepth);
+}

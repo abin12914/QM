@@ -41,7 +41,7 @@
                         <ul class="nav nav-tabs">
                             <li class="{{ (empty(old('tab_flag')) || old('tab_flag') == 'employee') ? 'active' : '' }}"><a href="#employee_tab" data-toggle="tab">Employee Attendance</a></li>
                             <li class="{{ (old('tab_flag') == 'excavator') ? 'active' : '' }}"><a href="#excavators_tab" data-toggle="tab">Excavators</a></li>
-                            <li class="{{ (old('tab_flag') == 'jack_hammer') ? 'active' : '' }}"><a href="#jack_hammers_tab" data-toggle="tab">Jack-Hammers</a></li>
+                            <li class="{{ (old('tab_flag') == 'jackhammer') ? 'active' : '' }}"><a href="#jack_hammers_tab" data-toggle="tab">Jack-Hammers</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="{{ (empty(old('tab_flag')) || old('tab_flag') == 'employee') ? 'active' : '' }} tab-pane" id="employee_tab">
@@ -170,11 +170,11 @@
                                                 </div> --}}
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_bucket_hour')) ? 'has-error' : '' }}">
-                                                        <label for="excavator_bucket_hour" class="control-label">Bucket Running Hour : </label>
+                                                        <label for="excavator_bucket_hour" class="control-label">Bucket [Working Hour] : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="excavator_bucket_hour" id="excavator_bucket_hour" tabindex="3">
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_breaker_hour')) ? 'has-error' : '' }}">
-                                                        <label for="excavator_breaker_hour" class="control-label">breaker Running Hour : </label>
+                                                        <label for="excavator_breaker_hour" class="control-label">Breaker [Working Hour] : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="excavator_breaker_hour" id="excavator_breaker_hour" tabindex="3">
                                                     </div>
                                                 </div>
@@ -214,18 +214,22 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Employee Name</th>
-                                                <th>Account Name</th>
-                                                <th>Wage</th>
+                                                <th>Excavator</th>
+                                                <th>Contractor Account</th>
+                                                <th>Bucket [Working Hour]</th>
+                                                <th>Breaker [Working Hour]</th>
+                                                <th>Operator Bata</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($excavatorReadings as $index => $excavatorReading)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td>{{ $excavatorReading->id }}</td>
-                                                    <td>{{ $excavatorReading->id }}</td>
-                                                    <td>{{ $excavatorReading->id }}</td>
+                                                    <td>{{ $excavatorReading->excavator->name }}</td>
+                                                    <td>{{ $excavatorReading->transaction->creditAccount->account_name }}</td>
+                                                    <td>{{ $excavatorReading->bucket_hour }}</td>
+                                                    <td>{{ $excavatorReading->breaker_hour }}</td>
+                                                    <td>{{ $excavatorReading->bata }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -233,7 +237,7 @@
                                 </div>
                             </div>
                             <!-- /.tab-pane -->
-                            <div class="{{ (old('tab_flag') == 'jack_hammer') ? 'active' : '' }} tab-pane" id="jack_hammers_tab">
+                            <div class="{{ (old('tab_flag') == 'jackhammer') ? 'active' : '' }} tab-pane" id="jack_hammers_tab">
                                 <div class="box-body">
                                     <!-- form start -->
                                     <form action="{{ route('daily-statement-jackhammer-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
@@ -261,21 +265,21 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('jackhammer_contractor_account')) ? 'has-error' : '' }}">
                                                         <label for="jackhammer_contractor_account" class="control-label">Contractor : </label>
-                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_contractor_account" id="jackhammer_contractor_account" tabindex="3">
+                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_contractor_account" id="jackhammer_contractor_account" tabindex="3" readonly>
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('jackhammer_depth_per_pit')) ? 'has-error' : '' }}">
                                                         <label for="jackhammer_depth_per_pit" class="control-label">Depth Per Pit : </label>
-                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_depth_per_pit" id="jackhammer_depth_per_pit" tabindex="3">
+                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_depth_per_pit" id="jackhammer_depth_per_pit" value="{{ !empty(old('jackhammer_depth_per_pit')) ? old('jackhammer_depth_per_pit') : 5 }}" tabindex="3">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('jackhammer_no_of_pit')) ? 'has-error' : '' }}">
                                                         <label for="jackhammer_no_of_pit" class="control-label">No Of Pits : </label>
-                                                        <input type="text" class="form-control" name="jackhammer_no_of_pit" id="jackhammer_no_of_pit" tabindex="3">
+                                                        <input type="text" class="form-control number_only" name="jackhammer_no_of_pit" id="jackhammer_no_of_pit" tabindex="3">
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <label for="jackhammer_total_pit_depth" class="control-label">Total Pit Depth : </label>
-                                                        <input type="text" class="form-control" name="jackhammer_total_pit_depth" id="jackhammer_total_pit_depth" tabindex="3">
+                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_total_pit_depth" id="jackhammer_total_pit_depth" tabindex="3" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div><br>
@@ -310,14 +314,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- @foreach($excavatorReadings as $index => $excavatorReading)
+                                            @foreach($excavatorReadings as $index => $excavatorReading)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td>{{ $excavatorReading->id }}</td>
-                                                    <td>{{ $excavatorReading->id }}</td>
-                                                    <td>{{ $excavatorReading->id }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
-                                            @endforeach --}}
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
