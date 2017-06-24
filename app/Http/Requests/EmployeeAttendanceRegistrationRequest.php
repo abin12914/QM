@@ -26,12 +26,18 @@ class EmployeeAttendanceRegistrationRequest extends FormRequest
     public function messages()
     {
         return [
-            'attendance_account_id.required'   => 'The account name field is required.',
-            'attendance_account_id.integer'    => 'Something went wrong. Please try again after reloading the page.',
-            'attendance_account_id.in'         => 'Something went wrong. Please try again after reloading the page.',
-            'attendance_employee_id.required'  => 'The employee name field is required.',
-            'attendance_employee_id.integer'   => 'Something went wrong. Please try again after reloading the page.',
-            'attendance_employee_id.in'        => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_date.required'          => 'Date field is required',
+            'attendance_date.date_format'       => 'Date field format error. Please try again after reloading the page.',
+            'attendance_account_id.required'    => 'The account name field is required.',
+            'attendance_account_id.integer'     => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_account_id.in'          => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_employee_id.required'   => 'The employee name field is required.',
+            'attendance_employee_id.integer'    => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_employee_id.in'         => 'Something went wrong. Please try again after reloading the page.',
+            'attendance_wage.required'          => 'Wage field is required',
+            'attendance_wage.numeric'           => 'Wage field should be nuemeric.',
+            'attendance_wage.min'               => 'Wage field value should be greater than 0.',
+            'attendance_wage.max'               => 'Wage field value limit exceeded.',
         ];
     }
 
@@ -59,7 +65,9 @@ class EmployeeAttendanceRegistrationRequest extends FormRequest
                                             ],
             'attendance_wage'           => [
                                                 'required',
-                                                'numeric'
+                                                'numeric',
+                                                'min:1',
+                                                'max:5000'
                                             ],
         ];
     }

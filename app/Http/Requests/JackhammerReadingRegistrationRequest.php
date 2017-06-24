@@ -37,7 +37,7 @@ class JackhammerReadingRegistrationRequest extends FormRequest
             'jackhammer_no_of_pit.required'         => 'No of pit field is required.',
             'jackhammer_no_of_pit.numeric'          => 'No of pit field value should be numeric.',
             'jackhammer_no_of_pit.max'              => 'No of pit field value limit exceeded.',
-            'jackhammer_no_of_pit.min'              => 'No of pit field value must be greater than 0.',
+            'jackhammer_no_of_pit.min'              => 'No of pit field value must be greater than 5.',
             'jackhammer_total_pit_depth.required'   => 'Total pit depth field is required.',
             'jackhammer_total_pit_depth.numeric'    => 'Something went wrong. Please try again after reloading the page.',
             'jackhammer_total_pit_depth.max'        => 'Something went wrong. Please try again after reloading the page.',
@@ -66,13 +66,13 @@ class JackhammerReadingRegistrationRequest extends FormRequest
                                                     'required',
                                                     'numeric',
                                                     'max:30',
-                                                    'min:0.1'
+                                                    'min:1'
                                                 ],
             'jackhammer_no_of_pit'          => [
                                                     'required',
                                                     'numeric',
                                                     'max:1000',
-                                                    'min:1'
+                                                    'min:5'
                                                 ],
             'jackhammer_total_pit_depth'    => [
                                                     'required',

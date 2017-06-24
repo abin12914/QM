@@ -39,12 +39,12 @@
                     <!-- nav-tabs-custom -->
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="{{ (empty(old('tab_flag')) || old('tab_flag') == 'employee') ? 'active' : '' }}"><a href="#employee_tab" data-toggle="tab">Employee Attendance</a></li>
-                            <li class="{{ (old('tab_flag') == 'excavator') ? 'active' : '' }}"><a href="#excavators_tab" data-toggle="tab">Excavators</a></li>
-                            <li class="{{ (old('tab_flag') == 'jackhammer') ? 'active' : '' }}"><a href="#jack_hammers_tab" data-toggle="tab">Jack-Hammers</a></li>
+                            <li class="{{ ((old('tab_flag') == 'employee') || empty(Session::get('controller_tab_flag')) || (Session::get('controller_tab_flag') == 'employee')) ? 'active' : '' }}"><a href="#employee_tab" data-toggle="tab">Employee Attendance</a></li>
+                            <li class="{{ (old('tab_flag') == 'excavator' || (!empty(Session::get('controller_tab_flag')) && (Session::get('controller_tab_flag') == 'excavator'))) ? 'active' : '' }}"><a href="#excavators_tab" data-toggle="tab">Excavators</a></li>
+                            <li class="{{ (old('tab_flag') == 'jackhammer' || (!empty(Session::get('controller_tab_flag')) && (Session::get('controller_tab_flag') == 'jackhammer'))) ? 'active' : '' }}"><a href="#jack_hammers_tab" data-toggle="tab">Jack-Hammers</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="{{ (empty(old('tab_flag')) || old('tab_flag') == 'employee') ? 'active' : '' }} tab-pane" id="employee_tab">
+                            <div class="{{ (old('tab_flag') == 'employee' || (empty(Session::get('controller_tab_flag')) || Session::get('controller_tab_flag') == 'employee')) ? 'active' : '' }} tab-pane" id="employee_tab">
                                 <div class="box-body">
                                     <!-- form start -->
                                     <form action="{{ route('daily-statement-employee-attendance-action') }}" method="post" class="form-horizontal" multipart-form-data>
@@ -137,7 +137,7 @@
                                 </div>
                             </div>
                             <!-- /.tab-pane -->
-                            <div class="{{ (old('tab_flag') == 'excavator') ? 'active' : '' }} tab-pane" id="excavators_tab">
+                            <div class="{{ (old('tab_flag') == 'excavator' || (!empty(Session::get('controller_tab_flag')) && Session::get('controller_tab_flag') == 'excavator')) ? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <div class="box-body">
                                     <!-- form start -->
                                     <form action="{{ route('daily-statement-excavator-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
@@ -194,7 +194,6 @@
                                                     <div class="col-xs-4">
                                                         <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="5">Clear</button>
                                                     </div>
-                                                    {{-- <div class="col-sm-1"></div> --}}
                                                     <div class="col-xs-4">
                                                         <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4">Add</button>
                                                     </div>
@@ -237,7 +236,7 @@
                                 </div>
                             </div>
                             <!-- /.tab-pane -->
-                            <div class="{{ (old('tab_flag') == 'jackhammer') ? 'active' : '' }} tab-pane" id="jack_hammers_tab">
+                            <div class="{{ (old('tab_flag') == 'jackhammer' || (!empty(Session::get('controller_tab_flag')) && Session::get('controller_tab_flag') == 'jackhammer')) ? 'active' : '' }} tab-pane" id="jack_hammers_tab">
                                 <div class="box-body">
                                     <!-- form start -->
                                     <form action="{{ route('daily-statement-jackhammer-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
@@ -308,18 +307,18 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Employee Name</th>
-                                                <th>Account Name</th>
-                                                <th>Wage</th>
+                                                <th>Jackhammer</th>
+                                                <th>Contractor Account</th>
+                                                <th>Total Pit Depth</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($excavatorReadings as $index => $excavatorReading)
+                                            @foreach($jackhammerReadings as $index => $jackhammerReading)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{ $jackhammerReading->jackhammer->name }}</td>
+                                                    <td>{{ $jackhammerReading->jackhammer->account->account_name }}</td>
+                                                    <td>{{ $jackhammerReading->total_pit_depth }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

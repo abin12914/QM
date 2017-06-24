@@ -141,7 +141,7 @@ class EmployeeController extends Controller
             return ([
                     'flag'      => true,
                     'accountId' => $employee->account_id,
-                    'wage'      => ($employee->employee_type == 'labour') ? $employee->wage : $salary->salary
+                    'wage'      => ($employee->employee_type == 'labour') ? $employee->wage : $employee->salary
                 ]);
         } else {
             return ([
