@@ -148,6 +148,48 @@
                         </li>
                     </ul>
                 </li>
+                <li class="treeview {{ Request::is('monthly-statement/*')? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-calendar"></i>
+                        <span>Monthly Statement</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('monthly-statement/register')? 'active' : '' }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> Resources
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('monthly-statement/list')? 'active' : '' }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview {{ Request::is('voucher/*')? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-tags"></i>
+                        <span>Vouchers</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('voucher/register')? 'active' : '' }}">
+                            <a href="{{route('voucher-register-view')}}">
+                                <i class="fa fa-circle-o"></i> Register
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('daily-statement/list')? 'active' : '' }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="treeview {{ Request::is('account/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-book"></i>

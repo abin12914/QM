@@ -97,6 +97,9 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/daily-statement/employee/attendance/action', 'DailyStatementController@employeeAttendanceAction')->name('daily-statement-employee-attendance-action');
 		Route::post('/daily-statement/excavator/readings/action', 'DailyStatementController@excavatorReadingsAction')->name('daily-statement-excavator-readings-action');
 		Route::post('/daily-statement/jackhammer/readings/action', 'DailyStatementController@jackhammerReadingsAction')->name('daily-statement-jackhammer-readings-action');
+
+		//vouchers
+		Route::get('/voucher/register', 'DailyStatementController@register')->name('voucher-register-view');
 	});
 
 	//common routes
