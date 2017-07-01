@@ -99,7 +99,10 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/daily-statement/jackhammer/readings/action', 'DailyStatementController@jackhammerReadingsAction')->name('daily-statement-jackhammer-readings-action');
 
 		//vouchers
-		Route::get('/voucher/register', 'DailyStatementController@register')->name('voucher-register-view');
+		Route::get('/voucher/register', 'VoucherController@register')->name('voucher-register-view');
+		Route::post('/voucher/register/action', 'VoucherController@cashVoucherRegistrationAction')->name('cash-voucher-register-action');
+		Route::post('/voucher/register/action', 'VoucherController@dieselVoucherRegistrationAction')->name('diesel-voucher-register-action');
+		Route::get('/get/details/by/account/{id}', 'VoucherController@getAccountDetailsByaccountId')->name('get-details-by-account-id');
 	});
 
 	//common routes
