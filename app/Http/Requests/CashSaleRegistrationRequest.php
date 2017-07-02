@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Vehicle;
-//use App\Models\Account;
 use App\Models\Product;
 
 class CashSaleRegistrationRequest extends FormRequest
