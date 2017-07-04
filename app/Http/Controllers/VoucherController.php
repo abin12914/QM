@@ -9,6 +9,7 @@ use App\Models\Account;
 use App\Models\Voucher;
 use App\Models\Transaction;
 use App\Http\Requests\CashVoucherRegistrationRequest;
+use App\Http\Requests\CreditVoucherRegistrationRequest;
 
 class VoucherController extends Controller
 {
@@ -20,7 +21,7 @@ class VoucherController extends Controller
         $today = Carbon::now('Asia/Kolkata');
         
         $cashVouchers   = Voucher::orderBy('date_time', 'desc')->where('voucher_type','Cash')->take(5)->get();
-        $dieselVouchers = Voucher::orderBy('date_time', 'desc')->where('voucher_type','Diesel')->take(5)->get();
+        $creditVouchers = Voucher::orderBy('date_time', 'desc')->where('voucher_type','Diesel')->take(5)->get();
         $accounts       = Account::where('type','personal')->get();
 
         if(!empty($accounts)) {
@@ -28,7 +29,7 @@ class VoucherController extends Controller
                     'today' => $today,
                     'accounts'          => $accounts,
                     'cashVouchers'      => $cashVouchers,
-                    'dieselVouchers'    => $dieselVouchers,
+                    'creditVouchers'    => $creditVouchers,
                 ]);
         } else {
             return view('voucher.register',[
@@ -88,7 +89,6 @@ class VoucherController extends Controller
             $voucher = new Voucher;
             $voucher->date_time        = $dateTime;
             $voucher->voucher_type     = 'Cash';
-            $voucher->account_id       = $accountId;
             $voucher->transaction_type = $voucherTransactionType;
             $voucher->amount           = $voucherAmount;
             $voucher->description      = $description;
@@ -101,7 +101,64 @@ class VoucherController extends Controller
                 return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher. Try after reloading the page.")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher details. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher. Try after reloading the page.")->with("alert-class","alert-danger");
+        }
+    }
+
+    /**
+     * Handle new credit voucher registration
+     */
+    public function creditVoucherRegistrationAction(CreditVoucherRegistrationRequest $request)
+    {dd('c');
+        $date               = $request->get('credit_voucher_date');
+        $time               = $request->get('credit_voucher_time');
+        $debitAccountId     = $request->get('credit_voucher_debit_account_id');
+        $creditAccountId    = $request->get('credit_voucher_credit_account_id');
+        $voucherAmount      = $request->get('credit_voucher_amount');
+        $description        = $request->get('credit_voucher_description');
+
+        $debitAccount = Account::where('id', $debitAccountId)->first();
+        if($debitAccount) {
+            $debitAccountName = $debitAccount->accountDetail->name;
+        } else{
+            return redirect()->back()->withInput()->with("message","Something went wrong! Selected debit account not found.")->with("alert-class","alert-danger");
+        }
+
+        $creditAccount = Account::where('id', $creditAccountId)->first();
+        if($creditAccount) {
+            $creditAccountName = $creditAccount->accountDetail->name;
+        } else {
+            return redirect()->back()->withInput()->with("message","Something went wrong! Selected credit account not found.")->with("alert-class","alert-danger");
+        }
+
+        //converting date and time to sql datetime format
+        $dateTime = date('Y-m-d H:i:s', strtotime($date.' '.$time.':00'));
+
+        $transaction = new Transaction;
+        $transaction->debit_account_id  = $debitAccountId;
+        $transaction->credit_account_id = $creditAccountId;
+        $transaction->amount            = !empty($voucherAmount) ? $voucherAmount : '0';
+        $transaction->date_time         = $dateTime;
+        $transaction->particulars       = $description."[".$debitAccountName."->".$creditAccountName."]";
+        $transaction->status            = 1;
+        $transaction->created_user_id   = Auth::user()->id;
+        if($transaction->save()) {
+            $voucher = new Voucher;
+            $voucher->date_time        = $dateTime;
+            $voucher->voucher_type     = 'Credit';
+            $voucher->transaction_type = '3';
+            $voucher->amount           = $voucherAmount;
+            $voucher->description      = $description."[".$debitAccountName."->".$creditAccountName."]";
+            $voucher->transaction_id   = $transaction->id;
+            $voucher->status           = 1;
+            
+            if($voucher->save()) {
+                return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
+            } else {
+                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher. Try after reloading the page.")->with("alert-class","alert-danger");
+            }
+        } else {
+            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher. Try after reloading the page.")->with("alert-class","alert-danger");
         }
     }
 

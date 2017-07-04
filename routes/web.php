@@ -101,7 +101,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//vouchers
 		Route::get('/voucher/register', 'VoucherController@register')->name('voucher-register-view');
 		Route::post('/cash/voucher/register/action', 'VoucherController@cashVoucherRegistrationAction')->name('cash-voucher-register-action');
-		Route::post('/diesel/voucher/register/action', 'VoucherController@dieselVoucherRegistrationAction')->name('diesel-voucher-register-action');
+		Route::post('/credit/voucher/register/action', 'VoucherController@creditVoucherRegistrationAction')->name('credit-voucher-register-action');
 		Route::get('/get/details/by/account/{id}', 'VoucherController@getAccountDetailsByaccountId')->name('get-details-by-account-id');
 	});
 

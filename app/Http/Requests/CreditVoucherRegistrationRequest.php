@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Account;
 
-class CashVoucherRegistrationRequest extends FormRequest
+class CreditVoucherRegistrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

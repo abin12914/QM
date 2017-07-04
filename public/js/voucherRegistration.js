@@ -30,7 +30,7 @@ $(function () {
     setInterval(function() { updateTimepicker() }, 300000);
 
     //Initialize Select2 Element for account select box
-    $("#cash_voucher_account_id").select2({
+    $(".account_select").select2({
         minimumResultsForSearch: 5,
         language: {
              noResults: function() {
@@ -56,9 +56,7 @@ $(function () {
     //select name for the selected account
     $('body').on("change", "#cash_voucher_account_id", function () {
         var accountId = $('#cash_voucher_account_id').val();
-        // selectTriggerFlag is used for escaping from infinte execution of change event(attendance_employee_id and attendance_account_id)
-        /*if(selectTriggerFlag == 0){
-            selectTriggerFlag = 1;*/
+
         $('#cash_voucher_account_name').val('');
         if(accountId) {
             $.ajax({
@@ -78,11 +76,78 @@ $(function () {
                 }
             });
         } else {
-            $('#cash_voucher_account_id').trigger('change');
+            $('#cash_voucher_account_name').val('');
         }
-        /*} else {
-            selectTriggerFlag = 0;
-        }*/
+    });
+
+    //select name for the selected account
+    $('body').on("change", "#credit_voucher_debit_account_id", function () {
+        var debitAccountId = $('#credit_voucher_debit_account_id').val();
+        var creditAccountId = $('#credit_voucher_credit_account_id').val();
+
+        if(debitAccountId && (debitAccountId == creditAccountId)) {
+            alert("Debit account and credit account should not be same.");
+            $('#credit_voucher_debit_account_id').val("");
+            $('#credit_voucher_debit_account_id').trigger("change");
+            return false;
+        }
+
+        $('#credit_voucher_debit_account_name').val('');
+        if(debitAccountId) {
+            $.ajax({
+                url: "/get/details/by/account/" + debitAccountId,
+                method: "get",
+                success: function(result) {
+                    if(result && result.flag) {
+                        var name  = result.name;
+                        
+                        $('#credit_voucher_debit_account_name').val(name);
+                    } else {
+                        $('#credit_voucher_debit_account_name').val('');
+                    }
+                },
+                error: function () {
+                    $('#credit_voucher_debit_account_name').val('');
+                }
+            });
+        } else {
+            $('#credit_voucher_debit_account_name').val('');
+        }
+    });
+
+    //select name for the selected account
+    $('body').on("change", "#credit_voucher_credit_account_id", function () {
+        var creditAccountId = $('#credit_voucher_credit_account_id').val();
+        var debitAccountId = $('#credit_voucher_debit_account_id').val();
+
+        if(creditAccountId && (debitAccountId == creditAccountId)) {
+            alert("Debit account and credit account should not be same.");
+            $('#credit_voucher_credit_account_id').val("");
+            $('#credit_voucher_credit_account_id').trigger("change");
+            return false;
+        }
+
+        $('#credit_voucher_credit_account_name').val('');
+        if(creditAccountId) {
+            $.ajax({
+                url: "/get/details/by/account/" + creditAccountId,
+                method: "get",
+                success: function(result) {
+                    if(result && result.flag) {
+                        var name  = result.name;
+                        
+                        $('#credit_voucher_credit_account_name').val(name);
+                    } else {
+                        $('#credit_voucher_credit_account_name').val('');
+                    }
+                },
+                error: function () {
+                    $('#credit_voucher_credit_account_name').val('');
+                }
+            });
+        } else {
+            $('#credit_voucher_credit_account_name').val('');
+        }
     });
 });
 // timepicker value updation
