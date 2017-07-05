@@ -142,7 +142,7 @@
                             </a>
                         </li>
                         <li class="{{ Request::is('daily-statement/list')? 'active' : '' }}">
-                            <a href="#">
+                            <a href="{{route('daily-statement-list')}}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>

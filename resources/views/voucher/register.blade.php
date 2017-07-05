@@ -22,6 +22,15 @@
                 </h4>
             </div>
         @endif
+        @if (count($errors) > 0)
+            <div class="alert alert-danger" id="alert-message">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <!-- Main row -->
         <div class="row">
             <div class="col-md-12">
@@ -30,11 +39,11 @@
                     <!-- nav-tabs-custom -->
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="{{ ((old('tab_flag') == 'cash_voucher') || empty(Session::get('controller_tab_flag')) || (Session::get('controller_tab_flag') == 'cash_voucher')) ? 'active' : '' }}"><a href="#cash_voucher_tab" data-toggle="tab">Cash Voucher</a></li>
+                            <li class="{{ ((old('tab_flag') == 'cash_voucher') || (empty(Session::get('controller_tab_flag')) && empty(old('tab_flag'))) || (Session::get('controller_tab_flag') == 'cash_voucher')) ? 'active' : '' }}"><a href="#cash_voucher_tab" data-toggle="tab">Cash Voucher</a></li>
                             <li class="{{ (old('tab_flag') == 'credit_voucher' || (!empty(Session::get('controller_tab_flag')) && (Session::get('controller_tab_flag') == 'credit_voucher'))) ? 'active' : '' }}"><a href="#credit_voucher_tab" data-toggle="tab">Credit Voucher</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="{{ (old('tab_flag') == 'cash_voucher' || (empty(Session::get('controller_tab_flag')) || Session::get('controller_tab_flag') == 'cash_voucher')) ? 'active' : '' }} tab-pane" id="cash_voucher_tab">
+                            <div class="{{ (old('tab_flag') == 'cash_voucher') || (empty(Session::get('controller_tab_flag')) && empty(old('tab_flag'))) || (Session::get('controller_tab_flag') == 'cash_voucher') ? 'active' : '' }} tab-pane" id="cash_voucher_tab">
                                 <div class="box-body">
                                     <!-- form start -->
                                     <form action="{{ route('cash-voucher-register-action') }}" method="post" class="form-horizontal" multipart-form-data>
@@ -278,23 +287,21 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Excavator</th>
-                                                <th>Contractor Account</th>
-                                                <th>Bucket [Working Hour]</th>
-                                                <th>Breaker [Working Hour]</th>
-                                                <th>Operator Bata</th>
+                                                <th>Date & Time</th>
+                                                <th>Debit Account</th>
+                                                <th>Credit Account</th>
+                                                <th>Amount</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if(!empty($excavators) && count($excavators))
-                                            @foreach($excavatorReadings as $index => $excavatorReading)
+                                            @if(!empty($creditVouchers) && count($creditVouchers) > 0)
+                                            @foreach($creditVouchers as $index => $creditVoucher)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td>{{ $excavatorReading->excavator->name }}</td>
-                                                    <td>{{ $excavatorReading->transaction->creditAccount->account_name }}</td>
-                                                    <td>{{ $excavatorReading->bucket_hour }}</td>
-                                                    <td>{{ $excavatorReading->breaker_hour }}</td>
-                                                    <td>{{ $excavatorReading->bata }}</td>
+                                                    <td>{{ $creditVoucher->date_time }}</td>
+                                                    <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
+                                                    <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
+                                                    <td>{{ $creditVoucher->amount }}</td>
                                                 </tr>
                                             @endforeach
                                             @endif

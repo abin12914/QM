@@ -21,7 +21,7 @@ class VoucherController extends Controller
         $today = Carbon::now('Asia/Kolkata');
         
         $cashVouchers   = Voucher::orderBy('date_time', 'desc')->where('voucher_type','Cash')->take(5)->get();
-        $creditVouchers = Voucher::orderBy('date_time', 'desc')->where('voucher_type','Diesel')->take(5)->get();
+        $creditVouchers = Voucher::orderBy('date_time', 'desc')->where('voucher_type','Credit')->take(5)->get();
         $accounts       = Account::where('type','personal')->get();
 
         if(!empty($accounts)) {
@@ -109,7 +109,7 @@ class VoucherController extends Controller
      * Handle new credit voucher registration
      */
     public function creditVoucherRegistrationAction(CreditVoucherRegistrationRequest $request)
-    {dd('c');
+    {
         $date               = $request->get('credit_voucher_date');
         $time               = $request->get('credit_voucher_time');
         $debitAccountId     = $request->get('credit_voucher_debit_account_id');

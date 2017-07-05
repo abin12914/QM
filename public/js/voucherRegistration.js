@@ -30,17 +30,7 @@ $(function () {
     setInterval(function() { updateTimepicker() }, 300000);
 
     //Initialize Select2 Element for account select box
-    $(".account_select").select2({
-        minimumResultsForSearch: 5,
-        language: {
-             noResults: function() {
-                return accountRegistrationLink;
-            }
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        }
-    });
+    initializeSelect2();
 
     //handle link to tabs
     var url = document.location.toString();
@@ -92,6 +82,20 @@ $(function () {
             return false;
         }
 
+        if(debitAccountId) {
+            $('#credit_voucher_debit_account_id, #credit_voucher_credit_account_id').not($('#credit_voucher_debit_account_id'))
+            .children('option[value=' + debitAccountId + ']')
+            .attr('disabled', true)
+            .siblings().removeAttr('disabled');
+        } else {
+            $('#credit_voucher_debit_account_id, #credit_voucher_credit_account_id').not($('#credit_voucher_debit_account_id'))
+            .children('option[value=""]')
+            .siblings().removeAttr('disabled');
+        }
+
+        //reinitializing select2 elements for resetting disabled options
+        initializeSelect2();
+
         $('#credit_voucher_debit_account_name').val('');
         if(debitAccountId) {
             $.ajax({
@@ -126,6 +130,20 @@ $(function () {
             $('#credit_voucher_credit_account_id').trigger("change");
             return false;
         }
+
+        if(creditAccountId) {
+            $('#credit_voucher_credit_account_id, #credit_voucher_debit_account_id').not($('#credit_voucher_credit_account_id'))
+            .children('option[value=' + creditAccountId + ']')
+            .attr('disabled', true)
+            .siblings().removeAttr('disabled');
+        } else {
+            $('#credit_voucher_credit_account_id, #credit_voucher_debit_account_id').not($('#credit_voucher_credit_account_id'))
+            .children('option[value=""]')
+            .siblings().removeAttr('disabled');
+        }
+
+        //reinitializing select2 elements for resetting disabled options
+        initializeSelect2();
 
         $('#credit_voucher_credit_account_name').val('');
         if(creditAccountId) {
@@ -165,4 +183,19 @@ function updateTimepicker() {
 
     currentTime = currentHour + ':' + currentMinute;
     $(".timepicker").val(currentTime);  
+}
+
+//Initialize Select2 Element for account select box
+function initializeSelect2() {
+    $(".account_select").select2({
+        minimumResultsForSearch: 5,
+        language: {
+             noResults: function() {
+                return accountRegistrationLink;
+            }
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        }
+    });
 }

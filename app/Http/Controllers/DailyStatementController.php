@@ -266,4 +266,20 @@ class DailyStatementController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
     }
+
+    /**
+     * Return view for daily statement listing
+     */
+    public function list()
+    {
+        $purchases = \App\Models\Purchase::paginate(15);
+        if(empty($purchases)) {
+            return view('daily-statement.list',[
+                    'purchases' => $purchases
+                ]);
+        } else {
+            session()->flash('message', 'No purchase record available to show!');
+            return view('daily-statement.list');
+        }
+    }
 }
