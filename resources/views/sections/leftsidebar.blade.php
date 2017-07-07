@@ -141,8 +141,8 @@
                                 <i class="fa fa-circle-o"></i> Resources
                             </a>
                         </li>
-                        <li class="{{ Request::is('daily-statement/list')? 'active' : '' }}">
-                            <a href="{{route('daily-statement-list')}}">
+                        <li class="{{ Request::is('daily-statement/list/*')? 'active' : '' }}">
+                            <a href="{{route('daily-statement-list-employee')}}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
@@ -158,7 +158,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('monthly-statement/register')? 'active' : '' }}">
-                            <a href="#">
+                            <a href="{{ route('monthly-statement-register-view') }}">
                                 <i class="fa fa-circle-o"></i> Resources
                             </a>
                         </li>

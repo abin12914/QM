@@ -28,11 +28,11 @@ class ExcavatorRegistrationRequest extends FormRequest
             'contractor_account_id.required'    => "The contractor or provider account field is required.",
             'contractor_account_id.integer'     => "Invalid value passed, Select a valid contractor or provider.",
             'contractor_account_id.in'          => "The selected contractor account is invalid.",
-            'rate_monthly.required'             => "The monthly rent field is required.",
+            'rate_monthly.required_if'          => "The monthly rent field is required.",
             'rate_monthly.numeric'              => "The monthly rent must be a number.",
-            'rate_bucket.required'              => "The hourly bucket rent field is required.",
+            'rate_bucket.required_if'           => "The hourly bucket rent field is required.",
             'rate_bucket.numeric'               => "The hourly bucket rent must be a number.",
-            'rate_breaker.required'             => "The hourly breaker rent field is required.",
+            'rate_breaker.required_if'          => "The hourly breaker rent field is required.",
             'rate_breaker.numeric'              => "The hourly breaker rent must be a number.",
         ];
     }
@@ -57,9 +57,9 @@ class ExcavatorRegistrationRequest extends FormRequest
                                             'max:7',
                                             Rule::in(['hourly','monthly'])
                                         ],
-            'rate_monthly'          => 'required|numeric|max:999999',
-            'rate_bucket'           => 'required|numeric|max:99999',
-            'rate_breaker'          => 'required|numeric|max:99999'
+            'rate_monthly'          => 'required_if:rent_type,"monthly"|numeric|max:999999',
+            'rate_bucket'           => 'required_if:rent_type,"hourly"|numeric|max:99999',
+            'rate_breaker'          => 'required_if:rent_type,"hourly"|numeric|max:99999'
         ];
     }
 }

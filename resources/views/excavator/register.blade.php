@@ -79,40 +79,44 @@
                                     <label for="rent_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Rental Type : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('rent_type')) ? 'has-error' : '' }}">
                                         <select class="form-control" name="rent_type" id="rent_type" tabindex="4">
-                                            <option value="" selected="">Select rental type</option>
-                                            <option value="hourly">Hourly rent</option>
-                                            <option value="monthly">Monthly rent</option>
+                                            <option value="" {{ (empty(old('rent_type'))) ? 'selected' : '' }}>Select rental type</option>
+                                            <option value="hourly" {{ ((old('rent_type')) == "hourly") ? 'selected' : '' }}>Hourly rent</option>
+                                            <option value="monthly" {{ ((old('rent_type')) == "monthly") ? 'selected' : '' }}>Monthly rent</option>
                                         </select>
                                         @if(!empty($errors->first('rent_type')))
                                             <p style="color: red;" >{{$errors->first('rent_type')}}</p>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label"><b style="color: red;">* </b> Rent/Month : </label>
-                                    <div class="col-sm-10 {{ !empty($errors->first('rate_monthly')) ? 'has-error' : '' }}">
-                                        <input type="text" class="form-control decimal_number_only" name="rate_monthly" id="rate_monthly" placeholder="Rent per month" value="{{ old('rate_monthly') }}" tabindex="5">
-                                        @if(!empty($errors->first('rate_monthly')))
-                                            <p style="color: red;" >{{$errors->first('rate_monthly')}}</p>
-                                        @endif
+                                <div id="rent_type_month_div" {{ (empty(old('rent_type')) || (old('rent_type') == 'hourly')) ? 'hidden' : '' }}>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color: red;">* </b> Rent/Month : </label>
+                                        <div class="col-sm-10 {{ !empty($errors->first('rate_monthly')) ? 'has-error' : '' }}">
+                                            <input type="text" class="form-control decimal_number_only" name="rate_monthly" id="rate_monthly" placeholder="Rent per month" value="{{ old('rate_monthly') }}" tabindex="5">
+                                            @if(!empty($errors->first('rate_monthly')))
+                                                <p style="color: red;" >{{$errors->first('rate_monthly')}}</p>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label"><b style="color: red;">* </b> Rent/Hour-Bucket : </label>
-                                    <div class="col-sm-10 {{ !empty($errors->first('rate_bucket')) ? 'has-error' : '' }}">
-                                        <input type="text" class="form-control decimal_number_only" name="rate_bucket" id="rate_bucket" placeholder="Rent per hour for bucket" value="{{ old('rate_bucket') }}" tabindex="6">
-                                        @if(!empty($errors->first('rate_bucket')))
-                                            <p style="color: red;" >{{$errors->first('rate_bucket')}}</p>
-                                        @endif
+                                <div id="rent_type_hour_div" {{ (old('rent_type') == 'monthly') ? 'hidden' : '' }}>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color: red;">* </b> Rent/Hour-Bucket : </label>
+                                        <div class="col-sm-10 {{ !empty($errors->first('rate_bucket')) ? 'has-error' : '' }}">
+                                            <input type="text" class="form-control decimal_number_only" name="rate_bucket" id="rate_bucket" placeholder="Rent per hour for bucket" value="{{ old('rate_bucket') }}" tabindex="6">
+                                            @if(!empty($errors->first('rate_bucket')))
+                                                <p style="color: red;" >{{$errors->first('rate_bucket')}}</p>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label"><b style="color: red;">* </b> Rent/Hour-Breaker : </label>
-                                    <div class="col-sm-10 {{ !empty($errors->first('rate_breaker')) ? 'has-error' : '' }}">
-                                        <input type="text" class="form-control decimal_number_only" name="rate_breaker" id="rate_breaker" placeholder="Rent per hour for breaker" value="{{ old('rate_breaker') }}" tabindex="7">
-                                        @if(!empty($errors->first('rate_breaker')))
-                                            <p style="color: red;" >{{$errors->first('rate_breaker')}}</p>
-                                        @endif
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color: red;">* </b> Rent/Hour-Breaker : </label>
+                                        <div class="col-sm-10 {{ !empty($errors->first('rate_breaker')) ? 'has-error' : '' }}">
+                                            <input type="text" class="form-control decimal_number_only" name="rate_breaker" id="rate_breaker" placeholder="Rent per hour for breaker" value="{{ old('rate_breaker') }}" tabindex="7">
+                                            @if(!empty($errors->first('rate_breaker')))
+                                                <p style="color: red;" >{{$errors->first('rate_breaker')}}</p>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -140,4 +144,7 @@
     </section>
     <!-- /.content -->
 </div>
+@endsection
+@section('scripts')
+    <script src="/js/excavatorRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

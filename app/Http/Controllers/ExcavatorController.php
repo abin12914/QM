@@ -29,9 +29,9 @@ class ExcavatorController extends Controller
         $description            = $request->get('description');
         $contractorAccountId    = $request->get('contractor_account_id');
         $rentalType             = $request->get('rent_type');
-        $rentMonthly            = $request->get('rate_monthly');
-        $rentHourlyBucket       = $request->get('rate_bucket');
-        $rentHourlyBreaker      = $request->get('rate_breaker');
+        $rentMonthly            = ($rentalType == "monthly") ? ($request->get('rate_monthly')) : 0;
+        $rentHourlyBucket       = ($rentalType == "hourly") ? ($request->get('rate_bucket')) : 0;
+        $rentHourlyBreaker      = ($rentalType == "hourly") ? ($request->get('rate_breaker')) : 0;
 
         $excavator = new Excavator;
         $excavator->name                    = $name;

@@ -23,6 +23,16 @@ $(function () {
     $('.datepicker').datepicker('setDate', new Date());    
     //$(".datepicker").datepicker("update", new Date());
 
+    //handle link to tabs
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs-custom a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    // Change hash for page-reload
+    $('.nav-tabs-custom a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    });
 
     //Initialize Select2 Element for employee name select box
     $("#attendance_employee_id").select2({

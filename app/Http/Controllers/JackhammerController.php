@@ -28,16 +28,16 @@ class JackhammerController extends Controller
         $name                   = $request->get('name');
         $description            = $request->get('description');
         $contractorAccountId    = $request->get('contractor_account_id');
-        $rentalType             = $request->get('rent_type');
-        $rentPerDay             = $request->get('rate_daily');
+        //$rentalType             = $request->get('rent_type');
+        //$rentPerDay             = $request->get('rate_daily');
         $rentPerFeet            = $request->get('rate_feet');
 
         $jackhammer = new Jackhammer;
         $jackhammer->name                   = $name;
         $jackhammer->description            = $description;
         $jackhammer->contractor_account_id  = $contractorAccountId;
-        $jackhammer->rent_type              = $rentalType;
-        $jackhammer->rent_daily             = $rentPerDay;
+        $jackhammer->rent_type              = "per_feet";//$rentalType;
+        $jackhammer->rent_daily             = 0;//$rentPerDay;
         $jackhammer->rent_feet              = $rentPerFeet;
         $jackhammer->status                 = 1;
         if($jackhammer->save()) {

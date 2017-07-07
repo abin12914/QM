@@ -40,8 +40,8 @@
                                             <th>Name</th>
                                             <th>Contractor</th>
                                             <th>Rent Type</th>
-                                            <th>Daily Rent</th>
-                                            <th>Rent per Feet</th>
+                                            {{-- <th>Daily Rent</th> --}}
+                                            <th>Rent</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -50,18 +50,13 @@
                                                 <tr>
                                                     <td>{{ $jackhammer->name }}</td>
                                                     <td>{{ $jackhammer->account->account_name }}</td>
-                                                    <td>{{ $jackhammer->rent_type }}</td>
-                                                    <td>{{ $jackhammer->rent_daily }}</td>
+                                                    <td>{{ ($jackhammer->rent_type == 'per_feet') ? "Rent Per Feet" : "Other" }}</td>
+                                                    {{-- <td>{{ $jackhammer->rent_daily }}</td> --}}
                                                     <td>{{ $jackhammer->rent_feet }}</td>
                                                 </tr>
                                             @endforeach
                                         @endif
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th><th></th><th></th><th></th><th></th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>

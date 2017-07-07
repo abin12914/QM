@@ -75,7 +75,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label for="rent_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Rental Type : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('rent_type')) ? 'has-error' : '' }}">
                                         <select class="form-control" name="rent_type" id="rent_type" tabindex="4">
@@ -96,7 +96,7 @@
                                             <p style="color: red;" >{{$errors->first('rate_daily')}}</p>
                                         @endif
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="form-group">
                                     <label for="rate_feet" class="col-sm-2 control-label"><b style="color: red;">* </b> Rate/Feet : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('rate_feet')) ? 'has-error' : '' }}">

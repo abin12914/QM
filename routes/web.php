@@ -97,7 +97,12 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/daily-statement/employee/attendance/action', 'DailyStatementController@employeeAttendanceAction')->name('daily-statement-employee-attendance-action');
 		Route::post('/daily-statement/excavator/readings/action', 'DailyStatementController@excavatorReadingsAction')->name('daily-statement-excavator-readings-action');
 		Route::post('/daily-statement/jackhammer/readings/action', 'DailyStatementController@jackhammerReadingsAction')->name('daily-statement-jackhammer-readings-action');
-		Route::get('/daily-statement/list', 'DailyStatementController@list')->name('daily-statement-list');
+		Route::get('/daily-statement/list/employee', 'DailyStatementController@employeeAttendanceList')->name('daily-statement-list-employee');
+		Route::get('/daily-statement/list/excavator', 'DailyStatementController@excavatorReadingList')->name('daily-statement-list-excavator');
+		Route::get('/daily-statement/list/jackhammer', 'DailyStatementController@jackhammerReadingList')->name('daily-statement-list-jackhammer');
+
+		//monthly statement
+		Route::get('/monthly-statement/register', 'MonthlyStatementController@register')->name('monthly-statement-register-view');
 
 		//vouchers
 		Route::get('/voucher/register', 'VoucherController@register')->name('voucher-register-view');

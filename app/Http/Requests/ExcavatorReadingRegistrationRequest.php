@@ -69,13 +69,13 @@ class ExcavatorReadingRegistrationRequest extends FormRequest
                                                 'required',
                                                 'numeric',
                                                 'max:100',
-                                                'min:0.1'
+                                                'min:0'
                                             ],
             'excavator_breaker_hour'    => [
                                                 'required',
                                                 'numeric',
                                                 'max:100',
-                                                'min:0.1'
+                                                'min:0'
                                             ],
             'excavator_operator'        => [
                                                 'required',

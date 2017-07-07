@@ -54,9 +54,15 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('attendance_date')) ? 'has-error' : '' }}">
-                                                        <label for="attendance_date" class="control-label">Date : </label>
+                                                        <label for="attendance_date" class="control-label">Start Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="attendance_date" id="attendance_date" placeholder="Date" value="{{ old('attendance_date') }}" tabindex="1">
                                                     </div>
+                                                    <div class="col-sm-6 {{ !empty($errors->first('attendance_date')) ? 'has-error' : '' }}">
+                                                        <label for="attendance_date" class="control-label">End Date : </label>
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="attendance_date" id="attendance_date" placeholder="Date" value="{{ old('attendance_date') }}" tabindex="1">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('attendance_employee_id')) ? 'has-error' : '' }}">
                                                         <label for="attendance_employee_id" class="control-label">Employee Name : </label>
                                                         <select class="form-control" name="attendance_employee_id" id="attendance_employee_id" tabindex="2" style="width: 100%">
@@ -68,8 +74,6 @@
                                                             @endif
                                                         </select>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('attendance_account_id')) ? 'has-error' : '' }}">
                                                         <label for="attendance_account_id" class="control-label">Employee Account : </label>
                                                         <select class="form-control" name="attendance_account_id" id="attendance_account_id" tabindex="3" style="width: 100%">
@@ -81,8 +85,10 @@
                                                             @endif
                                                         </select>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('attendance_wage')) ? 'has-error' : '' }}">
-                                                        <label for="attendance_wage" class="control-label">Wage : </label>
+                                                        <label for="attendance_wage" class="control-label">Salary : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="attendance_wage" id="attendance_wage" value="{{ old('attendance_wage') }}" tabindex="3">
                                                     </div>
                                                 </div>
@@ -146,6 +152,12 @@
                                                         <label for="excavator_date" class="control-label">Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="excavator_date" id="excavator_date" placeholder="Date" value="{{ old('excavator_date') }}" tabindex="1">
                                                     </div>
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_date')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_date" class="control-label">Date : </label>
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="excavator_date" id="excavator_date" placeholder="Date" value="{{ old('excavator_date') }}" tabindex="1">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_id')) ? 'has-error' : '' }}">
                                                         <label for="excavator_id" class="control-label">Excavator : </label>
                                                         <select class="form-control" name="excavator_id" id="excavator_id" tabindex="2" style="width: 100%">
@@ -157,6 +169,10 @@
                                                             @endif
                                                         </select>
                                                     </div>
+                                                    <div class="col-sm-6 {{ !empty($errors->first('jackhammer_contractor_account')) ? 'has-error' : '' }}">
+                                                        <label for="jackhammer_contractor_account" class="control-label">Contractor : </label>
+                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_contractor_account" id="jackhammer_contractor_account" tabindex="3" readonly>
+                                                    </div>
                                                 </div>
                                                 {{-- <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_contractor_name')) ? 'has-error' : '' }}">
@@ -165,22 +181,8 @@
                                                     </div>
                                                 </div> --}}
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_bucket_hour')) ? 'has-error' : '' }}">
-                                                        <label for="excavator_bucket_hour" class="control-label">Bucket [Working Hour] : </label>
-                                                        <input type="text" class="form-control decimal_number_only" name="excavator_bucket_hour" id="excavator_bucket_hour" value="{{ old("excavator_bucket_hour") }}" tabindex="3">
-                                                    </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_breaker_hour')) ? 'has-error' : '' }}">
-                                                        <label for="excavator_breaker_hour" class="control-label">Breaker [Working Hour] : </label>
-                                                        <input type="text" class="form-control decimal_number_only" name="excavator_breaker_hour" id="excavator_breaker_hour" value="{{ old("excavator_breaker_hour") }}" tabindex="3">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_operator')) ? 'has-error' : '' }}">
-                                                        <label for="excavator_operator" class="control-label">Operator Name : </label>
-                                                        <input type="text" class="form-control" name="excavator_operator" id="excavator_operator" value="{{ old("excavator_operator") }}" tabindex="3">
-                                                    </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_operator_bata')) ? 'has-error' : '' }}">
-                                                        <label for="excavator_operator_bata" class="control-label">Operator Bata : </label>
+                                                        <label for="excavator_operator_bata" class="control-label">Monthly Rent : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="excavator_operator_bata" id="excavator_operator_bata" value="{{ old("excavator_operator_bata") }}" tabindex="3">
                                                     </div>
                                                 </div>
@@ -245,6 +247,12 @@
                                                         <label for="jackhammer_date" class="control-label">Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="jackhammer_date" id="jackhammer_date" placeholder="Date" value="{{ old('jackhammer_date') }}" tabindex="1">
                                                     </div>
+                                                    <div class="col-sm-6 {{ !empty($errors->first('jackhammer_date')) ? 'has-error' : '' }}">
+                                                        <label for="jackhammer_date" class="control-label">Date : </label>
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="jackhammer_date" id="jackhammer_date" placeholder="Date" value="{{ old('jackhammer_date') }}" tabindex="1">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('jackhammer_id')) ? 'has-error' : '' }}">
                                                         <label for="jackhammer_id" class="control-label">JackHammer : </label>
                                                         <select class="form-control" name="jackhammer_id" id="jackhammer_id" tabindex="2" style="width: 100%">
@@ -256,25 +264,15 @@
                                                             @endif
                                                         </select>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('jackhammer_contractor_account')) ? 'has-error' : '' }}">
                                                         <label for="jackhammer_contractor_account" class="control-label">Contractor : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="jackhammer_contractor_account" id="jackhammer_contractor_account" tabindex="3" readonly>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('jackhammer_depth_per_pit')) ? 'has-error' : '' }}">
                                                         <label for="jackhammer_depth_per_pit" class="control-label">Depth Per Pit : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="jackhammer_depth_per_pit" id="jackhammer_depth_per_pit" value="{{ !empty(old('jackhammer_depth_per_pit')) ? old('jackhammer_depth_per_pit') : 5 }}" tabindex="3">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('jackhammer_no_of_pit')) ? 'has-error' : '' }}">
-                                                        <label for="jackhammer_no_of_pit" class="control-label">No Of Pits : </label>
-                                                        <input type="text" class="form-control number_only" name="jackhammer_no_of_pit" id="jackhammer_no_of_pit" tabindex="3">
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <label for="jackhammer_total_pit_depth" class="control-label">Total Pit Depth : </label>
-                                                        <input type="text" class="form-control decimal_number_only" name="jackhammer_total_pit_depth" id="jackhammer_total_pit_depth" tabindex="3" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div><br>

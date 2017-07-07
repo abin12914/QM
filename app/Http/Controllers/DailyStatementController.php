@@ -82,7 +82,11 @@ class DailyStatementController extends Controller
         $date = date('Y-m-d', strtotime($date.' '.'00:00:00'));
 
         $employee = Employee::where('account_id', $employeeAccountId)->first();
-        if(empty($employee) || $employeeId != $employee->id) {
+        if(!empty($employee) && $employeeId == $employee->id) {
+            if($employee->employee_type == "staff") {
+                return redirect()->back()->with("message","Selected employee has monthly salary scheme; Use monthly statement for this user.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');    
+            }
+        } else {
             return redirect()->back()->with("message","Something went wrong! Employee not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
@@ -127,6 +131,7 @@ class DailyStatementController extends Controller
 
     public function excavatorReadingsAction(ExcavatorReadingRegistrationRequest $request)
     {
+        $rentTypeFlag   = 0;
         $date           = $request->get('excavator_date');
         $excavatorId    = $request->get('excavator_id');
         $bucketHour     = $request->get('excavator_bucket_hour');
@@ -149,7 +154,7 @@ class DailyStatementController extends Controller
             if($rentType == 'hourly'){
                 $bill = ($bucketHour * $bucketRate) + ($breakerHour * $breakerRate) + $operatorBata;
             } else {
-                return redirect()->back()->with("message","Something went wrong! (Rent type monthly)")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+                $rentTypeFlag = 1;
             }
         } else {
             return redirect()->back()->with("message","Something went wrong! Excavator not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
@@ -169,31 +174,42 @@ class DailyStatementController extends Controller
 
         $temp = ("Excavator Rent : Bucket : ".$bucketHour." * ".$bucketRate." = ".($bucketHour*$bucketRate)." / Breaker : ".$breakerHour." * ".$breakerRate." = ".($breakerHour * $breakerRate)." / Bata : ".$operatorBata);
 
-        $transaction = new Transaction;
-        $transaction->debit_account_id  = $excavatorReadingAccountId; //excavator reading account id
-        $transaction->credit_account_id = $excavatorContractorAccountId;
-        $transaction->amount            = $bill;
-        $transaction->date_time         = $dateTime;
-        $transaction->particulars       = $temp;
-        $transaction->status            = 1;
-        $transaction->created_user_id   = Auth::user()->id;
+        if($rentTypeFlag == 0) {
+            $transaction = new Transaction;
+            $transaction->debit_account_id  = $excavatorReadingAccountId; //excavator reading account id
+            $transaction->credit_account_id = $excavatorContractorAccountId;
+            $transaction->amount            = $bill;
+            $transaction->date_time         = $dateTime;
+            $transaction->particulars       = $temp;
+            $transaction->status            = 1;
+            $transaction->created_user_id   = Auth::user()->id;
 
-        if($transaction->save()) {
+            if($transaction->save()) {
+                $excavatorReading = new ExcavatorReading;
+                $excavatorReading->date             = $date;
+                $excavatorReading->excavator_id     = $excavatorId;
+                $excavatorReading->transaction_id   = $transaction->id;
+                $excavatorReading->bucket_hour      = $bucketHour;
+                $excavatorReading->breaker_hour     = $breakerHour;
+                $excavatorReading->operator_name    = $operatorName;
+                $excavatorReading->bata             = $operatorBata;
+                $excavatorReading->status           = 1;
+            } else {
+                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the attendance details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            }
+        } else {
             $excavatorReading = new ExcavatorReading;
             $excavatorReading->date             = $date;
             $excavatorReading->excavator_id     = $excavatorId;
-            $excavatorReading->transaction_id   = $transaction->id;
             $excavatorReading->bucket_hour      = $bucketHour;
             $excavatorReading->breaker_hour     = $breakerHour;
             $excavatorReading->operator_name    = $operatorName;
             $excavatorReading->bata             = $operatorBata;
             $excavatorReading->status           = 1;
+        }
             
-            if($excavatorReading->save()) {
-                return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'excavator');
-            } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the attendance details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
-            }
+        if($excavatorReading->save()) {
+            return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'excavator');
         } else {
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the attendance details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
@@ -201,6 +217,7 @@ class DailyStatementController extends Controller
 
     public function jackhammerReadingsAction(JackhammerReadingRegistrationRequest $request)
     {
+        $rentTypeFlag   = 0;
         $date           = $request->get('jackhammer_date');
         $jackhammerId   = $request->get('jackhammer_id');
         $depthPerPit    = $request->get('jackhammer_depth_per_pit');
@@ -220,7 +237,7 @@ class DailyStatementController extends Controller
             if($rentType == 'per_feet'){
                 $bill = ($totalPitDepth * $rentPerFeet);
             } else {
-                return redirect()->back()->with("message","Something went wrong! (Rent type per day)")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+                $rentTypeFlag   = 1;
             }
         } else {
             return redirect()->back()->with("message","Something went wrong! Jackhammer not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
@@ -240,28 +257,35 @@ class DailyStatementController extends Controller
 
         $temp = ("Jackhammer rent : ".$depthPerPit." * ".$noOfPit." * ".$rentPerFeet." = ".($depthPerPit*$noOfPit*$rentPerFeet));
 
-        $transaction = new Transaction;
-        $transaction->debit_account_id  = $jackhammerReadingAccountId; //jackhammer reading account id
-        $transaction->credit_account_id = $jackhammerContractorAccountId;
-        $transaction->amount            = $bill;
-        $transaction->date_time         = $dateTime;
-        $transaction->particulars       = $temp;
-        $transaction->status            = 1;
-        $transaction->created_user_id   = Auth::user()->id;
+        if($rentTypeFlag == 0){
+            $transaction = new Transaction;
+            $transaction->debit_account_id  = $jackhammerReadingAccountId; //jackhammer reading account id
+            $transaction->credit_account_id = $jackhammerContractorAccountId;
+            $transaction->amount            = $bill;
+            $transaction->date_time         = $dateTime;
+            $transaction->particulars       = $temp;
+            $transaction->status            = 1;
+            $transaction->created_user_id   = Auth::user()->id;
 
-        if($transaction->save()) {
-            $jackhammerReading = new JackhammerReading;
-            $jackhammerReading->date             = $date;
-            $jackhammerReading->jackhammer_id    = $jackhammerId;
-            $jackhammerReading->transaction_id   = $transaction->id;
-            $jackhammerReading->total_pit_depth    = $totalPitDepth;
-            $jackhammerReading->status           = 1;
-            
-            if($jackhammerReading->save()) {
-                return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'jackhammer');
+            if($transaction->save()) {
+                $jackhammerReading = new JackhammerReading;
+                $jackhammerReading->date             = $date;
+                $jackhammerReading->jackhammer_id    = $jackhammerId;
+                $jackhammerReading->transaction_id   = $transaction->id;
+                $jackhammerReading->total_pit_depth  = $totalPitDepth;
+                $jackhammerReading->status           = 1;
             } else {
                 return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
             }
+        } else {
+            $jackhammerReading = new JackhammerReading;
+            $jackhammerReading->date             = $date;
+            $jackhammerReading->jackhammer_id    = $jackhammerId;
+            $jackhammerReading->total_pit_depth  = $totalPitDepth;
+            $jackhammerReading->status           = 1;
+        }
+        if($jackhammerReading->save()) {
+            return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'jackhammer');
         } else {
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
@@ -270,12 +294,55 @@ class DailyStatementController extends Controller
     /**
      * Return view for daily statement listing
      */
-    public function list()
+    public function employeeAttendanceList()
     {
-        $purchases = \App\Models\Purchase::paginate(15);
-        if(empty($purchases)) {
+        $employeeAttendance = EmployeeAttendance::paginate(1);
+
+        if(empty($employeeAttendance)) {
+            $employeeAttendance = [];
+        }
+        return view('daily-statement.list',[
+                    'employeeAttendance'    => $employeeAttendance,
+                    'excavatorReadings'     => [],
+                    'jackhammerReadings'    => [],
+                ]);
+    }
+
+    /**
+     * Return view for daily statement listing
+     */
+    public function excavatorReadingList()
+    {
+        $employeeAttendance = EmployeeAttendance::paginate(1);
+        $excavatorReadings  = ExcavatorReading::paginate(1);
+        $jackhammerReadings = JackhammerReading::paginate(1);
+
+        if(!empty($employeeAttendance) || !empty($excavatorReadings) || !empty($jackhammerReadings)) {
             return view('daily-statement.list',[
-                    'purchases' => $purchases
+                    'employeeAttendance'    => $employeeAttendance,
+                    'excavatorReadings'     => $excavatorReadings,
+                    'jackhammerReadings'    => $jackhammerReadings
+                ]);
+        } else {
+            session()->flash('message', 'No purchase record available to show!');
+            return view('daily-statement.list');
+        }
+    }
+
+    /**
+     * Return view for daily statement listing
+     */
+    public function jackhammerReadingList()
+    {
+        $employeeAttendance = EmployeeAttendance::paginate(1);
+        $excavatorReadings  = ExcavatorReading::paginate(1);
+        $jackhammerReadings = JackhammerReading::paginate(1);
+
+        if(!empty($employeeAttendance) || !empty($excavatorReadings) || !empty($jackhammerReadings)) {
+            return view('daily-statement.list',[
+                    'employeeAttendance'    => $employeeAttendance,
+                    'excavatorReadings'     => $excavatorReadings,
+                    'jackhammerReadings'    => $jackhammerReadings
                 ]);
         } else {
             session()->flash('message', 'No purchase record available to show!');

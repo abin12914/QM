@@ -28,8 +28,8 @@ class JackhammerRegistrationRequest extends FormRequest
             'contractor_account_id.required'    => "The contractor or provider account field is required.",
             'contractor_account_id.integer'     => "Invalid value passed, Select a valid contractor or provider.",
             'contractor_account_id.in'          => "The selected contractor account is invalid.",
-            'rate_daily.required'               => "The daily rent field is required. Use zero for empty value",
-            'rate_daily.numeric'                => "The daily rent must be a number.",
+            /*'rate_daily.required'               => "The daily rent field is required. Use zero for empty value",
+            'rate_daily.numeric'                => "The daily rent must be a number.",*/
             'rate_feet.required'                => "The rent per feet field is required.",
             'rate_feet.numeric'                 => "The rent per feet must be a number.",
         ];
@@ -50,12 +50,12 @@ class JackhammerRegistrationRequest extends FormRequest
                                             'integer',
                                             Rule::in(Account::pluck('id')->toArray()),
                                         ],
-            'rent_type'             => [
+            /*'rent_type'             => [
                                             'required',
                                             'max:8',
                                             Rule::in(['per_day','per_feet'])
                                         ],
-            'rate_daily'            => 'required|numeric|max:99999',
+            'rate_daily'            => 'required|numeric|max:99999',*/
             'rate_feet'             => 'required|numeric|max:9999',
         ];
     }
