@@ -22,15 +22,6 @@
                 </h4>
             </div>
         @endif
-        @if (count($errors) > 0)
-            <div class="alert alert-danger" id="alert-message">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <!-- Main row -->
         <div class="row">
             <div class="col-md-12">
@@ -52,9 +43,9 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('employee_employee_id')) ? 'has-error' : '' }}">
-                                                        <label for="employee_employee_id" class="control-label">Employee Name : </label>
-                                                        <select class="form-control" name="employee_employee_id" id="emp_salary_employee_id" tabindex="2" style="width: 100%">
+                                                    <div class="col-sm-6 {{ !empty($errors->first('emp_salary_employee_id')) ? 'has-error' : '' }}">
+                                                        <label for="emp_salary_employee_id" class="control-label">Employee Name : </label>
+                                                        <select class="form-control" name="emp_salary_employee_id" id="emp_salary_employee_id" tabindex="2" style="width: 100%">
                                                             @if(count($employees))
                                                                 <option value="">Select employee name</option>
                                                                 @foreach($employees as $employee)
@@ -62,6 +53,9 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
+                                                        @if(!empty($errors->first('emp_salary_employee_id')))
+                                                            <p style="color: red;" >{{$errors->first('emp_salary_employee_id')}}</p>
+                                                        @endif
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('emp_salary_account_id')) ? 'has-error' : '' }}">
                                                         <label for="emp_salary_account_id" class="control-label">Employee Account : </label>
@@ -73,26 +67,41 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
+                                                        @if(!empty($errors->first('emp_salary_account_id')))
+                                                            <p style="color: red;" >{{$errors->first('emp_salary_account_id')}}</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('emp_salary_start_date')) ? 'has-error' : '' }}">
                                                         <label for="emp_salary_start_date" class="control-label">Start Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="emp_salary_start_date" id="emp_salary_start_date" placeholder="Date" value="{{ old('emp_salary_start_date') }}" tabindex="1">
+                                                        @if(!empty($errors->first('emp_salary_start_date')))
+                                                            <p style="color: red;" >{{$errors->first('emp_salary_start_date')}}</p>
+                                                        @endif
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('emp_salary_end_date')) ? 'has-error' : '' }}">
                                                         <label for="emp_salary_end_date" class="control-label">End Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="emp_salary_end_date" id="emp_salary_end_date" placeholder="Date" value="{{ old('emp_salary_end_date') }}" tabindex="1">
+                                                        @if(!empty($errors->first('emp_salary_end_date')))
+                                                            <p style="color: red;" >{{$errors->first('emp_salary_end_date')}}</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('emp_salary_salary')) ? 'has-error' : '' }}">
                                                         <label for="emp_salary_salary" class="control-label">Salary : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="emp_salary_salary" id="emp_salary_salary" value="{{ old('emp_salary_salary') }}" tabindex="3">
+                                                        @if(!empty($errors->first('emp_salary_salary')))
+                                                            <p style="color: red;" >{{$errors->first('emp_salary_salary')}}</p>
+                                                        @endif
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('emp_salary_description')) ? 'has-error' : '' }}">
                                                         <label for="emp_salary_description" class="control-label">Description : </label>
-                                                        <input type="text" class="form-control decimal_number_only" name="emp_salary_description" id="emp_salary_description" value="{{ old('emp_salary_description') }}" tabindex="3">
+                                                        <input type="text" class="form-control" name="emp_salary_description" id="emp_salary_description" value="{{ old('emp_salary_description') }}" tabindex="3">
+                                                        @if(!empty($errors->first('emp_salary_description')))
+                                                            <p style="color: red;" >{{$errors->first('emp_salary_description')}}</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div><br>
@@ -187,5 +196,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/dailyStatement.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/monthlyStatement.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

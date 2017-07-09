@@ -103,7 +103,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 
 		//monthly statement
 		Route::get('/monthly-statement/register', 'MonthlyStatementController@register')->name('monthly-statement-register-view');
-		Route::post('/monthly-statement/employee/salary/action', 'MonthlyStatementController@employeeAttendanceAction')->name('monthly-statement-employee-salary-action');
+		Route::post('/monthly-statement/employee/salary/action', 'MonthlyStatementController@employeeSalaryAction')->name('monthly-statement-employee-salary-action');
 		Route::post('/monthly-statement/excavator/readings/action', 'MonthlyStatementController@excavatorReadingsAction')->name('monthly-statement-excavator-readings-action');
 
 		//vouchers

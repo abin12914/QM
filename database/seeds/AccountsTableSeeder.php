@@ -65,6 +65,24 @@ class AccountsTableSeeder extends Seeder
                 'financial_status'  => 'none',
                 'opening_balance'   => '0',
                 'status'            => '1'  
+            ],
+            [
+                'account_name'      => 'Employee Salary',
+                'description'       => 'Employee salary account',
+                'type'              => 'nominal',
+                'relation'          => 'nominal',
+                'financial_status'  => 'none',
+                'opening_balance'   => '0',
+                'status'            => '1'  
+            ],
+            [
+                'account_name'      => 'Excavator Rent',
+                'description'       => 'Excavator rent account',
+                'type'              => 'nominal',
+                'relation'          => 'nominal',
+                'financial_status'  => 'none',
+                'opening_balance'   => '0',
+                'status'            => '1'  
             ]
         ]);
 
@@ -107,6 +125,20 @@ class AccountsTableSeeder extends Seeder
             [
                 'account_id'    => '06',
                 'name'          => 'Jackhammer reading account',
+                'address'       => '',
+                'image'         => '/images/real.jpg',
+                'status'        => '1'  
+            ],
+            [
+                'account_id'    => '07',
+                'name'          => 'Employe salary account',
+                'address'       => '',
+                'image'         => '/images/real.jpg',
+                'status'        => '1'  
+            ],
+            [
+                'account_id'    => '08',
+                'name'          => 'Excavator rent account',
                 'address'       => '',
                 'image'         => '/images/real.jpg',
                 'status'        => '1'  
