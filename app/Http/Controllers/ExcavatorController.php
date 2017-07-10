@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ExcavatorRegistrationRequest;
 use App\Models\Excavator;
 use App\Models\Account;
+use App\Models\ExcavatorRent;
+use DateTime;
 
 class ExcavatorController extends Controller
 {
@@ -62,6 +64,35 @@ class ExcavatorController extends Controller
         } else {
             session()->flash('message', 'No excavator records available to show!');
             return view('excavators.list');
+        }
+    }
+
+    /**
+     * Return contractor account for excavator id
+     */
+    public function getAccountByExcavatorId($excavatorId)
+    {
+        $excavator = Excavator::where('id', $excavatorId)->first();
+        if(!empty($excavatorId) && !empty($excavator->id)) {
+            $accountName = $excavator->account->account_name;
+            $excavatorRent = ExcavatorRent::where('excavator_id', $excavatorId)->orderBy('to_date','desc')->first();
+            if(!empty($excavatorRent) && !empty($excavatorRent->id)) {
+                $excavatorLastRentDate = $excavatorRent->to_date;
+                $excavatorLastRentDate = new DateTime($excavatorLastRentDate);
+                $excavatorLastRentDate->modify('+1 day');
+                $excavatorLastRentDate = $excavatorLastRentDate->format('m-d-Y');
+            }
+
+            return ([
+                    'flag'          => true,
+                    'accountName'   => $accountName,
+                    'rent'          => ($excavator->rent_type == 'monthly') ? $excavator->rent_monthly : 0,
+                    'excavatorLastRentDate' => !empty($excavatorLastRentDate) ? $excavatorLastRentDate : ''
+                ]);
+        } else {
+            return ([
+                    'flag'          => false
+                ]);
         }
     }
 }

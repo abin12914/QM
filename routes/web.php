@@ -65,6 +65,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/machine/excavator/register', 'ExcavatorController@register')->name('excavator-register-view');
 		Route::post('/machine/excavator/register/action', 'ExcavatorController@registerAction')->name('excavator-register-action');
 		Route::get('/machine/excavator/list', 'ExcavatorController@list')->name('excavator-list');
+		Route::get('/get/account/by/excavator/{id}', 'ExcavatorController@getAccountByExcavatorId')->name('get-account-by-excavator-id');
 
 		//jackhammer
 		Route::get('/machine/jackhammer/register', 'JackhammerController@register')->name('jackhammer-register-view');
@@ -104,13 +105,20 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//monthly statement
 		Route::get('/monthly-statement/register', 'MonthlyStatementController@register')->name('monthly-statement-register-view');
 		Route::post('/monthly-statement/employee/salary/action', 'MonthlyStatementController@employeeSalaryAction')->name('monthly-statement-employee-salary-action');
-		Route::post('/monthly-statement/excavator/readings/action', 'MonthlyStatementController@excavatorReadingsAction')->name('monthly-statement-excavator-readings-action');
+		Route::post('/monthly-statement/excavator/rent/action', 'MonthlyStatementController@excavatorRentAction')->name('monthly-statement-excavator-rent-action');
+		Route::get('/monthly-statement/list/employee', 'MonthlyStatementController@employeeSalaryList')->name('monthly-statement-list-employee');
+		Route::get('/monthly-statement/list/excavator', 'MonthlyStatementController@excavatorRentList')->name('monthly-statement-list-excavator');
 
 		//vouchers
 		Route::get('/voucher/register', 'VoucherController@register')->name('voucher-register-view');
 		Route::post('/cash/voucher/register/action', 'VoucherController@cashVoucherRegistrationAction')->name('cash-voucher-register-action');
 		Route::post('/credit/voucher/register/action', 'VoucherController@creditVoucherRegistrationAction')->name('credit-voucher-register-action');
 		Route::get('/get/details/by/account/{id}', 'VoucherController@getAccountDetailsByaccountId')->name('get-details-by-account-id');
+		Route::get('/voucher/list/cash', 'VoucherController@cashVoucherList')->name('cash-voucher-list');
+		Route::get('/voucher/list/credit', 'VoucherController@creditVoucherList')->name('credit-voucher-list');
+
+		//final statement
+		Route::get('/account-statement/list', 'AccountStatementController@accountSatementList')->name('account-statement-list-view');
 	});
 
 	//common routes

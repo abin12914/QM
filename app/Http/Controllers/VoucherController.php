@@ -179,4 +179,36 @@ class VoucherController extends Controller
                 ]);            
         }
     }
+
+    /**
+     * Return view for list voucher / cash
+     */
+    public function cashVoucherList()
+    {
+        $cashVouchers = Voucher::where('voucher_type', 'Cash')->paginate(10);
+
+        if(empty($cashVouchers)) {
+            $cashVouchers = [];
+        }
+        return view('voucher.list',[
+                    'cashVouchers'    => $cashVouchers,
+                    'creditVouchers'  => []
+                ]);
+    }
+
+    /**
+     * Return view for list voucher / credit
+     */
+    public function creditVoucherList()
+    {
+        $creditVouchers = Voucher::where('voucher_type', 'Credit')->paginate(10);
+
+        if(empty($creditVouchers)) {
+            $creditVouchers = [];
+        }
+        return view('voucher.list',[
+                    'cashVouchers'    => [],
+                    'creditVouchers'  => $creditVouchers
+                ]);
+    }
 }

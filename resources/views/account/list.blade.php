@@ -37,18 +37,21 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Account Name</th>
                                             <th>Type</th>
                                             <th>Relation</th>
                                             <th>Account Holder/Head</th>
-                                            <th>Credit</th>
-                                            <th>Debit</th>
+                                            <th>Opening Credit</th>
+                                            <th>Opening Debit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if(!empty($accounts))
-                                            @foreach($accounts as $account)
+                                            @foreach($accounts as $index => $account)
                                                 <tr>
+                                                    {{-- <td>{{ (!empty(Request::get('page')) ? Request::get('page')-1 : 0) * 10 + ($index+1) }}</td> --}}
+                                                    <td>{{ $index+1 }}</td>
                                                     <td>{{ $account->account_name }}</td>
                                                     <td>{{ $account->type }}</td>
                                                     <td>{{ $account->relation }}</td>

@@ -127,8 +127,9 @@ class EmployeeController extends Controller
                 $employeeLastSalaryDate = $employeeSalary->to_date;
                 $salaryDate = new DateTime($employeeLastSalaryDate);
                 $salaryDate->modify('+1 day');
-                $salaryDate = $salaryDate->format('d-m-Y');
+                $salaryDate = $salaryDate->format('m-d-Y');
             }
+            
             return ([
                     'flag'          => true,
                     'employeeId'    => $employee->id,//account->accountDetail->name,
@@ -148,11 +149,21 @@ class EmployeeController extends Controller
     public function getEmployeeByEmployeeId($employeeId)
     {
         $employee = Employee::where('id', $employeeId)->first();
-        if(!empty($employee)) {
+        if(!empty($employee) && !empty($employee->id)) {
+            $employeeId = $employee->id;
+            $employeeSalary = EmployeeSalary::where('employee_id', $employeeId)->orderBy('to_date','desc')->first();
+            if(!empty($employeeSalary) && !empty($employeeSalary->id)) {
+                $employeeLastSalaryDate = $employeeSalary->to_date;
+                $salaryDate = new DateTime($employeeLastSalaryDate);
+                $salaryDate->modify('+1 day');
+                $salaryDate = $salaryDate->format('m-d-Y');
+            }
+
             return ([
-                    'flag'      => true,
-                    'accountId' => $employee->account_id,
-                    'wage'      => ($employee->employee_type == 'labour') ? $employee->wage : $employee->salary
+                    'flag'       => true,
+                    'accountId'  => $employee->account_id,
+                    'wage'       => ($employee->employee_type == 'labour') ? $employee->wage : $employee->salary,
+                    'salaryDate' => !empty($salaryDate) ? $salaryDate : ''
                 ]);
         } else {
             return ([

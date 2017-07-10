@@ -17,10 +17,6 @@ $(function () {
         autoclose: true,
     });
 
-    //setting current date as selected
-    $('.datepicker').datepicker('setDate', new Date());
-    //$(".datepicker").datepicker("update", new Date());
-
     //handle link to tabs
     var url = document.location.toString();
     if (url.match('#')) {
@@ -104,14 +100,15 @@ $(function () {
                             if(salaryDate) {
                                 var today = new Date();
                                 var salaryDateField = new Date(salaryDate);
-                                if(salaryDate <= today) { console.log('1');
-                                    $('.datepicker').datepicker('setStartDate', salaryDate);
-                                    $('.datepicker').datepicker('setDate', salaryDate);
-                                } else{
-                                    console.log('2');
+                                if(salaryDateField < today) {
+                                    var day     = salaryDateField.getDate();
+                                    var month   = salaryDateField.getMonth()+1;
+                                    var year    = salaryDateField.getFullYear();
+                                    salaryDate  = day+'-'+month+'-'+year;
+
+                                    //$('.datepicker').datepicker('setStartDate', salaryDate);
+                                    $('#emp_salary_start_date').datepicker('setDate', salaryDate);
                                 }
-                            } else {
-                                console.log('3');
                             }
                         } else {
                             $('#emp_salary_account_id').val('');
@@ -134,10 +131,10 @@ $(function () {
     //select employee name for the selected account
     $('body').on("change", "#emp_salary_employee_id", function () {
         var employeeId = $('#emp_salary_employee_id').val();
-        // selectTriggerFlag is used for escaping from infinte execution of change event(attendance_employee_id and attendance_account_id)
+        // selectTriggerFlag is used for escaping from infinte execution of change event(emp_salary_employee_id and emp_salary_account_id)
         if(selectTriggerFlag == 0){
             selectTriggerFlag = 1;
-            /*$('#attendance_account_id').val('');
+            $('#emp_salary_account_id').val('');
             if(employeeId) {
                 $.ajax({
                     url: "/employee/get/employee/" + employeeId,
@@ -145,80 +142,104 @@ $(function () {
                     success: function(result) {
                         if(result && result.flag) {
                             var accountId   = result.accountId;
-                            var wage        = result.wage;
-                            
-                            $('#attendance_account_id').val(accountId);
-                            $('#attendance_wage').val(wage);
+                            var salary      = result.wage;
+                            var salaryDate  = result.salaryDate;
+
+                            $('#emp_salary_account_id').val(accountId);
+                            $('#emp_salary_salary').val(salary);
+
+                            if(salaryDate) {
+                                var today = new Date();
+                                var salaryDateField = new Date(salaryDate);
+                                if(salaryDateField < today) {
+                                    var day     = salaryDateField.getDate();
+                                    var month   = salaryDateField.getMonth()+1;
+                                    var year    = salaryDateField.getFullYear();
+                                    salaryDate  = day+'-'+month+'-'+year;
+
+                                    //$('.datepicker').datepicker('setStartDate', salaryDate);
+                                    $('#emp_salary_start_date').datepicker('setDate', salaryDate);
+                                }
+                            }
                         } else {
-                            $('#attendance_employee_id').val('');
+                            $('#emp_salary_employee_id').val('');
                         }
-                        $('#attendance_account_id').trigger('change');
+                        $('#emp_salary_account_id').trigger('change');
                     },
                     error: function () {
-                        $('#attendance_employee_id').val('');
+                        $('#emp_salary_employee_id').val('');
                     }
                 });
             } else {
-               $('#attendance_account_id').trigger('change'); 
-            }*/
+               $('#emp_salary_account_id').trigger('change'); 
+            }
         } else {
             selectTriggerFlag = 0;
         }
     });
 
     //select contractor details for the selected jackhammer
-    $('body').on("change", "#jackhammer_id", function () {
-        var jackhammerId = $('#jackhammer_id').val();
+    $('body').on("change", "#excavator_id", function () {
+        var excavatorId = $('#excavator_id').val();
         
-        $('#jackhammer_contractor_account').val('');
-        if(jackhammerId) {
+        $('#excavator_contractor_name').val('');
+        if(excavatorId) {
             $.ajax({
-                url: "/get/account/by/jackhammer/" + jackhammerId,
+                url: "/get/account/by/excavator/" + excavatorId,
                 method: "get",
                 success: function(result) {
                     if(result && result.flag) {
                         var accountName   = result.accountName;
-                        $('#jackhammer_contractor_account').val(accountName);
+                        var rent = result.rent;
+                        var excavatorLastRentDate  = result.excavatorLastRentDate;
+
+                        $('#excavator_contractor_name').val(accountName);
+                        $('#excavator_rent').val(rent);
+                        
+                        if(excavatorLastRentDate) {
+                            var today = new Date();
+                            var salaryDateField = new Date(excavatorLastRentDate);
+                            if(salaryDateField < today) {
+                                var day     = salaryDateField.getDate();
+                                var month   = salaryDateField.getMonth()+1;
+                                var year    = salaryDateField.getFullYear();
+                                excavatorLastRentDate  = day+'-'+month+'-'+year;
+
+                                $('#excavator_from_date').datepicker('setDate', excavatorLastRentDate);
+                            }
+                        }
                     } else {
-                        $('#jackhammer_id').val('');
+                        $('#excavator_id').val('');
                     }
                 },
                 error: function () {
-                    $('#jackhammer_id').val('');
+                    $('#excavator_id').val('');
                 }
             });
         } else {
-           $('#jackhammer_id').val('');
+           $('#excavator_id').val('');
         }
     });
 
-    //total pit depth calculation
-    $('body').on("change", "#jackhammer_depth_per_pit", function () {
-        calculateTotalPitDepth();
+    //update start date based on from date selection - employee
+    $('body').on("change", "#emp_salary_start_date", function () {
+        var startDate = $('#emp_salary_start_date').val();
+        
+        if(startDate) {
+            $('#emp_salary_end_date').datepicker('setStartDate', startDate);
+        } else {
+           $('#emp_salary_end_date').datepicker('setStartDate', '');
+        }
     });
 
-    //total pit depth calculation
-    $('body').on("keyup", "#jackhammer_depth_per_pit", function () {
-        calculateTotalPitDepth();
-    });
-
-    //total pit depth calculation
-    $('body').on("change", "#jackhammer_no_of_pit", function () {
-        calculateTotalPitDepth();
-    });
-
-    //total pit depth calculation
-    $('body').on("keyup", "#jackhammer_no_of_pit", function () {
-        calculateTotalPitDepth();
+    //update start date based on from date selection - excavator
+    $('body').on("change", "#excavator_from_date", function () {
+        var fromDate = $('#excavator_from_date').val();
+        
+        if(fromDate) {
+            $('#excavator_to_date').datepicker('setStartDate', fromDate);
+        } else {
+           $('#excavator_to_date').datepicker('setStartDate', '');
+        }
     });
 });
-
-function calculateTotalPitDepth() {
-    var depthPerPit     = $('#jackhammer_depth_per_pit').val();
-    var noOfPit         = $('#jackhammer_no_of_pit').val();
-    var totalPitDepth   = 0;
-    if(depthPerPit > 0 && noOfPit > 0) {
-        totalPitDepth = depthPerPit * noOfPit;
-    }
-    $('#jackhammer_total_pit_depth').val(totalPitDepth);
-}

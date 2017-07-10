@@ -64,7 +64,7 @@
             </li>
              <li class="treeview {{ Request::is('product/*')? 'active' : '' }}">
                     <a href="#">
-                        <i class="fa fa-dollar"></i>
+                        <i class="fa fa-industry"></i>
                         <span>Products</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -163,7 +163,7 @@
                             </a>
                         </li>
                         <li class="{{ Request::is('monthly-statement/list')? 'active' : '' }}">
-                            <a href="#">
+                            <a href="{{route('monthly-statement-list-employee')}}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
@@ -183,9 +183,25 @@
                                 <i class="fa fa-circle-o"></i> Register
                             </a>
                         </li>
-                        <li class="{{ Request::is('daily-statement/list')? 'active' : '' }}">
-                            <a href="#">
+                        <li class="{{ Request::is('voucher/list/*')? 'active' : '' }}">
+                            <a href="{{route('cash-voucher-list')}}">
                                 <i class="fa fa-circle-o"></i> List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview {{ Request::is('account-statement/*')? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-dollar"></i>
+                        <span>Accout Statement</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('account-statement/list')? 'active' : '' }}">
+                            <a href="{{route('account-statement-list-view')}}">
+                                <i class="fa fa-circle-o"></i> Statement
                             </a>
                         </li>
                     </ul>

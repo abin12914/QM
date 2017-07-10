@@ -101,7 +101,7 @@
                                                             <td>{{ $index+1 }}</td>
                                                             <td>{{ $excavatorReading->date }}</td>
                                                             <td>{{ $excavatorReading->excavator->name }}</td>
-                                                            <td>{{ $excavatorReading->transaction->creditAccount->account_name }}</td>
+                                                            <td>{{ $excavatorReading->excavator->account->account_name }}</td>
                                                             <td>{{ $excavatorReading->bucket_hour }}</td>
                                                             <td>{{ $excavatorReading->breaker_hour }}</td>
                                                             <td>{{ $excavatorReading->bata }}</td>

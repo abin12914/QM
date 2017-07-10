@@ -195,7 +195,7 @@ class DailyStatementController extends Controller
                 $excavatorReading->bata             = $operatorBata;
                 $excavatorReading->status           = 1;
             } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the attendance details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
             }
         } else {
             $excavatorReading = new ExcavatorReading;
@@ -211,7 +211,7 @@ class DailyStatementController extends Controller
         if($excavatorReading->save()) {
             return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'excavator');
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the attendance details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
     }
 
@@ -237,7 +237,8 @@ class DailyStatementController extends Controller
             if($rentType == 'per_feet'){
                 $bill = ($totalPitDepth * $rentPerFeet);
             } else {
-                $rentTypeFlag   = 1;
+                //$rentTypeFlag   = 1;
+                return redirect()->back()->with("message","Error! Selected jackhammer has a diffrent rent scheme.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');    
             }
         } else {
             return redirect()->back()->with("message","Something went wrong! Jackhammer not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
@@ -257,46 +258,47 @@ class DailyStatementController extends Controller
 
         $temp = ("Jackhammer rent : ".$depthPerPit." * ".$noOfPit." * ".$rentPerFeet." = ".($depthPerPit*$noOfPit*$rentPerFeet));
 
-        if($rentTypeFlag == 0){
-            $transaction = new Transaction;
-            $transaction->debit_account_id  = $jackhammerReadingAccountId; //jackhammer reading account id
-            $transaction->credit_account_id = $jackhammerContractorAccountId;
-            $transaction->amount            = $bill;
-            $transaction->date_time         = $dateTime;
-            $transaction->particulars       = $temp;
-            $transaction->status            = 1;
-            $transaction->created_user_id   = Auth::user()->id;
+        //if($rentTypeFlag == 0){
+        $transaction = new Transaction;
+        $transaction->debit_account_id  = $jackhammerReadingAccountId; //jackhammer reading account id
+        $transaction->credit_account_id = $jackhammerContractorAccountId;
+        $transaction->amount            = $bill;
+        $transaction->date_time         = $dateTime;
+        $transaction->particulars       = $temp;
+        $transaction->status            = 1;
+        $transaction->created_user_id   = Auth::user()->id;
 
-            if($transaction->save()) {
-                $jackhammerReading = new JackhammerReading;
-                $jackhammerReading->date             = $date;
-                $jackhammerReading->jackhammer_id    = $jackhammerId;
-                $jackhammerReading->transaction_id   = $transaction->id;
-                $jackhammerReading->total_pit_depth  = $totalPitDepth;
-                $jackhammerReading->status           = 1;
+        if($transaction->save()) {
+            $jackhammerReading = new JackhammerReading;
+            $jackhammerReading->date             = $date;
+            $jackhammerReading->jackhammer_id    = $jackhammerId;
+            $jackhammerReading->transaction_id   = $transaction->id;
+            $jackhammerReading->total_pit_depth  = $totalPitDepth;
+            $jackhammerReading->status           = 1;
+
+            if($jackhammerReading->save()) {
+                return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'jackhammer');
             } else {
                 return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
             }
         } else {
+            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+        }
+        /*} else {
             $jackhammerReading = new JackhammerReading;
             $jackhammerReading->date             = $date;
             $jackhammerReading->jackhammer_id    = $jackhammerId;
             $jackhammerReading->total_pit_depth  = $totalPitDepth;
             $jackhammerReading->status           = 1;
-        }
-        if($jackhammerReading->save()) {
-            return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'jackhammer');
-        } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
-        }
+        }*/
     }
 
     /**
-     * Return view for daily statement listing
+     * Return view for daily statement listing / employee attendance
      */
     public function employeeAttendanceList()
     {
-        $employeeAttendance = EmployeeAttendance::paginate(1);
+        $employeeAttendance = EmployeeAttendance::paginate(10);
 
         if(empty($employeeAttendance)) {
             $employeeAttendance = [];
@@ -309,44 +311,36 @@ class DailyStatementController extends Controller
     }
 
     /**
-     * Return view for daily statement listing
+     * Return view for daily statement listing / excavator reading
      */
     public function excavatorReadingList()
     {
-        $employeeAttendance = EmployeeAttendance::paginate(1);
-        $excavatorReadings  = ExcavatorReading::paginate(1);
-        $jackhammerReadings = JackhammerReading::paginate(1);
+        $excavatorReadings  = ExcavatorReading::paginate(10);
 
-        if(!empty($employeeAttendance) || !empty($excavatorReadings) || !empty($jackhammerReadings)) {
-            return view('daily-statement.list',[
-                    'employeeAttendance'    => $employeeAttendance,
-                    'excavatorReadings'     => $excavatorReadings,
-                    'jackhammerReadings'    => $jackhammerReadings
-                ]);
-        } else {
-            session()->flash('message', 'No purchase record available to show!');
-            return view('daily-statement.list');
+        if(empty($excavatorReadings)) {
+            $excavatorReadings = [];
         }
+        return view('daily-statement.list',[
+                'employeeAttendance'    => [],
+                'excavatorReadings'     => $excavatorReadings,
+                'jackhammerReadings'    => []
+            ]);
     }
 
     /**
-     * Return view for daily statement listing
+     * Return view for daily statement listing / daily statement
      */
     public function jackhammerReadingList()
     {
-        $employeeAttendance = EmployeeAttendance::paginate(1);
-        $excavatorReadings  = ExcavatorReading::paginate(1);
-        $jackhammerReadings = JackhammerReading::paginate(1);
+        $jackhammerReadings = JackhammerReading::paginate(10);
 
-        if(!empty($employeeAttendance) || !empty($excavatorReadings) || !empty($jackhammerReadings)) {
-            return view('daily-statement.list',[
-                    'employeeAttendance'    => $employeeAttendance,
-                    'excavatorReadings'     => $excavatorReadings,
-                    'jackhammerReadings'    => $jackhammerReadings
-                ]);
-        } else {
-            session()->flash('message', 'No purchase record available to show!');
-            return view('daily-statement.list');
+        if(empty($jackhammerReadings)) {
+            $jackhammerReadings = [];
         }
+        return view('daily-statement.list',[
+                'employeeAttendance'    => [],
+                'excavatorReadings'     => [],
+                'jackhammerReadings'    => $jackhammerReadings
+            ]);
     }
 }

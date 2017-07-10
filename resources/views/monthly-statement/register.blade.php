@@ -127,7 +127,7 @@
                             <div class="{{ (old('tab_flag') == 'excavator' || (!empty(Session::get('controller_tab_flag')) && Session::get('controller_tab_flag') == 'excavator')) ? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('monthly-statement-excavator-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('monthly-statement-excavator-rent-action') }}" method="post" class="form-horizontal" multipart-form-data>
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="excavator">
                                         <div class="row">
@@ -136,13 +136,16 @@
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_id')) ? 'has-error' : '' }}">
                                                         <label for="excavator_id" class="control-label">Excavator : </label>
                                                         <select class="form-control" name="excavator_id" id="excavator_id" tabindex="2" style="width: 100%">
-                                                            @if(count($excavators))
+                                                            @if(count($excavators) > 0)
                                                                 <option value="">Select excavator</option>
                                                                 @foreach($excavators as $excavator)
                                                                     <option value="{{ $excavator->id }}" {{ (old('excavator_id') == $excavator->id ) ? 'selected' : '' }}>{{ $excavator->name }} / Contractor : {{ $excavator->account->accountDetail->name }}</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>
+                                                        @if(!empty($errors->first('excavator_id')))
+                                                            <p style="color: red;" >{{$errors->first('excavator_id')}}</p>
+                                                        @endif
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_contractor_name')) ? 'has-error' : '' }}">
                                                         <label for="excavator_contractor_name" class="control-label">Contractor Name : </label>
@@ -153,16 +156,32 @@
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_from_date')) ? 'has-error' : '' }}">
                                                         <label for="excavator_from_date" class="control-label">Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="excavator_from_date" id="excavator_from_date" placeholder="Date" value="{{ old('excavator_from_date') }}" tabindex="1">
+                                                        @if(!empty($errors->first('excavator_from_date')))
+                                                            <p style="color: red;" >{{$errors->first('excavator_from_date')}}</p>
+                                                        @endif
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_to_date')) ? 'has-error' : '' }}">
                                                         <label for="excavator_to_date" class="control-label">Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="excavator_to_date" id="excavator_to_date" placeholder="Date" value="{{ old('excavator_to_date') }}" tabindex="1">
+                                                        @if(!empty($errors->first('excavator_to_date')))
+                                                            <p style="color: red;" >{{$errors->first('excavator_to_date')}}</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_rent')) ? 'has-error' : '' }}">
                                                         <label for="excavator_rent" class="control-label">Monthly Rent : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="excavator_rent" id="excavator_rent" value="{{ old("excavator_rent") }}" tabindex="3">
+                                                        @if(!empty($errors->first('excavator_rent')))
+                                                            <p style="color: red;" >{{$errors->first('excavator_rent')}}</p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-sm-6 {{ !empty($errors->first('excavator_description')) ? 'has-error' : '' }}">
+                                                        <label for="excavator_description" class="control-label">Description : </label>
+                                                        <input type="text" class="form-control" name="excavator_description" id="excavator_description" value="{{ old('excavator_description') }}" tabindex="3">
+                                                        @if(!empty($errors->first('excavator_description')))
+                                                            <p style="color: red;" >{{$errors->first('excavator_description')}}</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div><br>
