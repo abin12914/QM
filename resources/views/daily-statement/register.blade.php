@@ -4,7 +4,7 @@
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Daily Statement
+            Daily Resource
             <small>Registartion</small>
         </h1>
         <ol class="breadcrumb">

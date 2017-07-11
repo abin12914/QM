@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AccountRegistrationRequest;
 use App\Models\Account;
 use App\Models\AccountDetail;
+use App\Models\Transaction;
 
 class AccountController extends Controller
 {
@@ -84,6 +85,31 @@ class AccountController extends Controller
         } else {
             session()->flash('message', 'No accounts available to show!');
             return view('account.list');/*->with("message","No account records available!")->with("alert-class","alert-success");*/
+        }
+    }
+
+    /**
+     * Return view for account statement
+     */
+    public function accountSatementList()
+    {
+        $accountId  = 14;
+        $fromDate   = '2017-07-01';
+        $toDate     = '2017-07-06';
+
+        $transactions = Transaction::where(function ($query) use($accountId) {
+            $query->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
+        })->whereBetween('date_time', [$fromDate, $toDate])->orderBy('date_time','desc')->paginate(10);
+        if(!empty($transactions)) {
+            return view('account-statement.statement',[
+                    'transactions'  => $transactions,
+                    'accountId'     => $accountId,
+                    'creditAmount'  => 0,
+                    'debitAmount'   => 0
+                ]);
+        } else {
+            session()->flash('message', 'No accounts available to show!');
+            return view('account-statement.statement');
         }
     }
 }

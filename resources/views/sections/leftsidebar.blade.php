@@ -130,7 +130,7 @@
                 <li class="treeview {{ Request::is('daily-statement/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-calendar-plus-o"></i>
-                        <span>Daily Statement</span>
+                        <span>Daily Resources</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -138,7 +138,7 @@
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('daily-statement/register')? 'active' : '' }}">
                             <a href="{{route('daily-statement-register-view')}}">
-                                <i class="fa fa-circle-o"></i> Resources
+                                <i class="fa fa-circle-o"></i> Registration
                             </a>
                         </li>
                         <li class="{{ Request::is('daily-statement/list/*')? 'active' : '' }}">
@@ -151,7 +151,7 @@
                 <li class="treeview {{ Request::is('monthly-statement/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-calendar"></i>
-                        <span>Monthly Statement</span>
+                        <span>Monthly Resources</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -159,7 +159,7 @@
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('monthly-statement/register')? 'active' : '' }}">
                             <a href="{{ route('monthly-statement-register-view') }}">
-                                <i class="fa fa-circle-o"></i> Resources
+                                <i class="fa fa-circle-o"></i> Register
                             </a>
                         </li>
                         <li class="{{ Request::is('monthly-statement/list')? 'active' : '' }}">
@@ -193,7 +193,7 @@
                 <li class="treeview {{ Request::is('account-statement/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-dollar"></i>
-                        <span>Accout Statement</span>
+                        <span>Statements</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -201,7 +201,7 @@
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('account-statement/list')? 'active' : '' }}">
                             <a href="{{route('account-statement-list-view')}}">
-                                <i class="fa fa-circle-o"></i> Statement
+                                <i class="fa fa-circle-o"></i> Account Statement
                             </a>
                         </li>
                     </ul>

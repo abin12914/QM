@@ -135,8 +135,8 @@ class VoucherController extends Controller
         $dateTime = date('Y-m-d H:i:s', strtotime($date.' '.$time.':00'));
 
         $transaction = new Transaction;
-        $transaction->debit_account_id  = $debitAccountId;
-        $transaction->credit_account_id = $creditAccountId;
+        $transaction->debit_account_id  = $creditAccountId; //the crediter gives to company
+        $transaction->credit_account_id = $debitAccountId; //the company gives to debiter
         $transaction->amount            = !empty($voucherAmount) ? $voucherAmount : '0';
         $transaction->date_time         = $dateTime;
         $transaction->particulars       = $description."[".$debitAccountName."->".$creditAccountName."]";
