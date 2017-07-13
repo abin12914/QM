@@ -95,6 +95,8 @@ class AccountController extends Controller
     {
         /*$obDebitAmount  = 0;
         $obCreditAmount = 0;*/
+        $totalDebit     = 0;
+        $totalCredit    = 0;
         $accountId  = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
@@ -114,6 +116,9 @@ class AccountController extends Controller
             $selectedAccountName = '';
         }
 
+        $totalDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
+        $totalCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
+
         $query = Transaction::where(function ($qry) use($accountId) {
             $qry->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
         });
@@ -130,7 +135,7 @@ class AccountController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $transactions = $query->orderBy('date_time','desc')->paginate(10);
+        $transactions = $query->orderBy('date_time','desc')->paginate(5);
         
         return view('account-statement.statement',[
                 'accounts'              => $accounts,
@@ -139,6 +144,8 @@ class AccountController extends Controller
                 'selectedAccountName'   => $selectedAccountName,
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
+                'totalDebit'            => $totalDebit,
+                'totalCredit'           => $totalCredit,
             ]);
     }
 }

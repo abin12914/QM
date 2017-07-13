@@ -32,7 +32,7 @@
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">
                                     <div class="form-group">
-                                        <div class="col-sm-4 {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
+                                        <div class="col-sm-4     {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
                                             <label for="account_id" class="control-label"><b style="color: red">*</b> Account : </label>
                                             <select class="form-control" name="account_id" id="account_id" tabindex="3" style="width: 100%">
                                                 @if(!empty($accounts) && (count($accounts) > 0))
@@ -70,21 +70,87 @@
                                     <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
                                 </div>
                             </div>
-                            <div class="box-header with-border"></div><br>
                         </form>
                         <!-- /.form end -->
                     </div>
-                    @if(!empty($selectedAccountName))
-                        <div class="box-header">
-                            <h4>Ledger of <b>{{ $selectedAccountName }}</b> {{ !empty($fromDate) ? ' [ '.$fromDate.' - ' : '[ starting - ' }} {{ !empty($toDate) ? $toDate.' ]' : 'end ]' }}</h4>
-                        </div>
-                        <div class="col-md-3"></div>
-                    <div class="col-md-6">
-                        
-                    </div>
-                    @endif
-                    <!-- /.box-header -->
                     <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6">
+                                @if(!empty($selectedAccountName))
+                                    <div class="box-header">
+                                        <div class="pad margin no-print">
+                                            <div class="callout callout-default">
+                                                <h4 style="color: green;">Account Overview</h4>
+                                                <div class="table-responsive">
+                                                    <table class="table" style="color: orangered;">
+                                                        <tr>
+                                                            <th style="width:45%">
+                                                                <span class="badge bg-black"><i class="fa fa-book"></i></span>&nbsp&nbsp Account Name
+                                                                <b class="pull-right">:</b>
+                                                            </th>
+                                                            <td>
+                                                                <span class="badge bg-light-blue" style="width:100%;">{{ $selectedAccountName }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <span class="badge bg-black"><i class="fa fa-arrow-down"></i></span>&nbsp&nbsp Total Debit
+                                                                <b class="pull-right">:</b>
+                                                            </th>
+                                                            <td>
+                                                                <span class="badge bg-yellow" style="width:100%">{{ $totalDebit }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <span class="badge bg-black"><i class="fa fa-arrow-up"></i></span>&nbsp&nbsp Total Credit
+                                                                <b class="pull-right">:</b>
+                                                            </th>
+                                                            <td>
+                                                                <span class="badge bg-orange" style="width:100%">{{ $totalCredit }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            @if($totalDebit >= $totalCredit)
+                                                                <th>
+                                                                    <span class="badge bg-black"><i class="fa fa-dollar"></i></span>&nbsp&nbsp Balance To Get
+                                                                    <b class="pull-right">:</b>
+                                                                </th>
+                                                                <td>
+                                                                    <span class="badge bg-green" style="width:100%">{{ $totalDebit - $totalCredit }}</span>
+                                                                </td>
+                                                            @else
+                                                                <th>
+                                                                    <span class="badge bg-black"><i class="fa fa-dollar"></i></span>&nbsp&nbsp Balance To Pay
+                                                                    <b class="pull-right">:</b>
+                                                                </th>
+                                                                <td>
+                                                                    <span class="badge bg-red" style="width:100%">{{ $totalCredit - $totalDebit }}</span>
+                                                                </td>
+                                                            @endif
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-body">
+                        @if(!empty($selectedAccountName))
+                            <div class="box-header">
+                                <h4>Ledger of <b>{{ $selectedAccountName }}</b> {{ !empty($fromDate) ? ' [ '.$fromDate.' - ' : '[ starting - ' }} {{ !empty($toDate) ? $toDate.' ]' : 'end ]' }}</h4>
+                            </div>
+                        @endif
                         <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-bordered table-hover">
@@ -138,7 +204,7 @@
                     </div>
                     <!-- /.box-body -->
                 </div>
-                <!-- /.boxy -->
+                <!-- /.box -->
             </div>
             <!-- /.col-md-12 -->
         </div>
