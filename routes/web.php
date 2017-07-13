@@ -118,7 +118,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/voucher/list/credit', 'VoucherController@creditVoucherList')->name('credit-voucher-list');
 
 		//final statement
-		Route::get('/account-statement/list', 'AccountController@accountSatementList')->name('account-statement-list-view');
+		Route::get('/account-statement/list', 'AccountController@accountSatementSearch')->name('account-statement-list-search');
 	});
 
 	//common routes

@@ -7,7 +7,7 @@ use App\Http\Requests\AccountRegistrationRequest;
 use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Transaction;
-
+use DateTime;
 class AccountController extends Controller
 {
     /**
@@ -91,25 +91,70 @@ class AccountController extends Controller
     /**
      * Return view for account statement
      */
-    public function accountSatementList()
+    public function accountSatementSearch(Request $request)
     {
-        $accountId  = 14;
-        $fromDate   = '2017-07-01';
-        $toDate     = '2017-07-06';
+        /*$obDebitAmount  = 0;
+        $obCreditAmount = 0;*/
+        $accountId  = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
+        $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
 
-        $transactions = Transaction::where(function ($query) use($accountId) {
-            $query->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
-        })->whereBetween('date_time', [$fromDate, $toDate])->orderBy('date_time','desc')->paginate(10);
-        if(!empty($transactions)) {
-            return view('account-statement.statement',[
-                    'transactions'  => $transactions,
-                    'accountId'     => $accountId,
-                    'creditAmount'  => 0,
-                    'debitAmount'   => 0
-                ]);
-        } else {
+        $accounts = Account::where('status', '1')->get();
+        if(empty($accounts)) {
             session()->flash('message', 'No accounts available to show!');
             return view('account-statement.statement');
         }
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+            }
+        } else {
+            $selectedAccountName = '';
+        }
+
+        $query = Transaction::where(function ($qry) use($accountId) {
+            $qry->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
+        });
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d');
+            $query = $query->where('date_time', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate." 23:59");
+            $searchToDate = $searchToDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '<=', $searchToDate);
+        }
+
+        $transactions = $query->orderBy('date_time','desc')->paginate(10);
+        
+        return view('account-statement.statement',[
+                'accounts'              => $accounts,
+                'transactions'          => $transactions,
+                'accountId'             => $accountId,
+                'selectedAccountName'   => $selectedAccountName,
+                'fromDate'              => $fromDate,
+                'toDate'                => $toDate,
+            ]);
     }
 }
+/*$oldBalanceDate = new DateTime($fromDate." 23:59:59");
+$oldBalanceDate->modify('-1 day');
+$oldBalanceDate = $oldBalanceDate->format('Y-m-d H:i:s');
+
+$obTransactions = Transaction::where(function ($qry) use($accountId) {
+    $qry->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
+})->where('date_time', '<=', $oldBalanceDate)->get();
+if(!empty($obTransactions)) {
+    foreach ($obTransactions as $key => $obtransaction) {
+        if($obtransaction->debit_account_id == $accountId) {
+            $obDebitAmount = $obDebitAmount + $obtransaction->amount;
+        } else if($obtransaction->credit_account_id == $accountId) {
+            $obCreditAmount = $obCreditAmount + $obtransaction->amount;
+        }
+    }
+}*/

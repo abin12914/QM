@@ -200,7 +200,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('account-statement/list')? 'active' : '' }}">
-                            <a href="{{route('account-statement-list-view')}}">
+                            <a href="{{route('account-statement-list-search')}}">
                                 <i class="fa fa-circle-o"></i> Account Statement
                             </a>
                         </li>
