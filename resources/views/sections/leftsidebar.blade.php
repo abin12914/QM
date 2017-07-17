@@ -100,7 +100,7 @@
                             </a>
                         </li>
                         <li class="{{ Request::is('sales/list')? 'active' : '' }}">
-                            <a href="{{route('sales-list')}}">
+                            <a href="{{route('sales-list-search')}}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>

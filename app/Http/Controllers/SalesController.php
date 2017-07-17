@@ -9,7 +9,9 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Transaction;
 use App\Models\UserIssuedCreditSale;
+use App\Models\VehicleType;
 use Auth;
+use DateTime;
 use App\Http\Requests\CreditSaleRegistrationRequest;
 use App\Http\Requests\CashSaleRegistrationRequest;
 
@@ -207,17 +209,114 @@ class SalesController extends Controller
     /**
      * Return view for account listing
      */
-    public function list()
+    public function list(Request $request)
     {
-        $sales = Sale::paginate(15);
-        if(!empty($sales)) {
-            return view('sales.list',[
-                    'sales' => $sales
-                ]);
+        $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $fromDate       = !empty($request->get('from_date')) ? $request->get('from_date') : '';
+        $toDate         = !empty($request->get('to_date')) ? $request->get('to_date') : '';
+        $vehicleId      = !empty($request->get('vehicle_id')) ? $request->get('vehicle_id') : 0;
+        $productId      = !empty($request->get('product_id')) ? $request->get('product_id') : 0;
+        $vehicleTypeId  = !empty($request->get('vehicle_type_id')) ? $request->get('vehicle_type_id') : 0;
+
+        $accounts       = Account::where('type', 'personal')->where('status', '1')->get();
+        $vehicles       = Vehicle::where('status', '1')->get();
+        $vehicleTypes   = VehicleType::where('status', '1')->get();
+        $products       = Product::where('status', '1')->get();
+        
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+            }
         } else {
-            session()->flash('message', 'No sale record available to show!');
-            return view('sales.list');
+            $selectedAccountName = '';
         }
+
+        if(!empty($vehicleId) && $vehicleId != 0) {
+            $selectedVehicle = Vehicle::find($vehicleId);
+            if(!empty($selectedVehicle) && !empty($selectedVehicle->id)) {
+                $selectedVehicleRegNumber = $selectedVehicle->reg_number;
+            }
+        } else {
+            $selectedVehicleRegNumber = '';
+        }
+
+        if(!empty($productId) && $productId != 0) {
+            $selectedProduct = Product::find($productId);
+            if(!empty($selectedProduct) && !empty($selectedProduct->id)) {
+                $selectedProductName = $selectedProduct->name;
+            }
+        } else {
+            $selectedProductName = '';
+        }
+
+        if(!empty($vehicleTypeId) && $vehicleTypeId != 0) {
+            $selectedVehicleType = VehicleType::find($vehicleTypeId);
+            if(!empty($selectedVehicleType) && !empty($selectedVehicleType->id)) {
+                $selectedVehicleTypeName = $selectedVehicleType->name;
+            }
+        } else {
+            $selectedVehicleTypeName = '';
+        }
+
+        $query = Sale::where('status', 1);
+
+        if(!empty($accountId) && $accountId != 0) {
+            //$query->load('transaction.debitAccount', 'transaction.creditAccount');
+            $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                $q->whereHas('debitAccount', function ($qry) use($accountId) {
+                    $qry->where('id', $accountId);
+                });
+            });
+        }
+
+        if(!empty($vehicleId) && $vehicleId != 0) {
+            //$query->load('transaction.debitAccount', 'transaction.creditAccount');
+            $query = $query->where('vehicle_id', $vehicleId);
+        }
+
+        if(!empty($productId) && $productId != 0) {
+            //$query->load('transaction.debitAccount', 'transaction.creditAccount');
+            $query = $query->where('product_id', $productId);
+        }
+
+        if(!empty($vehicleTypeId) && $vehicleTypeId != 0) {
+            //$query->load('transaction.debitAccount', 'transaction.creditAccount');
+            $query = $query->whereHas('vehicle', function ($q) use($vehicleTypeId) {
+                $q->whereHas('vehicleType', function ($qry) use($vehicleTypeId) {
+                    $qry->where('id', $vehicleTypeId);
+                });
+            });
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d');
+            $query = $query->where('date_time', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate." 23:59");
+            $searchToDate = $searchToDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '<=', $searchToDate);
+        }
+
+        $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType'])->orderBy('date_time','desc')->paginate(3);
+        
+        return view('sales.list',[
+                'accounts'              => $accounts,
+                'vehicles'              => $vehicles,
+                'products'              => $products,
+                'vehicleTypes'          => $vehicleTypes,
+                'sales'                 => $sales,
+                'accountId'             => $accountId,
+                'vehicleId'             => $vehicleId,
+                'productId'             => $productId,
+                'vehicleTypeId'         => $vehicleTypeId,
+                'fromDate'              => $fromDate,
+                'toDate'                => $toDate,
+            ]);
     }
 
     /**

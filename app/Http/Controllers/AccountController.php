@@ -101,7 +101,7 @@ class AccountController extends Controller
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
 
-        $accounts = Account::where('status', '1')->get();
+        $accounts = Account::where('type', 'personal')->where('status', '1')->get();
         if(empty($accounts)) {
             session()->flash('message', 'No accounts available to show!');
             return view('account-statement.statement');
@@ -135,7 +135,7 @@ class AccountController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $transactions = $query->orderBy('date_time','desc')->paginate(5);
+        $transactions = $query->orderBy('date_time','desc')->paginate(3);
         
         return view('account-statement.statement',[
                 'accounts'              => $accounts,
