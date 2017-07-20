@@ -190,7 +190,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview {{ Request::is('account-statement/*')? 'active' : '' }}">
+                <li class="treeview {{ (Request::is('statement/*'))? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-dollar"></i>
                         <span>Statements</span>
@@ -199,12 +199,20 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ Request::is('account-statement/list')? 'active' : '' }}">
+                        <li class="{{ Request::is('statement/account-statement')? 'active' : '' }}">
                             <a href="{{route('account-statement-list-search')}}">
                                 <i class="fa fa-circle-o"></i> Account Statement
                             </a>
                         </li>
                     </ul>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('statement/daily-statement')? 'active' : '' }}">
+                            <a href="{{route('daily-statement-list-search')}}">
+                                <i class="fa fa-circle-o"></i> Daily Statement
+                            </a>
+                        </li>
+                    </ul>
+
                 </li>
                 <li class="treeview {{ Request::is('account/*')? 'active' : '' }}">
                     <a href="#">

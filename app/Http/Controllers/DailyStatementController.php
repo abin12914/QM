@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
+use DateTime;
 use App\Models\Account;
 use App\Models\EmployeeAttendance;
 use App\Models\Employee;
@@ -341,6 +342,44 @@ class DailyStatementController extends Controller
                 'employeeAttendance'    => [],
                 'excavatorReadings'     => [],
                 'jackhammerReadings'    => $jackhammerReadings
+            ]);
+    }
+
+    /**
+     * Return view for daily statement
+     */
+    public function dailySatementSearch(Request $request)
+    {
+        $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
+        $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
+
+        //$totalDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
+        //$totalCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
+
+        $query = Transaction::where('status', 1);
+
+        if(empty($fromDate) && empty($toDate)) {
+            $query = $query->whereDate('date_time', Carbon::today()->toDateString());
+        } else if(!empty($fromDate) && empty($toDate)){
+            $searchFromDate = Carbon::createFromFormat('d-m-Y', $fromDate);
+            $query = $query->whereDate('date_time', $searchFromDate->toDateString());
+        } else if(empty($fromDate) && !empty($toDate)) {
+            $searchToDate = Carbon::createFromFormat('d-m-Y', $toDate);
+            $query = $query->whereDate('date_time', $searchToDate->toDateString());
+        } else {
+            $searchFromDate = Carbon::createFromFormat('d-m-Y H:i:s', $fromDate." 00:00:00");
+            $searchToDate = Carbon::createFromFormat('d-m-Y H:i:s', $toDate." 23:59:59");
+            $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
+        }
+
+        $transactions = $query->orderBy('date_time','desc')->paginate(10);
+        //dd($transactions);
+        return view('daily-statement.statement',[
+                'transactions'          => $transactions,
+                'fromDate'              => $fromDate,
+                'toDate'                => $toDate,
+                //'totalDebit'            => $totalDebit,
+                //'totalCredit'           => $totalCredit,
             ]);
     }
 }
