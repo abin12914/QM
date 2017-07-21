@@ -94,12 +94,18 @@ class UserController extends Controller
         $accountName        = $request->get('account_name');
         $financialStatus    = $request->get('financial_status');
         $openingBalance     = $request->get('opening_balance');
+        $royaltyOwner       = !empty($request->get('royalty_owner')) ? $request->get('royalty_owner') : 0;
 
         if ($request->hasFile('image_file')) {
             $file               = $request->file('image_file');
             $extension          = $file->getClientOriginalExtension(); // getting image extension
             $fileName           = $userName.'_'.time().'.'.$extension; // renameing image
             $file->move(public_path().$destination, $fileName); // uploading file to given path
+        }
+
+        $royaltyAccountFlag = Account::where('relation', 'royalty owner')->first();
+        if(!empty($royaltyAccountFlag) && !empty($royaltyAccountFlag->id)) {
+            return redirect()->back()->with("message","Failed to save owner. Royalty ownership already assigned.")->with("alert-class","alert-danger");
         }
 
     	$user = new User;
@@ -129,7 +135,7 @@ class UserController extends Controller
             $account->account_name      = $accountName;
             $account->description       = "Owner of the organization";
             $account->type              = "personal";
-            $account->relation          = "owner";
+            $account->relation          = (empty($royaltyOwner) || $royaltyOwner == 0) ? "owner" : "royalty owner";
             $account->financial_status  = $financialStatus;
             $account->opening_balance   = $openingBalance;
             $account->status            = 1;

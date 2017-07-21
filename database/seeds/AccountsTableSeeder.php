@@ -13,7 +13,7 @@ class AccountsTableSeeder extends Seeder
     {
         DB::table('accounts')->insert([
             [
-                'account_name'      => 'Cash',
+                'account_name'      => 'Cash', //account id : 1
                 'description'       => 'Cash account',
                 'type'              => 'real',
                 'relation'          => 'real',
@@ -22,7 +22,7 @@ class AccountsTableSeeder extends Seeder
                 'status'            => '1'
             ],
             [
-                'account_name'      => 'Sales',
+                'account_name'      => 'Sales', //account id : 2
                 'description'       => 'Sales account',
                 'type'              => 'nominal',
                 'relation'          => 'nominal',
@@ -31,7 +31,7 @@ class AccountsTableSeeder extends Seeder
                 'status'            => '1'  
             ],
             [
-                'account_name'      => 'Purchases',
+                'account_name'      => 'Purchases', //account id : 3
                 'description'       => 'Purchases account',
                 'type'              => 'nominal',
                 'relation'          => 'nominal',
@@ -40,7 +40,7 @@ class AccountsTableSeeder extends Seeder
                 'status'            => '1'  
             ],
             [
-                'account_name'      => 'Labour Attendance',
+                'account_name'      => 'Labour Attendance', //account id : 4
                 'description'       => 'Labour attendance account',
                 'type'              => 'nominal',
                 'relation'          => 'nominal',
@@ -49,7 +49,7 @@ class AccountsTableSeeder extends Seeder
                 'status'            => '1'  
             ],
             [
-                'account_name'      => 'Excavator Reading',
+                'account_name'      => 'Excavator Reading', //account id : 5
                 'description'       => 'Excavator reading account',
                 'type'              => 'nominal',
                 'relation'          => 'nominal',
@@ -58,7 +58,7 @@ class AccountsTableSeeder extends Seeder
                 'status'            => '1'  
             ],
             [
-                'account_name'      => 'Jackhammer Reading',
+                'account_name'      => 'Jackhammer Reading', //account id : 6
                 'description'       => 'Jackhammer reading account',
                 'type'              => 'nominal',
                 'relation'          => 'nominal',
@@ -67,7 +67,7 @@ class AccountsTableSeeder extends Seeder
                 'status'            => '1'  
             ],
             [
-                'account_name'      => 'Employee Salary',
+                'account_name'      => 'Employee Salary', //account id : 7
                 'description'       => 'Employee salary account',
                 'type'              => 'nominal',
                 'relation'          => 'nominal',
@@ -76,8 +76,17 @@ class AccountsTableSeeder extends Seeder
                 'status'            => '1'  
             ],
             [
-                'account_name'      => 'Excavator Rent',
+                'account_name'      => 'Excavator Rent', //account id : 8
                 'description'       => 'Excavator rent account',
+                'type'              => 'nominal',
+                'relation'          => 'nominal',
+                'financial_status'  => 'none',
+                'opening_balance'   => '0',
+                'status'            => '1'  
+            ],
+            [
+                'account_name'      => 'Sale Royalty', //account id : 9
+                'description'       => 'Sale royalty account',
                 'type'              => 'nominal',
                 'relation'          => 'nominal',
                 'financial_status'  => 'none',
@@ -139,6 +148,13 @@ class AccountsTableSeeder extends Seeder
             [
                 'account_id'    => '08',
                 'name'          => 'Excavator rent account',
+                'address'       => '',
+                'image'         => '/images/real.jpg',
+                'status'        => '1'  
+            ],
+            [
+                'account_id'    => '09',
+                'name'          => 'Sale Royalty account',
                 'address'       => '',
                 'image'         => '/images/real.jpg',
                 'status'        => '1'  

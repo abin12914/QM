@@ -17,6 +17,7 @@ use App\Models\JackhammerReading;
 use App\Http\Requests\EmployeeAttendanceRegistrationRequest;
 use App\Http\Requests\ExcavatorReadingRegistrationRequest;
 use App\Http\Requests\JackhammerReadingRegistrationRequest;
+use App\Models\Sale;
 
 class DailyStatementController extends Controller
 {
@@ -356,26 +357,25 @@ class DailyStatementController extends Controller
         //$totalDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
         //$totalCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
 
-        $query = Transaction::where('status', 1);
+        $sales = Sale::where('status', 1);
 
         if(empty($fromDate) && empty($toDate)) {
-            $query = $query->whereDate('date_time', Carbon::today()->toDateString());
+            $sales = $sales->whereDate('date_time', Carbon::today()->toDateString());
         } else if(!empty($fromDate) && empty($toDate)){
             $searchFromDate = Carbon::createFromFormat('d-m-Y', $fromDate);
-            $query = $query->whereDate('date_time', $searchFromDate->toDateString());
+            $sales = $sales->whereDate('date_time', $searchFromDate->toDateString());
         } else if(empty($fromDate) && !empty($toDate)) {
             $searchToDate = Carbon::createFromFormat('d-m-Y', $toDate);
-            $query = $query->whereDate('date_time', $searchToDate->toDateString());
+            $sales = $sales->whereDate('date_time', $searchToDate->toDateString());
         } else {
             $searchFromDate = Carbon::createFromFormat('d-m-Y H:i:s', $fromDate." 00:00:00");
             $searchToDate = Carbon::createFromFormat('d-m-Y H:i:s', $toDate." 23:59:59");
-            $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
+            $sales = $sales->whereBetween('date_time', [$searchFromDate, $searchToDate]);
         }
 
-        $transactions = $query->orderBy('date_time','desc')->paginate(10);
-        //dd($transactions);
+        $sales = $sales->sum('total_amount');
         return view('daily-statement.statement',[
-                'transactions'          => $transactions,
+                'sales'          => $sales,
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
                 //'totalDebit'            => $totalDebit,
@@ -383,3 +383,35 @@ class DailyStatementController extends Controller
             ]);
     }
 }
+//daily statement transaction table based
+
+/*$fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
+$toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
+
+//$totalDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
+//$totalCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
+
+$query = Transaction::where('status', 1);
+
+if(empty($fromDate) && empty($toDate)) {
+    $query = $query->whereDate('date_time', Carbon::today()->toDateString());
+} else if(!empty($fromDate) && empty($toDate)){
+    $searchFromDate = Carbon::createFromFormat('d-m-Y', $fromDate);
+    $query = $query->whereDate('date_time', $searchFromDate->toDateString());
+} else if(empty($fromDate) && !empty($toDate)) {
+    $searchToDate = Carbon::createFromFormat('d-m-Y', $toDate);
+    $query = $query->whereDate('date_time', $searchToDate->toDateString());
+} else {
+    $searchFromDate = Carbon::createFromFormat('d-m-Y H:i:s', $fromDate." 00:00:00");
+    $searchToDate = Carbon::createFromFormat('d-m-Y H:i:s', $toDate." 23:59:59");
+    $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
+}
+
+$transactions = $query->orderBy('date_time','desc')->paginate(10);
+return view('daily-statement.statement',[
+        'transactions'          => $transactions,
+        'fromDate'              => $fromDate,
+        'toDate'                => $toDate,
+        //'totalDebit'            => $totalDebit,
+        //'totalCredit'           => $totalCredit,
+    ]);*/

@@ -10,6 +10,8 @@ use App\Models\Sale;
 use App\Models\Transaction;
 use App\Models\UserIssuedCreditSale;
 use App\Models\VehicleType;
+use App\Models\RoyaltyChart;
+use App\Models\Royalty;
 use Auth;
 use DateTime;
 use App\Http\Requests\CreditSaleRegistrationRequest;
@@ -59,6 +61,20 @@ class SalesController extends Controller
             return redirect()->back()->withInput()->with("message","Something went wrong! Sales account not found.")->with("alert-class","alert-danger");
         }
 
+        $royaltyAccount = Account::where('account_name','Sale Royalty')->first();
+        if($royaltyAccount && !empty($royaltyAccount->id)) {
+            $royaltyAccountId = $royaltyAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Something went wrong! Sale Royalty account not found.")->with("alert-class","alert-danger");
+        }
+
+        $royaltyOwnerAccount = Account::where('relation', 'royalty owner')->first();
+        if($royaltyOwnerAccount && !empty($royaltyOwnerAccount->id)) {
+            $royaltyOwnerAccountId = $royaltyOwnerAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Something went wrong! Sale Royalty owner not registered.")->with("alert-class","alert-danger");
+        }
+
         if($measureType == 1) {
             if(($quantity * $rate) != $billAmount) {
                 return redirect()->back()->withInput()->with("message","Something went wrong! Bill calculation error.")->with("alert-class","alert-danger");
@@ -100,7 +116,12 @@ class SalesController extends Controller
             $sale->status           = 1;
             
             if($sale->save()) {
-                return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
+                $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId);
+                if($royaltyFlag) {dd($royaltyFlag);
+                    return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
+                } else {dd($royaltyFlag);
+                    return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the royalty details. Try after reloading the page.")->with("alert-class","alert-danger");
+                }
             } else {
                 return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the sale details. Try after reloading the page.")->with("alert-class","alert-danger");
             }
@@ -159,6 +180,20 @@ class SalesController extends Controller
             }
         }
 
+        $royaltyAccount = Account::where('account_name','Sale Royalty')->first();
+        if($royaltyAccount && !empty($royaltyAccount->id)) {
+            $royaltyAccountId = $royaltyAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Something went wrong! Sale Royalty account not found.")->with("alert-class","alert-danger");
+        }
+
+        $royaltyOwnerAccount = Account::where('relation', 'royalty owner')->first();
+        if($royaltyOwnerAccount && !empty($royaltyOwnerAccount->id)) {
+            $royaltyOwnerAccountId = $royaltyOwnerAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Something went wrong! Sale Royalty owner not registered.")->with("alert-class","alert-danger");
+        }
+
         //converting date and time to sql datetime format
         $dateTime = date('Y-m-d H:i:s', strtotime($date.' '.$time.':00'));
 
@@ -184,6 +219,12 @@ class SalesController extends Controller
             $sale->status           = 1;
             
             if($sale->save()) {
+
+                $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId);
+                if(!$royaltyFlag) {
+                    return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the royalty details. Try after reloading the page.")->with("alert-class","alert-danger");
+                }
+
                 $userIssuedCreditSale = new UserIssuedCreditSale;
                 $userIssuedCreditSale->vehicle_id         = $vehicleId;
                 $userIssuedCreditSale->debit_amount       = $payment;
@@ -203,6 +244,53 @@ class SalesController extends Controller
             }
         } else {
             return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the sale details. Try after reloading the page.")->with("alert-class","alert-danger");
+        }
+    }
+
+    /**
+     * Handle royalty save for each sale [call from sale save action]
+     */
+    public function saveRoyalty($saleId, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId)
+    {
+        if(empty($saleId) || empty($royaltyAccountId)) {
+            return 1;
+        }
+
+        $vehicle = Vehicle::find($vehicleId);
+        if(!empty($vehicle) && !empty($vehicle->id)) {
+            $royaltyRecord = RoyaltyChart::where('vehicle_type_id', $vehicle->vehicle_type_id)->where('product_id', $productId)->first();
+            if(!empty($royaltyRecord) && !empty($royaltyRecord->id)) {
+                $royaltyAmount = $royaltyRecord->amount;
+            } else {
+                return 2;
+            }
+        } else {
+            return 3;
+        }
+
+        $transaction = new Transaction;
+        $transaction->debit_account_id  = $royaltyOwnerAccountId;
+        $transaction->credit_account_id = $royaltyAccountId; //royalty account id
+        $transaction->amount            = !empty($royaltyAmount) ? $royaltyAmount : '0';
+        $transaction->date_time         = $dateTime;
+        $transaction->particulars       = "Royalty credited for sale ".$saleId;
+        $transaction->status            = 1;
+        $transaction->created_user_id   = Auth::user()->id;
+        if($transaction->save()) {
+            $royalty = new Royalty;
+            $royalty->transaction_id    = $transaction->id;
+            $royalty->sale_id           = $saleId;
+            $royalty->vehicle_id        = $vehicleId;
+            $royalty->date_time         = $dateTime;
+            $royalty->amount            = $royaltyAmount;
+            $royalty->status            = 1;
+            if($royalty->save()) {
+                return 0;
+            } else {
+                return 4;
+            }
+        } else {
+            return 5;
         }
     }
 

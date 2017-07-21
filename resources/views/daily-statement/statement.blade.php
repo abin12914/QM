@@ -142,16 +142,27 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Date & Time</th>
                                             <th>Particulars</th>
                                             <th>Debit</th>
                                             <th>Credit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if(!empty($transactions))
-                                            @foreach($transactions as $index => $transaction)
+                                        @if(!empty($sales))
+                                            <tr>
+                                                <td>Sales</td>
+                                                <td></td>
+                                                <td>{{ $sales }}</td>
+                                            </tr>
+                                        @endif
+                                        @if(!empty($sales))
+                                            <tr>
+                                                <td>Sales</td>
+                                                <td></td>
+                                                <td>{{ $sales }}</td>
+                                            </tr>
+                                        @endif
+                                            {{-- @foreach($transactions as $index => $transaction)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
                                                     <td>{{ $transaction->date_time }}</td>
@@ -159,8 +170,7 @@
                                                     <td>{{ $transaction->amount }}</td>
                                                     <td>{{ $transaction->amount }}</td>
                                                 </tr>
-                                            @endforeach
-                                        @endif
+                                            @endforeach --}}
                                     </tbody>
                                 </table>
                             </div>

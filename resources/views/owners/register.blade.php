@@ -81,10 +81,21 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="image_file" class="col-sm-2 control-label">Image : </label>
-                                            <div class="col-sm-10 {{ !empty($errors->first('image_file')) ? 'has-error' : '' }}">
+                                            <div class="col-sm-5 {{ !empty($errors->first('image_file')) ? 'has-error' : '' }}">
                                                 <input type="file" name="image_file" class="form-control" id="image_file" accept="image/*" tabindex="5">
                                                 @if(!empty($errors->first('image_file')))
                                                     <p style="color: red;" >{{$errors->first('image_file')}}</p>
+                                                @endif
+                                            </div>
+                                            <div class="col-sm-5 {{ !empty($errors->first('image_file')) ? 'has-error' : '' }}">
+                                                <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <input type="checkbox" name="royalty_owner" id="royalty_owner" value="1" {{ old('royalty_owner') == '1' ? 'checked' : ''}}>
+                                                        </span>
+                                                        <label for="royalty_owner" class="form-control" tabindex="20">Make Royalty Owner</label>
+                                                    </div>
+                                                @if(!empty($errors->first('royalty_owner')))
+                                                    <p style="color: red;" >{{$errors->first('royalty_owner')}}</p>
                                                 @endif
                                             </div>
                                         </div>

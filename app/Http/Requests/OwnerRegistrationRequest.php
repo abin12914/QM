@@ -29,6 +29,8 @@ class OwnerRegistrationRequest extends FormRequest
             'image_file.size'           => 'The image file size should be less than 3 MB',
             'financial_status.max'      => 'Something went wrong. Please try again after reloading the page',
             'account_name.unique'       => 'The name has already been taken by an existing account. Please verify your entry or use initials.',
+            'royalty_owner.integer'     => 'Something went wrong! Try again after reloading the page.',
+            'royalty_owner.in'          => 'Something went wrong! Try again after reloading the page.',
         ];
     }
 
@@ -54,7 +56,12 @@ class OwnerRegistrationRequest extends FormRequest
                                         ],
             'account_name'          => 'required|max:200|unique:accounts',
             'opening_balance'       => 'required|numeric|max:9999999',
-            'address'               => 'nullable|max:200'
+            'address'               => 'nullable|max:200',
+            'royalty_owner'         => [
+                                            'nullable',
+                                            'integer',
+                                            Rule::in([1])  
+                                        ]
         ];
     }
 }
