@@ -59,72 +59,6 @@
                         </form>
                         <!-- /.form end -->
                     </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-3"></div>
-                            <div class="col-md-6">
-                                @if(!empty($totalDebit) && !empty($totalCredit))
-                                    <div class="box-header">
-                                        <div class="pad margin no-print">
-                                            <div class="callout callout-default">
-                                                <h4 style="color: green;">Account Overview</h4>
-                                                <div class="table-responsive">
-                                                    <table class="table" style="color: orangered;">
-                                                        <tr>
-                                                            <th style="width:45%">
-                                                                <span class="badge bg-black"><i class="fa fa-book"></i></span>&nbsp&nbsp Account Name
-                                                                <b class="pull-right">:</b>
-                                                            </th>
-                                                            <td>
-                                                                <span class="badge bg-light-blue" style="width:100%;">{{ $selectedAccountName }}</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>
-                                                                <span class="badge bg-black"><i class="fa fa-arrow-down"></i></span>&nbsp&nbsp Total Debit
-                                                                <b class="pull-right">:</b>
-                                                            </th>
-                                                            <td>
-                                                                <span class="badge bg-yellow" style="width:100%">{{ $totalDebit }}</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>
-                                                                <span class="badge bg-black"><i class="fa fa-arrow-up"></i></span>&nbsp&nbsp Total Credit
-                                                                <b class="pull-right">:</b>
-                                                            </th>
-                                                            <td>
-                                                                <span class="badge bg-orange" style="width:100%">{{ $totalCredit }}</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            @if($totalDebit >= $totalCredit)
-                                                                <th>
-                                                                    <span class="badge bg-black"><i class="fa fa-dollar"></i></span>&nbsp&nbsp Balance To Get
-                                                                    <b class="pull-right">:</b>
-                                                                </th>
-                                                                <td>
-                                                                    <span class="badge bg-green" style="width:100%">{{ $totalDebit - $totalCredit }}</span>
-                                                                </td>
-                                                            @else
-                                                                <th>
-                                                                    <span class="badge bg-black"><i class="fa fa-dollar"></i></span>&nbsp&nbsp Balance To Pay
-                                                                    <b class="pull-right">:</b>
-                                                                </th>
-                                                                <td>
-                                                                    <span class="badge bg-red" style="width:100%">{{ $totalCredit - $totalDebit }}</span>
-                                                                </td>
-                                                            @endif
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -151,40 +85,79 @@
                                         @if(!empty($sales))
                                             <tr>
                                                 <td>Sales</td>
-                                                <td></td>
+                                                <td>-</td>
                                                 <td>{{ $sales }}</td>
                                             </tr>
                                         @endif
-                                        @if(!empty($sales))
+                                        @if(!empty($purchases))
                                             <tr>
-                                                <td>Sales</td>
-                                                <td></td>
-                                                <td>{{ $sales }}</td>
+                                                <td>Purchases and other expences</td>
+                                                <td>{{ $purchases }}</td>
+                                                <td>-</td>
                                             </tr>
                                         @endif
-                                            {{-- @foreach($transactions as $index => $transaction)
-                                                <tr>
-                                                    <td>{{ $index+1 }}</td>
-                                                    <td>{{ $transaction->date_time }}</td>
-                                                    <td>{{ $transaction->particulars }}</td>
-                                                    <td>{{ $transaction->amount }}</td>
-                                                    <td>{{ $transaction->amount }}</td>
-                                                </tr>
-                                            @endforeach --}}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-6"></div>
-                                <div class="col-md-6">
-                                    <div class="pull-right">
-                                        @if(!empty($transactions))
-                                            {{ $transactions->appends(Request::all())->links() }}
+                                        @if(!empty($labourWage))
+                                            <tr>
+                                                <td>Labour Wage</td>
+                                                <td>{{ $labourWage }}</td>
+                                                <td>-</td>
+                                            </tr>
                                         @endif
-                                    </div>
-                                </div>
+                                        @if(!empty($excavatorReadingRent))
+                                            <tr>
+                                                <td>Excavator reading rent</td>
+                                                <td>{{ $excavatorReadingRent }}</td>
+                                                <td>-</td>
+                                            </tr>
+                                        @endif
+                                        @if(!empty($jackhammerRent))
+                                            <tr>
+                                                <td>Jackhammer rent</td>
+                                                <td>{{ $jackhammerRent }}</td>
+                                                <td>-</td>
+                                            </tr>
+                                        @endif
+                                        @if(!empty($employeeSalary))
+                                            <tr>
+                                                <td>Employee Salary</td>
+                                                <td>{{ $employeeSalary }}</td>
+                                                <td>-</td>
+                                            </tr>
+                                        @endif
+                                        @if(!empty($excavatorMonthlyRent))
+                                            <tr>
+                                                <td>Excavator monthly rent</td>
+                                                <td>{{ $excavatorMonthlyRent }}</td>
+                                                <td>-</td>
+                                            </tr>
+                                        @endif
+                                        @if(!empty($royalty))
+                                            <tr>
+                                                <td>Royalty</td>
+                                                <td>{{ $royalty }}</td>
+                                                <td>-</td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th>{{ $totalDebit }}</th>
+                                            <th>{{ $totalCredit }}</th>
+                                        </tr>
+                                        <tr>
+                                            @if($totalDebit <= $totalCredit)
+                                                <th>{{ 'Balance' }}</th>
+                                                <th>{{ $totalCredit - $totalDebit }}</th>
+                                                <th>-</th>
+                                            @else
+                                                <th>{{ 'Over expence' }}</th>
+                                                <th>-</th>
+                                                <th>{{ $totalDebit - $totalCredit }}</th>
+                                            @endif
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>

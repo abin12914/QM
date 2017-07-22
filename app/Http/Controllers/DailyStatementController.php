@@ -351,67 +351,91 @@ class DailyStatementController extends Controller
      */
     public function dailySatementSearch(Request $request)
     {
+        $sales = 0;
+        $purchases = 0;
+        $labourWage = 0;
+        $excavatorReadingRent = 0;
+        $jackhammerRent = 0;
+        $employeeSalary = 0;
+        $excavatorMonthlyRent = 0;
+        $royalty = 0;
+        $fromDate = 0;
+        $toDate = 0;
+        $totalDebit = 0;
+        $totalCredit = 0;
+
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
 
-        //$totalDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
-        //$totalCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
-
-        $sales = Sale::where('status', 1);
+        $query = Transaction::where('status', 1);
 
         if(empty($fromDate) && empty($toDate)) {
-            $sales = $sales->whereDate('date_time', Carbon::today()->toDateString());
+            $query = $query->whereDate('date_time', Carbon::today()->toDateString());
         } else if(!empty($fromDate) && empty($toDate)){
             $searchFromDate = Carbon::createFromFormat('d-m-Y', $fromDate);
-            $sales = $sales->whereDate('date_time', $searchFromDate->toDateString());
+
+            $query = $query->whereDate('date_time', $searchFromDate->toDateString());
         } else if(empty($fromDate) && !empty($toDate)) {
             $searchToDate = Carbon::createFromFormat('d-m-Y', $toDate);
-            $sales = $sales->whereDate('date_time', $searchToDate->toDateString());
+
+            $query = $query->whereDate('date_time', $searchToDate->toDateString());
         } else {
             $searchFromDate = Carbon::createFromFormat('d-m-Y H:i:s', $fromDate." 00:00:00");
             $searchToDate = Carbon::createFromFormat('d-m-Y H:i:s', $toDate." 23:59:59");
-            $sales = $sales->whereBetween('date_time', [$searchFromDate, $searchToDate]);
+
+            $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
         }
 
-        $sales = $sales->sum('total_amount');
+        $transactions = $query->get();
+        
+        foreach ($transactions as $key => $transaction) {
+            if($transaction->credit_account_id == 2) {
+                $sales = $sales + $transaction->amount;
+            }
+            switch ($transaction->debit_account_id) {
+                case '3':
+                    $purchases = $purchases + $transaction->amount;
+                    break;
+                case '4':
+                    $labourWage = $labourWage + $transaction->amount;
+                    break;
+                case '5':
+                    $excavatorReadingRent = $excavatorReadingRent + $transaction->amount;
+                    break;
+                case '6':
+                    $jackhammerRent = $jackhammerRent + $transaction->amount;
+                    break;
+                case '7':
+                    $employeeSalary = $employeeSalary + $transaction->amount;
+                    break;
+                case '8':
+                    $excavatorMonthlyRent = $excavatorMonthlyRent + $transaction->amount;
+                    break;
+                case '9':
+                    $royalty = $royalty + $transaction->amount;
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+
+        $totalCredit    = $sales;
+        $totalDebit     = $purchases + $labourWage + $excavatorReadingRent + $jackhammerRent + $employeeSalary + $excavatorMonthlyRent + $royalty;
+
         return view('daily-statement.statement',[
-                'sales'          => $sales,
+                'sales'                 => $sales,
+                'purchases'             => $purchases,
+                'labourWage'            => $labourWage,
+                'excavatorReadingRent'  => $excavatorReadingRent,
+                'jackhammerRent'        => $jackhammerRent,
+                'employeeSalary'        => $employeeSalary,
+                'excavatorMonthlyRent'  => $excavatorMonthlyRent,
+                'royalty'               => $royalty,
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
-                //'totalDebit'            => $totalDebit,
-                //'totalCredit'           => $totalCredit,
+                'totalDebit'            => $totalDebit,
+                'totalCredit'           => $totalCredit
             ]);
     }
 }
-//daily statement transaction table based
-
-/*$fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
-$toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
-
-//$totalDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
-//$totalCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
-
-$query = Transaction::where('status', 1);
-
-if(empty($fromDate) && empty($toDate)) {
-    $query = $query->whereDate('date_time', Carbon::today()->toDateString());
-} else if(!empty($fromDate) && empty($toDate)){
-    $searchFromDate = Carbon::createFromFormat('d-m-Y', $fromDate);
-    $query = $query->whereDate('date_time', $searchFromDate->toDateString());
-} else if(empty($fromDate) && !empty($toDate)) {
-    $searchToDate = Carbon::createFromFormat('d-m-Y', $toDate);
-    $query = $query->whereDate('date_time', $searchToDate->toDateString());
-} else {
-    $searchFromDate = Carbon::createFromFormat('d-m-Y H:i:s', $fromDate." 00:00:00");
-    $searchToDate = Carbon::createFromFormat('d-m-Y H:i:s', $toDate." 23:59:59");
-    $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
-}
-
-$transactions = $query->orderBy('date_time','desc')->paginate(10);
-return view('daily-statement.statement',[
-        'transactions'          => $transactions,
-        'fromDate'              => $fromDate,
-        'toDate'                => $toDate,
-        //'totalDebit'            => $totalDebit,
-        //'totalCredit'           => $totalCredit,
-    ]);*/
