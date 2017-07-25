@@ -173,5 +173,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/statements/accountStatement.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/statements/DailyStatement.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

@@ -16,4 +16,12 @@ class EmployeeAttendance extends Model
     {
         return $this->belongsTo('App\Models\Employee', 'employee_id');
     }
+
+    /**
+     * Get the transaction details associated with the attendance
+     */
+    public function transaction()
+    {
+        return $this->belongsTo('App\Models\Transaction','transaction_id');
+    }
 }

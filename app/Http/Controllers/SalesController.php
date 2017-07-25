@@ -253,7 +253,7 @@ class SalesController extends Controller
     public function saveRoyalty($saleId, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId)
     {
         if(empty($saleId) || empty($royaltyAccountId)) {
-            return 1;
+            return false;
         }
 
         $vehicle = Vehicle::find($vehicleId);
@@ -262,10 +262,10 @@ class SalesController extends Controller
             if(!empty($royaltyRecord) && !empty($royaltyRecord->id)) {
                 $royaltyAmount = $royaltyRecord->amount;
             } else {
-                return 2;
+                return false;
             }
         } else {
-            return 3;
+            return false;
         }
 
         $transaction = new Transaction;
@@ -285,12 +285,12 @@ class SalesController extends Controller
             $royalty->amount            = $royaltyAmount;
             $royalty->status            = 1;
             if($royalty->save()) {
-                return 0;
+                return true;
             } else {
-                return 4;
+                return false;
             }
         } else {
-            return 5;
+            return false;
         }
     }
 
@@ -390,7 +390,7 @@ class SalesController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType'])->orderBy('date_time','desc')->paginate(3);
+        $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType'])->orderBy('date_time','desc')->paginate(10);
         
         return view('sales.list',[
                 'accounts'              => $accounts,

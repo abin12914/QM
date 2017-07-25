@@ -182,7 +182,7 @@
                                 <div class="col-md-6">
                                     <div class="pull-right">
                                         @if(!empty($sales))
-                                            {{ $sales->links() }}
+                                            {{ $sales->appends(Request::all())->links() }}
                                         @endif
                                     </div>
                                 </div>

@@ -88,7 +88,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//purchases
 		Route::get('/purchases/register', 'PurchasesController@register')->name('purchases-register-view');
 		Route::post('/purchases/register/action', 'PurchasesController@registerAction')->name('purchases-register-action');
-		Route::get('/purchases/list', 'PurchasesController@list')->name('purchases-list');
+		Route::get('/purchases/list', 'PurchasesController@list')->name('purchases-list-search');
 
 		//product
 		Route::get('/product/list', 'ProductController@list')->name('product-list');

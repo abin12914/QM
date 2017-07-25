@@ -298,43 +298,153 @@ class DailyStatementController extends Controller
     /**
      * Return view for daily statement listing / employee attendance
      */
-    public function employeeAttendanceList()
+    public function employeeAttendanceList(Request $request)
     {
-        $employeeAttendance = EmployeeAttendance::paginate(10);
+        $accountId  = !empty($request->get('attendance_account_id')) ? $request->get('attendance_account_id') : 0;
+        $employeeId = !empty($request->get('attendance_employee_id')) ? $request->get('attendance_employee_id') : 0;
+        $fromDate   = !empty($request->get('attendance_from_date')) ? $request->get('attendance_from_date') : '';
+        $toDate     = !empty($request->get('attendance_to_date')) ? $request->get('attendance_to_date') : '';
 
-        if(empty($employeeAttendance)) {
-            $employeeAttendance = [];
+        $accounts   = Account::where('relation', 'employee')->where('status', '1')->get();
+        $employees  = Employee::with(['account.accountDetail'])->where('status', '1')->get();
+
+        $query = EmployeeAttendance::where('status', 1);
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+
+                $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
+                        $qry->where('id', $accountId);
+                    });
+                });
+            } else {
+                $accountId = 0;
+            }
+        } else {
+            $selectedAccountName = '';
         }
+
+        if(!empty($employeeId) && $employeeId != 0) {
+            $selectedEmployee = Employee::find($employeeId);
+            if(!empty($selectedEmployee) && !empty($selectedEmployee->id)) {
+                $selectedEmployeeName = $selectedEmployee->name;
+
+                $query = $query->where('employee_id', $employeeId);
+            } else {
+                $employeeId = 0;
+            }
+        } else {
+            $selectedProductName = '';
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d');
+            $query = $query->where('date', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate);
+            $searchToDate = $searchToDate->format('Y-m-d');
+            $query = $query->where('date', '<=', $searchToDate);
+        }
+
+        $employeeAttendance = $query->with(['employee.account.accountDetail'])->orderBy('date','desc')->paginate(10);
+        
         return view('daily-statement.list',[
-                    'employeeAttendance'    => $employeeAttendance,
-                    'excavatorReadings'     => [],
-                    'jackhammerReadings'    => [],
-                ]);
+                'accounts'              => $accounts,
+                'employees'             => $employees,
+                'employeeAttendance'    => $employeeAttendance,
+                'accountId'             => $accountId,
+                'employeeId'            => $employeeId,
+                'fromDate'              => $fromDate,
+                'toDate'                => $toDate,
+                'excavatorReadings'     => [],
+                'jackhammerReadings'    => [],
+            ]);
     }
 
     /**
      * Return view for daily statement listing / excavator reading
      */
-    public function excavatorReadingList()
+    public function excavatorReadingList(Request $request)
     {
-        $excavatorReadings  = ExcavatorReading::paginate(10);
+        $accountId      = !empty($request->get('excavator_account_id')) ? $request->get('excavator_account_id') : 0;
+        $excavatorId    = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
+        $fromDate       = !empty($request->get('excavator_from_date')) ? $request->get('excavator_from_date') : '';
+        $toDate         = !empty($request->get('excavator_to_date')) ? $request->get('excavator_to_date') : '';
 
-        if(empty($excavatorReadings)) {
-            $excavatorReadings = [];
+        $accounts   = Account::where('type', 'personal')->where('status', '1')->get();
+        $excavators = Excavator::with(['account.accountDetail'])->where('status', '1')->get();
+
+        $query = ExcavatorReading::where('status', 1);
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+
+                $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
+                        $qry->where('id', $accountId);
+                    });
+                });
+            } else {
+                $accountId = 0;
+            }
+        } else {
+            $selectedAccountName = '';
         }
+
+        if(!empty($excavatorId) && $excavatorId != 0) {
+            $selectedExcavator = Excavator::find($excavatorId);
+            if(!empty($selectedExcavator) && !empty($selectedExcavator->id)) {
+                $selectedExcavatorName = $selectedExcavator->name;
+
+                $query = $query->where('excavator_id', $excavatorId);
+            } else {
+                $excavatorId = 0;
+            }
+        } else {
+            $selectedExcavatorName = '';
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d');
+            $query = $query->where('date', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate);
+            $searchToDate = $searchToDate->format('Y-m-d');
+            $query = $query->where('date', '<=', $searchToDate);
+        }
+
+        $excavatorReadings = $query->with(['excavator.account.accountDetail'])->orderBy('date','desc')->paginate(10);
+        
         return view('daily-statement.list',[
-                'employeeAttendance'    => [],
+                'accounts'              => $accounts,
+                'excavators'            => $excavators,
                 'excavatorReadings'     => $excavatorReadings,
-                'jackhammerReadings'    => []
+                'accountId'             => $accountId,
+                'excavatorId'           => $excavatorId,
+                'fromDate'              => $fromDate,
+                'toDate'                => $toDate,
+                'employeeAttendance'    => [],
+                'jackhammerReadings'    => [],
             ]);
     }
 
     /**
      * Return view for daily statement listing / daily statement
      */
-    public function jackhammerReadingList()
+    public function jackhammerReadingList(Request $request)
     {
-        $jackhammerReadings = JackhammerReading::paginate(10);
+        /*$jackhammerReadings = JackhammerReading::paginate(10);
 
         if(empty($jackhammerReadings)) {
             $jackhammerReadings = [];
@@ -343,6 +453,72 @@ class DailyStatementController extends Controller
                 'employeeAttendance'    => [],
                 'excavatorReadings'     => [],
                 'jackhammerReadings'    => $jackhammerReadings
+            ]);*/
+
+        $accountId      = !empty($request->get('jackhammer_account_id')) ? $request->get('jackhammer_account_id') : 0;
+        $jackhammerId   = !empty($request->get('jackhammer_id')) ? $request->get('jackhammer_id') : 0;
+        $fromDate       = !empty($request->get('jackhammer_from_date')) ? $request->get('jackhammer_from_date') : '';
+        $toDate         = !empty($request->get('jackhammer_to_date')) ? $request->get('jackhammer_to_date') : '';
+
+        $accounts    = Account::where('type', 'personal')->where('status', '1')->get();
+        $jackhammers = Jackhammer::with(['account.accountDetail'])->where('status', '1')->get();
+
+        $query = JackhammerReading::where('status', 1);
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+
+                $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
+                        $qry->where('id', $accountId);
+                    });
+                });
+            } else {
+                $accountId = 0;
+            }
+        } else {
+            $selectedAccountName = '';
+        }
+
+        if(!empty($jackhammerId) && $jackhammerId != 0) {
+            $selectedJackhammer = Jackhammer::find($jackhammerId);
+            if(!empty($selectedJackhammer) && !empty($selectedJackhammer->id)) {
+                $selectedExcavatorName = $selectedJackhammer->name;
+
+                $query = $query->where('jackhammer_id', $jackhammerId);
+            } else {
+                $jackhammerId = 0;
+            }
+        } else {
+            $selectedExcavatorName = '';
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d');
+            $query = $query->where('date', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate);
+            $searchToDate = $searchToDate->format('Y-m-d');
+            $query = $query->where('date', '<=', $searchToDate);
+        }
+
+        $jackhammerReadings = $query->with(['jackhammer.account.accountDetail'])->orderBy('date','desc')->paginate(10);
+        
+        return view('daily-statement.list',[
+                'accounts'              => $accounts,
+                'jackhammers'           => $jackhammers,
+                'jackhammerReadings'    => $jackhammerReadings,
+                'accountId'             => $accountId,
+                'jackhammerId'          => $jackhammerId,
+                'fromDate'              => $fromDate,
+                'toDate'                => $toDate,
+                'employeeAttendance'    => [],
+                'excavatorReadings'     => [],
             ]);
     }
 

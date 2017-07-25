@@ -121,7 +121,7 @@
                             </a>
                         </li>
                         <li class="{{ Request::is('purchases/list')? 'active' : '' }}">
-                            <a href="{{route('purchases-list')}}">
+                            <a href="{{route('purchases-list-search')}}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
@@ -204,8 +204,6 @@
                                 <i class="fa fa-circle-o"></i> Account Statement
                             </a>
                         </li>
-                    </ul>
-                    <ul class="treeview-menu">
                         <li class="{{ Request::is('statement/daily-statement')? 'active' : '' }}">
                             <a href="{{route('daily-statement-list-search')}}">
                                 <i class="fa fa-circle-o"></i> Daily Statement
