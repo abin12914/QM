@@ -16,4 +16,12 @@ class EmployeeSalary extends Model
     {
         return $this->belongsTo('App\Models\Employee', 'employee_id');
     }
+
+    /**
+     * Get the transaction details associated with the salary
+     */
+    public function transaction()
+    {
+        return $this->belongsTo('App\Models\Transaction','transaction_id');
+    }
 }

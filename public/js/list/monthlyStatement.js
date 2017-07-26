@@ -7,8 +7,6 @@ $(function () {
     employeeRegistrationLink    = "No employees found. <a href='/hr/employee/register'>Register new employee</a>";
     //new excavator registration link for select2
     excavatorRegistrationLink   = "No excavator found. <a href='/machine/excavator/register'>Register new excavator</a>";
-    //new jackhammer registration link for select2
-    jackhammerRegistrationLink  = "No jackhammer found. <a href='/machine/jackhammer/register'>Register new jackhammer</a>";
     
     //Date picker
     $('.datepicker').datepicker({
@@ -19,19 +17,8 @@ $(function () {
         autoclose: true,
     });
 
-    //handle link to tabs
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('.nav-tabs-custom a[href="#' + url.split('#')[1] + '"]').tab('show');
-    }
-
-    // Change hash for page-reload
-    $('.nav-tabs-custom a').on('shown.bs.tab', function (e) {
-        window.location.hash = e.target.hash;
-    });
-
     //Initialize Select2 Element for employee name select box
-    $("#attendance_employee_id").select2({
+    $("#salary_employee_id").select2({
         minimumResultsForSearch: 5,
         language: {
              noResults: function() {
@@ -44,7 +31,7 @@ $(function () {
     });
 
     //Initialize Select2 Element for employee account select box
-    $("#attendance_account_id").select2({
+    $("#salary_account_id").select2({
         minimumResultsForSearch: 5,
         language: {
              noResults: function() {
@@ -69,38 +56,12 @@ $(function () {
         }
     });
 
-    //Initialize Select2 Element for excavator account select box
+    //Initialize Select2 Element for excavator contractor account select box
     $("#excavator_account_id").select2({
         minimumResultsForSearch: 5,
         language: {
              noResults: function() {
                 return excavatorRegistrationLink;
-            }
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        }
-    });
-
-    //Initialize Select2 Element for jackhammer select box
-    $("#jackhammer_id").select2({
-        minimumResultsForSearch: 5,
-        language: {
-             noResults: function() {
-                return jackhammerRegistrationLink;
-            }
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        }
-    });
-
-    //Initialize Select2 Element for jackhammer contractor account select box
-    $("#jackhammer_account_id").select2({
-        minimumResultsForSearch: 5,
-        language: {
-             noResults: function() {
-                return jackhammerRegistrationLink;
             }
         },
         escapeMarkup: function (markup) {
@@ -120,12 +81,12 @@ $(function () {
     });
 
     //select employee name for the selected account
-    $('body').on("change", "#attendance_account_id", function () {
-        var accountId = $('#attendance_account_id').val();
+    $('body').on("change", "#salary_account_id", function () {
+        var accountId = $('#salary_account_id').val();
         // selectTriggerFlag is used for escaping from infinte execution of change event(attendance_employee_id and attendance_account_id)
         if(selectTriggerFlag == 0){
             selectTriggerFlag = 1;
-            $('#attendance_employee_id').val('');
+            $('#salary_employee_id').val('');
             if(accountId) {
                 $.ajax({
                     url: "/employee/get/account/" + accountId,
@@ -134,19 +95,19 @@ $(function () {
                         if(result && result.flag) {
                             var employeeId  = result.employeeId;
                             
-                            $('#attendance_employee_id').val(employeeId);
+                            $('#salary_employee_id').val(employeeId);
                         } else {
-                            $('#attendance_account_id').val('');
+                            $('#salary_account_id').val('');
                         }
 
-                        $('#attendance_employee_id').trigger('change');
+                        $('#salary_employee_id').trigger('change');
                     },
                     error: function () {
-                        $('#attendance_account_id').val('');
+                        $('#salary_account_id').val('');
                     }
                 });
             } else {
-                $('#attendance_employee_id').trigger('change');
+                $('#salary_employee_id').trigger('change');
             }
         } else {
             selectTriggerFlag = 0;
@@ -154,12 +115,12 @@ $(function () {
     });
 
     //select employee name for the selected account
-    $('body').on("change", "#attendance_employee_id", function () {
-        var employeeId = $('#attendance_employee_id').val();
-        // selectTriggerFlag is used for escaping from infinte execution of change event(attendance_employee_id and attendance_account_id)
+    $('body').on("change", "#salary_employee_id", function () {
+        var employeeId = $('#salary_employee_id').val();
+        // selectTriggerFlag is used for escaping from infinte execution of change event(salary_employee_id and salary_account_id)
         if(selectTriggerFlag == 0){
             selectTriggerFlag = 1;
-            $('#attendance_account_id').val('');
+            $('#salary_account_id').val('');
             if(employeeId) {
                 $.ajax({
                     url: "/employee/get/employee/" + employeeId,
@@ -167,48 +128,44 @@ $(function () {
                     success: function(result) {
                         if(result && result.flag) {
                             var accountId   = result.accountId;
-                            
-                            $('#attendance_account_id').val(accountId);
+
+                            $('#salary_account_id').val(accountId);
                         } else {
-                            $('#attendance_employee_id').val('');
+                            $('#salary_employee_id').val('');
                         }
-                        $('#attendance_account_id').trigger('change');
+                        $('#salary_account_id').trigger('change');
                     },
                     error: function () {
-                        $('#attendance_employee_id').val('');
+                        $('#salary_employee_id').val('');
                     }
                 });
             } else {
-               $('#attendance_account_id').trigger('change'); 
+               $('#salary_account_id').trigger('change'); 
             }
         } else {
             selectTriggerFlag = 0;
         }
     });
 
-    //select contractor details for the selected jackhammer
-    $('body').on("change", "#jackhammer_id", function () {
-        var jackhammerId = $('#jackhammer_id').val();
+    //update start date based on from date selection - employee
+    $('body').on("change", "#salary_from_date", function () {
+        var startDate = $('#salary_from_date').val();
         
-        $('#jackhammer_contractor_account').val('');
-        if(jackhammerId) {
-            $.ajax({
-                url: "/get/account/by/jackhammer/" + jackhammerId,
-                method: "get",
-                success: function(result) {
-                    if(result && result.flag) {
-                        var accountName   = result.accountName;
-                        $('#jackhammer_contractor_account').val(accountName);
-                    } else {
-                        $('#jackhammer_id').val('');
-                    }
-                },
-                error: function () {
-                    $('#jackhammer_id').val('');
-                }
-            });
+        if(startDate) {
+            $('#salary_to_date').datepicker('setStartDate', startDate);
         } else {
-           $('#jackhammer_id').val('');
+           $('#salary_to_date').datepicker('setStartDate', '');
+        }
+    });
+
+    //update start date based on from date selection - excavator
+    $('body').on("change", "#excavator_from_date", function () {
+        var fromDate = $('#excavator_from_date').val();
+        
+        if(fromDate) {
+            $('#excavator_to_date').datepicker('setStartDate', fromDate);
+        } else {
+           $('#excavator_to_date').datepicker('setStartDate', '');
         }
     });
 });

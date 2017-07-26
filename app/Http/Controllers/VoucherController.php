@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
+use DateTime;
 use App\Models\Account;
 use App\Models\Voucher;
 use App\Models\Transaction;
@@ -183,32 +184,117 @@ class VoucherController extends Controller
     /**
      * Return view for list voucher / cash
      */
-    public function cashVoucherList()
+    public function cashVoucherList(Request $request)
     {
-        $cashVouchers = Voucher::where('voucher_type', 'Cash')->paginate(10);
+        $accountId          = !empty($request->get('cash_voucher_account_id')) ? $request->get('cash_voucher_account_id') : 0;
+        $transactionType    = !empty($request->get('transaction_type')) ? $request->get('transaction_type') : 0;
+        $fromDate           = !empty($request->get('cash_voucher_from_date')) ? $request->get('cash_voucher_from_date') : '';
+        $toDate             = !empty($request->get('cash_voucher_to_date')) ? $request->get('cash_voucher_to_date') : '';
 
-        if(empty($cashVouchers)) {
-            $cashVouchers = [];
+        $accounts   = Account::where('type', 'personal')->where('status', '1')->get();
+
+        $query = Voucher::where('status', 1)->where('voucher_type', 'Cash');
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+
+                /*$query = $query->whereHas('transaction', function ($q) use($accountId) {
+                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
+                        $qry->where('id', $accountId);
+                    })->orWhereHas('debitAccount', function ($qry) use($accountId) {
+                        $qry->where('id', $accountId);
+                    });
+                });*/
+                $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                    $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
+                });
+            } else {
+                $accountId = 0;
+            }
+        } else {
+            $selectedAccountName = '';
         }
+
+        if(!empty($transactionType) && $transactionType != 0) {
+            $query = $query->where('transaction_type', $transactionType);
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate);
+            $searchToDate = $searchToDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '<=', $searchToDate);
+        }
+
+        $cashVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('date_time','desc')->paginate(10);
+        
         return view('voucher.list',[
-                    'cashVouchers'    => $cashVouchers,
-                    'creditVouchers'  => []
-                ]);
+                'accounts'        => $accounts,
+                'cashVouchers'    => $cashVouchers,
+                'accountId'       => $accountId,
+                'transactionType' => $transactionType,
+                'fromDate'        => $fromDate,
+                'toDate'          => $toDate,
+                'creditVouchers'  => []
+            ]);
     }
 
     /**
      * Return view for list voucher / credit
      */
-    public function creditVoucherList()
+    public function creditVoucherList(Request $request)
     {
-        $creditVouchers = Voucher::where('voucher_type', 'Credit')->paginate(10);
+        $accountId          = !empty($request->get('credit_voucher_account_id')) ? $request->get('credit_voucher_account_id') : 0;
+        $fromDate           = !empty($request->get('credit_voucher_from_date')) ? $request->get('credit_voucher_from_date') : '';
+        $toDate             = !empty($request->get('credit_voucher_to_date')) ? $request->get('credit_voucher_to_date') : '';
 
-        if(empty($creditVouchers)) {
-            $creditVouchers = [];
+        $accounts   = Account::where('type', 'personal')->where('status', '1')->get();
+
+        $query = Voucher::where('status', 1)->where('voucher_type', 'Credit');
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+
+                $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                    $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
+                });
+            } else {
+                $accountId = 0;
+            }
+        } else {
+            $selectedAccountName = '';
         }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate);
+            $searchToDate = $searchToDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '<=', $searchToDate);
+        }
+
+        $creditVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('date_time','desc')->paginate(10);
+        
         return view('voucher.list',[
-                    'cashVouchers'    => [],
-                    'creditVouchers'  => $creditVouchers
-                ]);
+                'accounts'        => $accounts,
+                'creditVouchers'  => $creditVouchers,
+                'accountId'       => $accountId,
+                'fromDate'        => $fromDate,
+                'toDate'          => $toDate,
+                'cashVouchers'    => []
+            ]);
     }
 }

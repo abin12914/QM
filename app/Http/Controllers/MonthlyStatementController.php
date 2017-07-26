@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
+use DateTime;
 use App\Models\Account;
 use App\Models\Employee;
 use App\Models\EmployeeSalary;
@@ -184,32 +185,142 @@ class MonthlyStatementController extends Controller
     /**
      * Return view for monthly statement listing / employee salary
      */
-    public function employeeSalaryList()
+    public function employeeSalaryList(Request $request)
     {
-        $employeeSalary = EmployeeSalary::paginate(10);
+        $accountId  = !empty($request->get('salary_account_id')) ? $request->get('salary_account_id') : 0;
+        $employeeId = !empty($request->get('salary_employee_id')) ? $request->get('salary_employee_id') : 0;
+        $fromDate   = !empty($request->get('salary_from_date')) ? $request->get('salary_from_date') : '';
+        $toDate     = !empty($request->get('salary_to_date')) ? $request->get('salary_to_date') : '';
 
-        if(empty($employeeSalary)) {
-            $employeeSalary = [];
+        $accounts   = Account::where('relation', 'employee')->where('status', '1')->get();
+        $employees  = Employee::with(['account.accountDetail'])->where('status', '1')->get();
+
+        $query = EmployeeSalary::where('status', 1);
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+
+                $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
+                        $qry->where('id', $accountId);
+                    });
+                });
+            } else {
+                $accountId = 0;
+            }
+        } else {
+            $selectedAccountName = '';
         }
+
+        if(!empty($employeeId) && $employeeId != 0) {
+            $selectedEmployee = Employee::find($employeeId);
+            if(!empty($selectedEmployee) && !empty($selectedEmployee->id)) {
+                $selectedEmployeeName = $selectedEmployee->name;
+
+                $query = $query->where('employee_id', $employeeId);
+            } else {
+                $employeeId = 0;
+            }
+        } else {
+            $selectedProductName = '';
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d');
+            $query = $query->where('from_date', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate);
+            $searchToDate = $searchToDate->format('Y-m-d');
+            $query = $query->where('from_date', '<=', $searchToDate);
+        }
+
+        $employeeSalary = $query->with(['employee.account.accountDetail'])->orderBy('from_date','desc')->paginate(10);
+        
         return view('monthly-statement.list',[
-                    'employeeSalary'    => $employeeSalary,
-                    'excavatorRent'     => []
-                ]);
+                'accounts'          => $accounts,
+                'employees'         => $employees,
+                'employeeSalary'    => $employeeSalary,
+                'accountId'         => $accountId,
+                'employeeId'        => $employeeId,
+                'fromDate'          => $fromDate,
+                'toDate'            => $toDate,
+                'excavatorRent'     => []
+            ]);
     }
 
     /**
      * Return view for monthly statement listing / excavator rent
      */
-    public function excavatorRentList()
+    public function excavatorRentList(Request $request)
     {
-        $excavatorRent  = ExcavatorRent::paginate(10);
+        $accountId      = !empty($request->get('excavator_account_id')) ? $request->get('excavator_account_id') : 0;
+        $excavatorId    = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
+        $fromDate       = !empty($request->get('excavator_from_date')) ? $request->get('excavator_from_date') : '';
+        $toDate         = !empty($request->get('excavator_to_date')) ? $request->get('excavator_to_date') : '';
 
-        if(empty($excavatorRent)) {
-            $excavatorRent = [];
+        $accounts   = Account::where('type', 'personal')->where('status', '1')->get();
+        $excavators = Excavator::with(['account.accountDetail'])->where('status', '1')->get();
+
+        $query = ExcavatorRent::where('status', 1);
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+
+                $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
+                        $qry->where('id', $accountId);
+                    });
+                });
+            } else {
+                $accountId = 0;
+            }
+        } else {
+            $selectedAccountName = '';
         }
+
+        if(!empty($excavatorId) && $excavatorId != 0) {
+            $selectedExcavator = Excavator::find($excavatorId);
+            if(!empty($selectedExcavator) && !empty($selectedExcavator->id)) {
+                $selectedExcavatorName = $selectedExcavator->name;
+
+                $query = $query->where('excavator_id', $excavatorId);
+            } else {
+                $excavatorId = 0;
+            }
+        } else {
+            $selectedExcavatorName = '';
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d');
+            $query = $query->where('from_date', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate);
+            $searchToDate = $searchToDate->format('Y-m-d');
+            $query = $query->where('from_date', '<=', $searchToDate);
+        }
+
+        $excavatorRent = $query->with(['excavator.account.accountDetail'])->orderBy('from_date','desc')->paginate(10);
+        
         return view('monthly-statement.list',[
-                'employeeSalary'    => [],
+                'accounts'          => $accounts,
+                'excavators'        => $excavators,
                 'excavatorRent'     => $excavatorRent,
+                'accountId'         => $accountId,
+                'excavatorId'       => $excavatorId,
+                'fromDate'          => $fromDate,
+                'toDate'            => $toDate,
+                'employeeSalary'    => [],
             ]);
     }
 }

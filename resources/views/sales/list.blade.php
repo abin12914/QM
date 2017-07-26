@@ -40,7 +40,7 @@
                                             <label for="account_id" class="control-label">Purchaser : </label>
                                             <select class="form-control" name="account_id" id="account_id" tabindex="3" style="width: 100%">
                                                 @if(!empty($accounts) && (count($accounts) > 0))
-                                                    <option value="">Select employee account</option>
+                                                    <option value="">Select purchaser account</option>
                                                     @foreach($accounts as $account)
                                                         <option value="{{ $account->id }}" {{ ((old('account_id') == $account->id ) || $accountId == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
                                                     @endforeach
@@ -94,7 +94,7 @@
                                                 <p style="color: red;" >{{$errors->first('product')}}</p>
                                             @endif
                                         </div>
-                                        <div class="col-sm-4 {{ !empty($errors->first('to_date')) ? 'has-error' : '' }}">
+                                        <div class="col-sm-4 {{ !empty($errors->first('vehicle_type_id')) ? 'has-error' : '' }}">
                                             <label for="vehicle_type_id" class="control-label">Truck Type : </label>
                                             <select class="form-control" name="vehicle_type_id" id="vehicle_type_id" tabindex="3" style="width: 100%">
                                                 @if(!empty($vehicleTypes) && (count($vehicleTypes) > 0))
@@ -199,4 +199,7 @@
     </section>
     <!-- /.content -->
 </div>
+@endsection
+@section('scripts')
+    <script src="/js/list/sales.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

@@ -31,6 +31,60 @@
                         <h3 class="box-title">Account List</h3>
                     </div>
                     <!-- /.box-header -->
+                    <div class="box-header">
+                        <form action="{{ route('account-list') }}" method="get" class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-6 {{ !empty($errors->first('relation')) ? 'has-error' : '' }}">
+                                            <label for="relation" class="control-label">Relation Or Type : </label>
+                                            <select class="form-control" name="relation" id="relation" tabindex="3" style="width: 100%">
+                                                <option value="" {{ (empty($relation) || (empty(old('relation')) && $relation == 0)) ? 'selected' : '' }}>Select transaction type</option>
+                                                <option value="real" {{ (!empty($relation) && ((old('relation') == 'real' ) || $relation == 'real')) ? 'selected' : '' }}>Real Account</option>
+                                                <option value="nominal" {{ (!empty($relation) && (old('relation') == 'nominal' || $relation == 'nominal')) ? 'selected' : '' }}>Nominal</option>
+                                                <option value="personal" {{ (!empty($relation) && (old('relation') == 'personal' || $relation == 'personal')) ? 'selected' : '' }}>Personal</option>
+                                            </select>
+                                            @if(!empty($errors->first('relation')))
+                                                <p style="color: red;" >{{$errors->first('relation')}}</p>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6     {{ !empty($errors->first('cash_voucher_account_id')) ? 'has-error' : '' }}">
+                                            <label for="cash_voucher_account_id" class="control-label">Account : </label>
+                                            <select class="form-control" name="cash_voucher_account_id" id="cash_voucher_account_id" tabindex="3" style="width: 100%">
+                                                @if(!empty($accounts) && (count($accounts) > 0))
+                                                    <option value="">Select employee account</option>
+                                                    @foreach($accounts as $account)
+                                                        <option value="{{ $account->id }}" {{ ((old('cash_voucher_account_id') == $account->id ) || (!empty($accountId) && $accountId == $account->id)) ? 'selected' : '' }}>{{ $account->account_name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                            @if(!empty($errors->first('cash_voucher_account_id')))
+                                                <p style="color: red;" >{{$errors->first('cash_voucher_account_id')}}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div><br>
+                            <div class="row">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-2">
+                                    <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- /.form end -->
+                    </div><br>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-12">

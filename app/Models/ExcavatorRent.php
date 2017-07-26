@@ -16,4 +16,12 @@ class ExcavatorRent extends Model
     {
         return $this->belongsTo('App\Models\Excavator', 'excavator_id');
     }
+
+    /**
+     * Get the transaction details associated with the excavator rent
+     */
+    public function transaction()
+    {
+        return $this->belongsTo('App\Models\Transaction','transaction_id');
+    }
 }

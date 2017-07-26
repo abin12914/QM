@@ -162,7 +162,7 @@
                                 <i class="fa fa-circle-o"></i> Register
                             </a>
                         </li>
-                        <li class="{{ Request::is('monthly-statement/list')? 'active' : '' }}">
+                        <li class="{{ Request::is('monthly-statement/list/*')? 'active' : '' }}">
                             <a href="{{route('monthly-statement-list-employee')}}">
                                 <i class="fa fa-circle-o"></i> List
                             </a>
