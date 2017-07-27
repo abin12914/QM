@@ -117,9 +117,9 @@ class SalesController extends Controller
             
             if($sale->save()) {
                 $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId);
-                if($royaltyFlag) {dd($royaltyFlag);
+                if($royaltyFlag) {
                     return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
-                } else {dd($royaltyFlag);
+                } else {
                     return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the royalty details. Try after reloading the page.")->with("alert-class","alert-danger");
                 }
             } else {
@@ -404,6 +404,18 @@ class SalesController extends Controller
                 'vehicleTypeId'         => $vehicleTypeId,
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
+            ]);
+    }
+
+    /**
+     * Return view for weighment registration
+     */
+    public function weighmentRegister()
+    {
+        $sales    = Sale::where('measure_type', 2)->where('quantity', 0)->orderBy('date_time', 'desc')->paginate(5);
+
+        return view('sales.weighment',[
+                'sales' => $sales,
             ]);
     }
 

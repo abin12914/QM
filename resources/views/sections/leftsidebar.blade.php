@@ -104,6 +104,11 @@
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
+                        <li class="{{ Request::is('sales/weighment/register')? 'active' : '' }}">
+                            <a href="{{route('sales-weighment-register-view')}}">
+                                <i class="fa fa-circle-o"></i> Weighment Registration
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="treeview {{ Request::is('purchases/*')? 'active' : '' }}">

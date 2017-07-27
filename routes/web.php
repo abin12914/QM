@@ -85,6 +85,10 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/sales/list', 'SalesController@list')->name('sales-list-search');
 		Route::get('/sales/get/last/vehicle/{id}', 'SalesController@getLastSaleByVehicleId')->name('sale-get-last-by-vehicle-id');
 
+		//sales /weighment updation
+		Route::get('/sales/weighment/register', 'SalesController@weighmentRegister')->name('sales-weighment-register-view');
+		Route::post('/sales/weighment/register/action', 'SalesController@weighmentRegisterAction')->name('sales-weighment-register-action');
+
 		//purchases
 		Route::get('/purchases/register', 'PurchasesController@register')->name('purchases-register-view');
 		Route::post('/purchases/register/action', 'PurchasesController@registerAction')->name('purchases-register-action');

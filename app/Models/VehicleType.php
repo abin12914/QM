@@ -12,4 +12,5 @@ class VehicleType extends Model
     public function products()
     {
         return $this->belongsToMany('App\Models\Product', 'royalty_chart', 'vehicle_type_id', 'product_id')->withPivot('amount', 'status');
-    }}
+    }
+}

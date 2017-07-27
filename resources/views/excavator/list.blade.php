@@ -31,6 +31,62 @@
                         <h3 class="box-title">Excavators List</h3>
                     </div>
                     <!-- /.box-header -->
+                    <div class="box-header">
+                        <form action="{{ route('excavator-list') }}" method="get" class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <div class="col-sm-6 {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
+                                            <label for="account_id" class="control-label">Contractor Account : </label>
+                                            <select class="form-control" name="account_id" id="account_id" tabindex="3" style="width: 100%">
+                                                @if(!empty($accounts) && (count($accounts) > 0))
+                                                    <option value="">Select contractor account</option>
+                                                    @foreach($accounts as $account)
+                                                        <option value="{{ $account->id }}" {{ ((old('account_id') == $account->id ) || (!empty($accountId) && $accountId == $account->id)) ? 'selected' : '' }}>{{ $account->account_name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                            @if(!empty($errors->first('account_id')))
+                                                <p style="color: red;" >{{$errors->first('account_id')}}</p>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6 {{ !empty($errors->first('excavator_id')) ? 'has-error' : '' }}">
+                                            <label for="excavator_id" class="control-label">Excavator : </label>
+                                            <select class="form-control" name="excavator_id" id="excavator_id" tabindex="3" style="width: 100%">
+                                                @if(!empty($excavatorsCombobox) && (count($excavatorsCombobox) > 0))
+                                                    <option value="">Select excavator</option>
+                                                    @foreach($excavatorsCombobox as $excavator)
+                                                        <option value="{{ $excavator->id }}" {{ ((old('excavator_id') == $excavator->id ) || (!empty($excavatorId) && $excavatorId == $excavator->id)) ? 'selected' : '' }}>{{ $excavator->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                            @if(!empty($errors->first('excavator_id')))
+                                                <p style="color: red;" >{{$errors->first('excavator_id')}}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div><br>
+                            <div class="row">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-2">
+                                    <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- /.form end -->
+                    </div><br>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -59,11 +115,6 @@
                                             @endforeach
                                         @endif
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th><th></th><th></th><th></th><th></th><th></th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -73,7 +124,7 @@
                                 <div class="col-md-6">
                                     <div class="pull-right">
                                         @if(!empty($excavators))
-                                            {{ $excavators->links() }}
+                                            {{ $excavators->appends(Request::all())->links() }}
                                         @endif
                                     </div>
                                 </div>
@@ -90,4 +141,7 @@
     </section>
     <!-- /.content -->
 </div>
+@endsection
+@section('scripts')
+    <script src="/js/list/excavator.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

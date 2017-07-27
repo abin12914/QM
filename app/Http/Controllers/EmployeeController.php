@@ -101,17 +101,49 @@ class EmployeeController extends Controller
     /**
      * Return view for employee listing
      */
-    public function list()
+    public function list(Request $request)
     {
-        $employees = Employee::paginate(10);
-        if(!empty($employees)) {
-            return view('employee.list',[
-                    'employees' => $employees
-                ]);
-        } else {
-            session()->flash('message', 'No employee records available to show!');
-            return view('employee.list');/*->with("message","No employee records available!")->with("alert-class","alert-danger");*/
+        $accountId  = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $employeeId = !empty($request->get('employee_id')) ? $request->get('employee_id') : 0;
+        $type       = !empty($request->get('type')) ? $request->get('type') : '0';
+
+        $accounts = Account::where('relation', 'employee')->where('status', '1')->get();
+        $employeesCombobox = Employee::with('account.accountDetail')->where('status', '1')->get();
+
+        $query = Employee::where('status', '1');
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $query = $query->where('account_id', $accountId);
+            } else {
+                $accountId = 0;
+            }
         }
+
+        if(!empty($employeeId) && $employeeId != 0) {
+            $selectedEmployee = Account::find($employeeId);
+            if(!empty($selectedEmployee) && !empty($selectedEmployee->id)) {
+                $query = $query->where('id', $employeeId);
+            } else {
+                $employeeId = 0;
+            }
+        }
+
+        if(!empty($type) && $type != '0') {
+            $query = $query->where('employee_type', $type);
+        }
+
+        $employees = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(10);
+
+        return view('employee.list',[
+                'accounts'          => $accounts,
+                'employeesCombobox' => $employeesCombobox,
+                'employees'         => $employees,
+                'accountId'         => $accountId,
+                'employeeId'        => $employeeId,
+                'type'              => $type
+            ]);
     }
 
     /**

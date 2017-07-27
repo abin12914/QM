@@ -75,17 +75,42 @@ class AccountController extends Controller
     /**
      * Return view for account listing
      */
-    public function list()
+    public function list(Request $request)
     {
-        $accounts = Account::paginate(10);
-        if(!empty($accounts)) {
-            return view('account.list',[
-                    'accounts' => $accounts
-                ]);
-        } else {
-            session()->flash('message', 'No accounts available to show!');
-            return view('account.list');/*->with("message","No account records available!")->with("alert-class","alert-success");*/
+        $accountId  = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $relation   = !empty($request->get('relation')) ? $request->get('relation') : '0';
+        $type       = !empty($request->get('type')) ? $request->get('type') : '0';
+
+        $accountsCombobox   = Account::where('status', '1')->get();
+
+        $query = Account::where('status', '1');
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $query = $query->where('id', $accountId);
+            } else {
+                $accountId = 0;
+            }
         }
+
+        if(!empty($relation) && $relation != '0') {
+            $query = $query->where('relation', $relation);
+        }
+
+        if(!empty($type) && $type != '0') {
+            $query = $query->where('type', $type);
+        }
+
+        $accounts = $query->with('accountDetail')->orderBy('created_at','desc')->paginate(10);
+        
+        return view('account.list',[
+                'accounts'          => $accounts,
+                'accountsCombobox'  => $accountsCombobox,
+                'accountId'         => $accountId,
+                'relation'          => $relation,
+                'type'              => $type
+            ]);
     }
 
     /**

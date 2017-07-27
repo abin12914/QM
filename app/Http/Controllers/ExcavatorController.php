@@ -54,17 +54,43 @@ class ExcavatorController extends Controller
     /**
      * Return view for excavators listing
      */
-    public function list()
+    public function list(Request $request)
     {
-        $excavators = Excavator::paginate(10);
-        if(!empty($excavators)) {
-            return view('excavator.list',[
-                    'excavators' => $excavators
-                ]);
-        } else {
-            session()->flash('message', 'No excavator records available to show!');
-            return view('excavators.list');
+        $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $excavatorId    = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
+
+        $accounts = Account::where('type', 'personal')->where('status', '1')->get();
+        $excavatorsCombobox = Excavator::where('status', '1')->get();
+
+        $query = Excavator::where('status', '1');
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $query = $query->where('contractor_account_id', $accountId);
+            } else {
+                $accountId = 0;
+            }
         }
+
+        if(!empty($excavatorId) && $excavatorId != 0) {
+            $selectedExcavator = Account::find($excavatorId);
+            if(!empty($selectedExcavator) && !empty($selectedExcavator->id)) {
+                $query = $query->where('id', $excavatorId);
+            } else {
+                $excavatorId = 0;
+            }
+        }
+
+        $excavators = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(10);
+
+        return view('excavator.list',[
+                'accounts'              => $accounts,
+                'excavatorsCombobox'    => $excavatorsCombobox,
+                'excavators'            => $excavators,
+                'accountId'             => $accountId,
+                'excavatorId'           => $excavatorId
+            ]);
     }
 
     /**

@@ -50,17 +50,43 @@ class JackhammerController extends Controller
     /**
      * Return view for jackhammer listing
      */
-    public function list()
+    public function list(Request $request)
     {
-        $jackhammers = Jackhammer::paginate(10);
-        if(!empty($jackhammers)) {
-            return view('jackhammer.list',[
-                    'jackhammers' => $jackhammers
-                ]);
-        } else {
-            session()->flash('message', 'No jackhammer records available to show!');
-            return view('jackhammer.list');
+        $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $jackhammerId   = !empty($request->get('jackhammer_id')) ? $request->get('jackhammer_id') : 0;
+
+        $accounts = Account::where('type', 'personal')->where('status', '1')->get();
+        $jackhammerCombobox = Jackhammer::where('status', '1')->get();
+
+        $query = Jackhammer::where('status', '1');
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $query = $query->where('contractor_account_id', $accountId);
+            } else {
+                $accountId = 0;
+            }
         }
+
+        if(!empty($jackhammerId) && $jackhammerId != 0) {
+            $selectedExcavator = Account::find($jackhammerId);
+            if(!empty($selectedExcavator) && !empty($selectedExcavator->id)) {
+                $query = $query->where('id', $jackhammerId);
+            } else {
+                $jackhammerId = 0;
+            }
+        }
+
+        $jackhammers = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(10);
+
+        return view('jackhammer.list',[
+                'accounts'              => $accounts,
+                'jackhammerCombobox'    => $jackhammerCombobox,
+                'jackhammers'            => $jackhammers,
+                'accountId'             => $accountId,
+                'jackhammerId'           => $jackhammerId
+            ]);
     }
 
     /**

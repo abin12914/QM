@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\VehicleTypeRegistrationRequest;
 use App\Models\VehicleType;
 use App\Models\Product;
-use App\Models\RoyaltyChart;
 
 class VehicleTypeController extends Controller
 {
@@ -66,16 +65,34 @@ class VehicleTypeController extends Controller
     /**
      * Return view for vehicle type listing
      */
-    public function list()
+    public function list(Request $request)
     {
-        $vehicletypes = VehicleType::paginate(10);
-        if(!empty($vehicletypes)) {
-            return view('vehicle-type.list',[
-                    'vehicletypes' => $vehicletypes
-                ]);
-        } else {
-            session()->flash('message', 'No vehicle type records available to show!');
-            return view('vehicle-type.list');
+        $vehicleTypeId  = !empty($request->get('vehicle_type_id')) ? $request->get('vehicle_type_id') : 0;
+        $productId      = !empty($request->get('product_id')) ? $request->get('product_id') : 0;
+
+        $vehicleTypesCombobox   = VehicleType::where('status', '1')->get();
+        $products               = Product::where('status', '1')->get();
+
+        $query = VehicleType::where('status', '1');
+
+        if(!empty($vehicleTypeId) && $vehicleTypeId != 0) {
+            $query = $query->where('id', $vehicleTypeId);
         }
+
+        if(!empty($productId) && $productId != 0) {
+            $query = $query->whereHas('products', function ($qry) use($productId) {
+                $qry->where('products.id', $productId);
+            });
+        }
+
+        $vehicleTypes = $query->with('products')->orderBy('generic_quantity','desc')->paginate(10);
+
+        return view('vehicle-type.list',[
+                'vehicleTypesCombobox'  => $vehicleTypesCombobox,
+                'products'              => $products,
+                'vehicleTypes'          => $vehicleTypes,
+                'vehicleTypeId'         => $vehicleTypeId,
+                'productId'              => $productId
+            ]);
     }
 }
