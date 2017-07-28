@@ -137,14 +137,11 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Date & Time</th>
                                             <th>Truck Number</th>
                                             <th>Truck Type</th>
-                                            <th>Date & Time</th>
                                             <th>Product</th>
                                             <th>Purchaser</th>
-                                            {{-- <th>Quantity</th>
-                                            <th>Rate</th>
-                                            <th>Discount</th> --}}
                                             <th>Bill Amount</th>
                                         </tr>
                                     </thead>
@@ -153,21 +150,15 @@
                                             @foreach($sales as $index=>$sale)
                                                 <tr>
                                                     <td>{{ $index + $sales->firstItem() }}</td>
+                                                    <td>{{ $sale->date_time }}</td>
                                                     <td>{{ $sale->vehicle->reg_number }}</td>
                                                     <td>{{ $sale->vehicle->vehicleType->name }}</td>
-                                                    <td>{{ $sale->date_time }}</td>
                                                     <td>{{ $sale->product->name }}</td>
                                                     <td>{{ $sale->transaction->debitAccount->account_name }}</td>
-                                                    @if($sale->measure_type == 1 && !empty($sale->quantity))
-                                                        {{-- <td>{{ $sale->quantity }}</td>
-                                                        <td>{{ $sale->rate }}</td>
-                                                        <td>{{ $sale->discount }}</td> --}}
-                                                        <td>{{ $sale->total_amount }}</td>
+                                                    @if($sale->measure_type == 2 && ($sale->quantity <= 0))
+                                                        <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
                                                     @else
-                                                        {{-- <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
-                                                        <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
-                                                        <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td> --}}
-                                                        <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                        <td  title="{{ $sale->quantity }} * {{ $sale->rate }}">{{ $sale->total_amount }}</td>
                                                     @endif
                                                 </tr>
                                             @endforeach

@@ -16,6 +16,7 @@ use Auth;
 use DateTime;
 use App\Http\Requests\CreditSaleRegistrationRequest;
 use App\Http\Requests\CashSaleRegistrationRequest;
+use App\Http\Requests\WeighmentRegistrationRequest;
 
 class SalesController extends Controller
 {
@@ -92,7 +93,7 @@ class SalesController extends Controller
         $transaction->credit_account_id = $salesAccountId; //sale account id
         $transaction->amount            = !empty($deductedTotal) ? $deductedTotal : '0';
         $transaction->date_time         = $dateTime;
-        $transaction->particulars       = "Credit sale";
+        $transaction->particulars       = ("Credit sale".(($measureType == 2) ? ' (Weighment pending)' : ''));
         $transaction->status            = 1;
         $transaction->created_user_id   = Auth::user()->id;
         if($transaction->save()) {
@@ -408,15 +409,138 @@ class SalesController extends Controller
     }
 
     /**
+     * Return view for weighment pending list
+     */
+    public function weighmentPending(Request $request)
+    {
+        $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $fromDate       = !empty($request->get('from_date')) ? $request->get('from_date') : '';
+        $toDate         = !empty($request->get('to_date')) ? $request->get('to_date') : '';
+        $vehicleId      = !empty($request->get('vehicle_id')) ? $request->get('vehicle_id') : 0;
+
+        $accounts       = Account::where('type', 'personal')->where('status', '1')->get();
+        $vehicles       = Vehicle::where('status', '1')->get();
+
+        $query = Sale::where('status', 1)->where('measure_type', 2)->where('quantity', 0);
+
+        if(!empty($accountId) && $accountId != 0) {
+            $selectedAccount = Account::find($accountId);
+            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
+                $selectedAccountName = $selectedAccount->account_name;
+                
+                $query = $query->whereHas('transaction', function ($qry) use($accountId) {
+                    $qry->where('debit_account_id', $accountId);
+                });
+            } else {
+                $accountId = 0;
+            }
+        } else {
+            $selectedAccountName = '';
+        }
+
+        if(!empty($vehicleId) && $vehicleId != 0) {
+            $selectedVehicle = Vehicle::find($vehicleId);
+            if(!empty($selectedVehicle) && !empty($selectedVehicle->id)) {
+                $selectedVehicleRegNumber = $selectedVehicle->reg_number;
+
+                $query = $query->where('vehicle_id', $vehicleId);
+            }
+        } else {
+            $selectedVehicleRegNumber = '';
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d');
+            $query = $query->where('date_time', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate." 23:59");
+            $searchToDate = $searchToDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '<=', $searchToDate);
+        }
+
+        $sales = $query->with(['vehicle','transaction.debitAccount','product'])->orderBy('date_time','desc')->paginate(10);
+        
+        return view('sales.weighment-pending-list',[
+                'accounts'              => $accounts,
+                'vehicles'              => $vehicles,
+                'sales'                 => $sales,
+                'accountId'             => $accountId,
+                'vehicleId'             => $vehicleId,
+                'fromDate'              => $fromDate,
+                'toDate'                => $toDate,
+            ]);
+    }
+
+    /**
      * Return view for weighment registration
      */
-    public function weighmentRegister()
+    public function weighmentRegister(Request $request)
     {
-        $sales    = Sale::where('measure_type', 2)->where('quantity', 0)->orderBy('date_time', 'desc')->paginate(5);
+        $saleId = !empty($request->get('sale_id')) ? $request->get('sale_id') : 0;
 
-        return view('sales.weighment',[
-                'sales' => $sales,
+        if(!empty($saleId) && $saleId != 0) {
+            $sale = Sale::where('id', $saleId)->where('measure_type', 2)->where('quantity', 0)->first();
+            if(empty($sale) || empty($sale->id)) {
+                return redirect(route('sales-weighment-pending-view'))->with("message","Something went wrong! Selected record not found.")->with("alert-class","alert-danger");
+            }
+        } else {
+            return redirect()->back()->with("message","Something went wrong! Selected record not found.")->with("alert-class","alert-danger");
+        }
+
+        return view('sales.weighment-register',[
+                'sale' => $sale
             ]);
+    }
+
+    /**
+     * Return view for weighment registration action
+     */
+    public function weighmentRegisterAction(WeighmentRegistrationRequest $request)
+    {
+        $saleId         = $request->get('sale_id');
+        $quantity       = $request->get('quantity');
+        $rate           = $request->get('rate');
+        $billAmount     = $request->get('bill_amount');
+        $discount       = $request->get('discount');
+        $deductedTotal  = $request->get('deducted_total');
+
+        if(!empty($saleId)){
+            $sale = Sale::find($saleId);
+            if(!empty($sale) && !empty($sale->id) && $sale->measure_type == 2 && $sale->quantity == 0) {
+                if(($quantity * $rate) != $billAmount) {
+                    return redirect()->back()->with("message","Something went wrong! Bill calculation error.1")->with("alert-class","alert-danger");
+                }
+                if(($billAmount - $discount) != $deductedTotal) {
+                    return redirect()->back()->with("message","Something went wrong! Discount deduction error.2")->with("alert-class","alert-danger");
+                }
+
+                $transaction = Transaction::find($sale->transaction->id);
+                $transaction->amount            = !empty($deductedTotal) ? $deductedTotal : '0';
+                $transaction->particulars       = "Credit sale";
+                $transaction->created_user_id   = Auth::user()->id;
+                if($transaction->save()) {
+                    $sale->quantity         = $quantity;
+                    $sale->rate             = $rate;
+                    $sale->discount         = $discount;
+                    $sale->total_amount     = $deductedTotal;
+                    
+                    if($sale->save()) {
+                        return redirect(route('sales-weighment-pending-view'))->with("message","Successfully saved.")->with("alert-class","alert-success");
+                    } else {
+                        return redirect(route('sales-weighment-pending-view'))->with("message","Something went wrong! Failed to save the weighment details. Try after reloading the page.3")->with("alert-class","alert-danger");
+                    }
+                } else {
+                    return redirect(route('sales-weighment-pending-view'))->with("message","Something went wrong! Failed to save the weighment details. Try after reloading the page.4")->with("alert-class","alert-danger");
+                }
+            } else {
+                return redirect()->back()->with("message","Something went wrong! Try after reloading the page.5")->with("alert-class","alert-danger");
+            }
+        } else {
+            return redirect()->back()->with("message","Something went wrong! Try after reloading the page.6")->with("alert-class","alert-danger");
+        }
     }
 
     /**

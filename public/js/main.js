@@ -12,6 +12,10 @@ $(function () {
             $('#opening_balance').prop("readonly",false);
         }
     });
+
+    $('body').on("keydown", ".prevent-edit", function (evt) {
+        return false;
+    });
     
     // for checking if the pressed key is a number
     $('body').on("keypress", ".number_only", function (evt) {

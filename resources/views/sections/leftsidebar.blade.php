@@ -8,7 +8,7 @@
             </div>
             <div class="pull-left info">
                 <p>{{ $currentUser->name }}</p>
-                <a><i class="fa fa-circle text-success"></i>Online</a>
+                <a href="{{ Request::is('my/profile') ? '#' : route('user-profile-view') }}"><i class="fa fa-hand-o-right"></i> View Profile</a>
             </div>
         </div>
         <ul class="sidebar-menu">
@@ -104,8 +104,8 @@
                                 <i class="fa fa-circle-o"></i> List
                             </a>
                         </li>
-                        <li class="{{ Request::is('sales/weighment/register')? 'active' : '' }}">
-                            <a href="{{route('sales-weighment-register-view')}}">
+                        <li class="{{ Request::is('sales/weighment/*')? 'active' : '' }}">
+                            <a href="{{route('sales-weighment-pending-view')}}">
                                 <i class="fa fa-circle-o"></i> Weighment Registration
                             </a>
                         </li>

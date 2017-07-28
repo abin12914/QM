@@ -13,6 +13,7 @@
 
 //licence
 Route::get('/licence', 'LoginController@licence')->name('licence-view');
+Route::get('/under-construction', 'LoginController@underConstruction')->name('under-construction-view');
 
 Route::group(['middleware' => 'is.guest'], function() {
 	Route::get('/', 'LoginController@publicHome')->name('public-home');
@@ -22,6 +23,12 @@ Route::group(['middleware' => 'is.guest'], function() {
 });
 
 Route::group(['middleware' => 'auth.check'], function () {
+	//common routes
+	Route::get('/dashboard', 'LoginController@dashboard')->name('user-dashboard');
+	Route::get('/my/profile', 'UserController@profileView')->name('user-profile-view');
+	Route::get('/lockscreen', 'LoginController@lockscreen')->name('lockscreen');
+	Route::get('/logout', 'LoginController@logout')->name('logout');
+
 	//superadmin routes
 	Route::group(['middleware' => ['user.role:superadmin,']], function () {
 		Route::get('/user/register', 'UserController@register')->name('user-register-view');
@@ -86,6 +93,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/sales/get/last/vehicle/{id}', 'SalesController@getLastSaleByVehicleId')->name('sale-get-last-by-vehicle-id');
 
 		//sales /weighment updation
+		Route::get('/sales/weighment/pending/list', 'SalesController@weighmentPending')->name('sales-weighment-pending-view');
 		Route::get('/sales/weighment/register', 'SalesController@weighmentRegister')->name('sales-weighment-register-view');
 		Route::post('/sales/weighment/register/action', 'SalesController@weighmentRegisterAction')->name('sales-weighment-register-action');
 
@@ -125,11 +133,4 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/statement/account-statement', 'AccountController@accountSatementSearch')->name('account-statement-list-search');
 		Route::get('/statement/daily-statement', 'DailyStatementController@dailySatementSearch')->name('daily-statement-list-search');
 	});
-
-	//common routes
-	Route::get('/dashboard', 'LoginController@dashboard')->name('user-dashboard');
-	Route::get('/my/profile', 'UserController@profileView')->name('user-profile-view');
-	Route::get('/logout', 'LoginController@logout')->name('logout');
-
-
 });

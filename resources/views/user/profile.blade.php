@@ -63,17 +63,17 @@
                                                 <a class="pull-right">{{ !empty($user->role) ? $user->role : 'Nil' }}</a>
                                             </li>
                                             <li class="list-group-item">
-                                                <b class="">Validid Till : </b>
+                                                <b class="">Valid Till : </b>
                                                 <a class="pull-right">{{ !empty($user->valid_till) ? $user->valid_till : 'Unlimited' }}</a>
                                             </li>
                                         </ul><br>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-3">
-                                            <a href="#" class="btn btn-primary btn-block"><b>View Activity Log</b></a>
+                                            <a href="{{ route('under-construction-view') }}" class="btn btn-primary btn-block"><b>View Activity Log</b></a>
                                         </div>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-3">
-                                            <a href="#" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
+                                            <a href="{{ route('under-construction-view') }}" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
                                         </div>
                                         <div class="clearfix"></div><br>
                                     </div>

@@ -17,7 +17,7 @@ class AuthCheck
     public function handle($request, Closure $next)
     {
         if(Auth::check()) {
-            return $next($request);            
+            return $next($request);
         } else {
             return redirect(route('login-view'))->with("message","Session expired. Login to continue.")
                                                 ->with("alert-class","alert-danger");

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 @section('title', 'License')
 @section('content')
-<div class="alert alert-info">
+<div class="alert alert-info no-print">
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-3"></div>
@@ -11,10 +11,17 @@
                     <div class="row"><div class="col-md-1"></div><div class="col-md-11">FREEDOM OF USE | FREEDOM TO STUDY | FREEDOM TO COPY | FREEDOM TO IMPROVE</div></div>
                 </h4>
             </div>
+            <div class="box-tools pull-right">
+                <a href="{{ !empty($currentUser)? route('user-dashboard') : route('login-view') }}">
+                    <button>
+                        <i class="text-red">Back to home</i>
+                    </button>
+                </a>
+            </div>
         </div>
     </div>
 </div>
-<div class="open-source">
+<div class="open-source no-print">
     <div class="login-box" style="border: powderblue; border-style: solid; border-width: thin;">
         <div class="login-logo">
             <div>
