@@ -46,7 +46,7 @@ class AccountController extends Controller
         if($account->save()) {
             $accountDetails = new AccountDetail;
             $accountDetails->account_id = $account->id;
-            // account type of real accounts does not need to store personal data
+            // account type of real/nominal accounts does not need to store personal data
             if($accountType == 'personal') {
                 $accountDetails->name       = $name;
                 $accountDetails->phone      = $phone;
@@ -55,10 +55,12 @@ class AccountController extends Controller
                 $accountDetails->name       = $accountName;
             }
             $accountDetails->status     = 1;
-            if($accountDetails->save()) {
+            if(2 == 1){//$accountDetails->save()) {
                 $saveFlag = 1;
             } else {
-                $saveFlag = 0;  
+                $saveFlag = 0;
+                //delete the account if account details save failed
+                $account->delete();
             }
         } else {
             $saveFlag = 0;
@@ -86,12 +88,7 @@ class AccountController extends Controller
         $query = Account::where('status', '1');
 
         if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $query = $query->where('id', $accountId);
-            } else {
-                $accountId = 0;
-            }
+            $query = $query->where('id', $accountId);
         }
 
         if(!empty($relation) && $relation != '0') {

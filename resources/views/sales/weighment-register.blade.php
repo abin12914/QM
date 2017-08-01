@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Sales Registration')
+@section('title', 'Weighment Registration')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> weighment</a></li>
-            <li class="active">Registration</li>
+            <li class="active">Weighment Registration</li>
         </ol>
     </section>
     <!-- Main content -->

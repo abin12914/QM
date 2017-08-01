@@ -9,7 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Account</a></li>
+            <li>Account</li>
             <li class="active">Registration</li>
         </ol>
     </section>
@@ -23,7 +23,7 @@
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
             <div class="col-md-2"></div>
             <div class="col-md-8">
@@ -34,7 +34,7 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form action="{{route('account-register-action')}}" method="post" class="form-horizontal" multipart-form-data>
+                    <form action="{{route('account-register-action')}}" method="post" class="form-horizontal">
                         <div class="box-body">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="row">
@@ -42,7 +42,7 @@
                                     <div class="form-group">
                                         <label for="account_name" class="col-sm-2 control-label"><b style="color: red;">* </b> Account Name : </label>
                                         <div class="col-sm-10 {{ !empty($errors->first('account_name')) ? 'has-error' : '' }}">
-                                            <input type="text" name="account_name" class="form-control" id="account_name" placeholder="Account Name" value="{{ old('account_name') }}"  tabindex="1">
+                                            <input type="text" name="account_name" class="form-control" id="account_name" placeholder="Account Name" value="{{ old('account_name') }}"  tabindex="1" maxlength="200">
                                             @if(!empty($errors->first('account_name')))
                                                 <p style="color: red;" >{{$errors->first('account_name')}}</p>
                                             @endif
@@ -52,9 +52,9 @@
                                         <label for="description" class="col-sm-2 control-label">Description : </label>
                                         <div class="col-sm-10 {{ !empty($errors->first('description')) ? 'has-error' : '' }}">
                                             @if(!empty(old('description')))
-                                                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description" style="resize: none;" tabindex="2">{{ old('description') }}</textarea>
+                                                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description" style="resize: none;" tabindex="2" maxlength="200">{{ old('description') }}</textarea>
                                             @else
-                                                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description" style="resize: none;" tabindex="2"></textarea>
+                                                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description" style="resize: none;" tabindex="2" maxlength="200"></textarea>
                                             @endif
                                             @if(!empty($errors->first('description')))
                                                 <p style="color: red;" >{{$errors->first('description')}}</p>
@@ -65,10 +65,10 @@
                                         <label for="account_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Account Type : </label>
                                         <div class="col-sm-10 {{ !empty($errors->first('account_type')) ? 'has-error' : '' }}">
                                             <select class="form-control" name="account_type" id="account_type" tabindex="3">
-                                                <option value="">Select account type</option>
+                                                {{-- <option value="">Select account type</option>
                                                 <option value="real" {{ (old('account_type') == 'real') ? 'selected' : '' }}>Real account</option>
-                                                <option value="nominal" {{ (old('account_type') == 'nominal') ? 'selected' : '' }}>Nominal account</option>
-                                                <option value="personal" {{ (old('account_type') == 'personal' || empty(old('account_type'))) ? 'selected' : '' }}>Personal account</option>
+                                                <option value="nominal" {{ (old('account_type') == 'nominal') ? 'selected' : '' }}>Nominal account</option> --}}
+                                                <option value="personal" selected{{-- {{ (old('account_type') == 'personal' || empty(old('account_type'))) ? 'selected' : '' } --}}}>Personal account</option>
                                             </select>
                                             @if(!empty($errors->first('account_type')))
                                                 <p style="color: red;" >{{$errors->first('account_type')}}</p>
@@ -93,7 +93,7 @@
                                         <div class="form-group">
                                             <label for="phone" class="col-sm-2 control-label"> Phone : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('phone')) ? 'has-error' : '' }}">
-                                                <input type="text" name="phone" class="form-control number_only" id="phone" placeholder="Phone number" value="{{ old('phone') }}" tabindex="6" {{ (old('account_type') != 'personal')  && !empty(old('account_type')) ? 'disabled' : '' }}>
+                                                <input type="text" name="phone" class="form-control number_only" id="phone" placeholder="Phone number" value="{{ old('phone') }}" tabindex="6" {{ (old('account_type') != 'personal')  && !empty(old('account_type')) ? 'disabled' : '' }} maxlength="13">
                                                 @if(!empty($errors->first('phone')))
                                                     <p style="color: red;" >{{$errors->first('phone')}}</p>
                                                 @endif
@@ -103,9 +103,9 @@
                                             <label for="address" class="col-sm-2 control-label">Address : </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('address')) ? 'has-error' : '' }}">
                                                 @if(!empty(old('address')))
-                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;" tabindex="7" {{ (old('account_type') != 'personal')  && !empty(old('account_type')) ? 'disabled' : '' }}>{{ old('address') }}</textarea>
+                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;" tabindex="7" {{ (old('account_type') != 'personal')  && !empty(old('account_type')) ? 'disabled' : '' }} maxlength="200">{{ old('address') }}</textarea>
                                                 @else
-                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;" tabindex="7" {{ (old('account_type') != 'personal')  && !empty(old('account_type')) ? 'disabled' : '' }}></textarea>
+                                                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Address" style="resize: none;" tabindex="7" {{ (old('account_type') != 'personal')  && !empty(old('account_type')) ? 'disabled' : '' }} maxlength="200"></textarea>
                                                 @endif
                                                 @if(!empty($errors->first('address')))
                                                     <p style="color: red;" >{{$errors->first('address')}}</p>
@@ -117,7 +117,6 @@
                                             <div class="col-sm-10 {{ !empty($errors->first('relation_type')) ? 'has-error' : '' }}">
                                                 <select class="form-control" name="relation_type" id="relation_type" tabindex="8" {{ (old('account_type') != 'personal')  && !empty(old('account_type')) ? 'disabled' : '' }}>
                                                     <option value="" {{ empty(old('relation_type')) ? 'selected' : '' }}>Select primary relation type</option>
-                                                    <option value="employee" {{ (old('relation_type') == 'employee') ? 'selected' : '' }}>Employee</option>
                                                     <option value="supplier" {{ (old('relation_type') == 'supplier') ? 'selected' : '' }}>Supplier</option>
                                                     <option value="customer" {{ (old('relation_type') == 'customer') ? 'selected' : '' }}>Customer</option>
                                                     <option value="contractor" {{ (old('relation_type') == 'contractor') ? 'selected' : '' }}>Contractor</option>
@@ -151,7 +150,7 @@
                                     <div class="form-group">
                                         <label for="opening_balance" class="col-sm-2 control-label"><b style="color: red;">* </b> Opening Balance : </label>
                                         <div class="col-sm-10 {{ !empty($errors->first('opening_balance')) ? 'has-error' : '' }}">
-                                            <input type="text" class="form-control decimal_number_only" name="opening_balance" id="opening_balance" placeholder="Opening balance" value="{{ old('opening_balance') }}" ="" tabindex="10">
+                                            <input type="text" class="form-control decimal_number_only" name="opening_balance" id="opening_balance" placeholder="Opening balance" value="{{ old('opening_balance') }}" ="" tabindex="10" maxlength="8">
                                             @if(!empty($errors->first('opening_balance')))
                                                 <p style="color: red;" >{{$errors->first('opening_balance')}}</p>
                                             @endif
@@ -184,5 +183,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/accountRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/registration/accountRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

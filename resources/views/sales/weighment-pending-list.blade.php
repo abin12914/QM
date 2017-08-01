@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Sales Registration')
+@section('title', 'Weighment Pending List')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Sales</a></li>
-            <li class="active">Registration</li>
+            <li class="active">Weighment Pending List</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -28,7 +27,7 @@
             <div class="col-md-10">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Filter Records</h3>
+                        <h3 class="box-title">Filter List</h3>
                     </div>
                     <div class="box-header">
                         <form action="{{ route('sales-weighment-pending-view') }}" method="get" class="form-horizontal" multipart-form-data>

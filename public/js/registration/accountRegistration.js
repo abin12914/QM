@@ -1,6 +1,20 @@
 $(function () {
+    //Initialize Select2 Element for account type select box
+    $("#account_type").select2({
+        minimumResultsForSearch: 5
+    });
 
-    $('body').on("change", "#account_type", function () {
+    //Initialize Select2 Element for relation select box
+    $("#relation_type").select2({
+        minimumResultsForSearch: 5
+    });
+
+    //Initialize Select2 Element for financial status select box
+    $("#financial_status").select2({
+        minimumResultsForSearch: 5
+    });
+    //acccount type change event
+    /*$('body').on("change", "#account_type", function () {
         accountType = $(this).val();
         if(accountType != 'personal') {
             $('#real_account_flag_message').show();
@@ -25,5 +39,5 @@ $(function () {
             $('#address').prop('disabled',false);
             $('#relation_type').prop('disabled',false);
         }
-    });
+    });*/
 });

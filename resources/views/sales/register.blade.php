@@ -1,16 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Sales Registration')
+@section('title', 'Sale Registration')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Sales
+            Sale
             <small>Registartion</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Sales</a></li>
-            <li class="active">Registration</li>
+            <li class="active">Sale Registration</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -126,7 +125,7 @@
                                             <div id="measure_volume_details" {{ old('measure_type') == '2' ? 'hidden' : ''}}>
                                                 <div class="box-header with-border"></div><br>
                                                 <div class="form-group">
-                                                    <label for="quantity_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Quantity * Rate :</label>
+                                                    <label for="quantity_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Quantity x Rate :</label>
                                                     <div class="col-sm-2 {{ !empty($errors->first('quantity')) ? 'has-error' : '' }}">
                                                         <input type="text" class="form-control decimal_number_only quantity" name="quantity" id="quantity_credit" placeholder="Quantity" value="{{ old('quantity') }}" tabindex="4">
                                                         @if(!empty($errors->first('quantity')))
@@ -253,7 +252,7 @@
                                             </div>
                                             <div class="box-header with-border"></div><br>
                                             <div class="form-group">
-                                                <label for="quantity_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Quantity * Rate :</label>
+                                                <label for="quantity_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Quantity x Rate :</label>
                                                 <div class="col-sm-2 {{ !empty($errors->first('quantity_cash')) ? 'has-error' : '' }}">
                                                     <input type="text" class="form-control decimal_number_only quantity" name="quantity_cash" id="quantity_cash" placeholder="Quantity" value="{{ old('quantity_cash') }}" tabindex="4">
                                                     @if(!empty($errors->first('quantity_cash')))
@@ -355,7 +354,7 @@
             <div class="col-md-8">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Last 5 Sales Records</h3>
+                        <h3 class="box-title">Last 5 Sale Records</h3>
                     </div>
                     <div class="box-body">
                         @if(!empty($sales_records))
@@ -422,7 +421,7 @@
                             <div class="row">
                                 <div class="col-sm-1"></div>
                                 <div class="col-sm-10">
-                                    <p style="color: red;"><b>Credits given by the user are strictly under the responsibility of the user.</b></p>
+                                    <p style="color: red;"><b>Credits given by the 'user' are strictly under the responsibility of the 'user'.</b></p>
                                 </div>
                                 <div class="col-sm-1"><i id="modal_warning_more_button" class="fa fa-chevron-down"></i></div>
                             </div>
@@ -448,5 +447,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/saleRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/registration/saleRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

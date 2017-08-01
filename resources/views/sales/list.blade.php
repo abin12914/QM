@@ -1,15 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Sales')
+@section('title', 'Sale List')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Sales
+            Sale List
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Sale</a></li>
-            <li class="active">List</li>
+            <li class="active">Sale List</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -27,7 +26,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Sale List</h3>
+                        <h3 class="box-title">Filter List</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-header">

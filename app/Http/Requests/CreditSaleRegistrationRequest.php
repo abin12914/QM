@@ -27,7 +27,7 @@ class CreditSaleRegistrationRequest extends FormRequest
     public function messages()
     {
         return [
-            'vehicle_id.required'           => "The truck number field is required.",
+            'vehicle_id.required'           => "The truck number is required.",
             'vehicle_id.integer'            => "Something went wrong. Please try again after reloading the page.",
             'vehicle_id.in'                 => "Something went wrong. Please try again after reloading the page.",
             'purchaser_account_id.required' => "The purchaser field is required.",
@@ -39,25 +39,25 @@ class CreditSaleRegistrationRequest extends FormRequest
             'measure_type.integer'          => "Something went wrong. Please try again after reloading the page.",
             'measure_type.in'               => "Something went wrong. Please try again after reloading the page.",
             'quantity.required_if'          => "Required field.",
-            'quantity.integer'              => "Invalid data",
-            'quantity.max'                  => "Maximum value exceeded",
-            'quantity.min'                  => "Minimum value expected",
+            'quantity.integer'              => "Invalid data.",
+            'quantity.max'                  => "Maximum value exceeded.",
+            'quantity.min'                  => "Minimum value expected.",
             'rate.required_if'              => "Required field.",
-            'rate.numeric'                  => "Invalid data",
-            'rate.max'                      => "Maximum value exceeded",
-            'rate.min'                      => "Minimum value expected",
+            'rate.numeric'                  => "Invalid data.",
+            'rate.max'                      => "Maximum value exceeded.",
+            'rate.min'                      => "Minimum value expected.",
             'bill_amount.required_if'       => "Required field.",
-            'bill_amount.integer'           => "Invalid data",
-            'bill_amount.max'               => "Maximum value exceeded",
-            'bill_amount.min'               => "Minimum value expected",
+            'bill_amount.integer'           => "Invalid data.",
+            'bill_amount.max'               => "Maximum value exceeded.",
+            'bill_amount.min'               => "Minimum value expected.",
             'discount.required_if'          => "Required field.",
-            'discount.integer'              => "Invalid data",
-            'discount.max'                  => "Maximum value exceeded",
-            'discount.min'                  => "Minimum value expected",
+            'discount.integer'              => "Invalid data.",
+            'discount.max'                  => "Maximum value exceeded.",
+            'discount.min'                  => "Minimum value expected.",
             'deducted_total.required_if'    => "Required field.",
-            'deducted_total.integer'        => "Invalid data",
-            'deducted_total.max'            => "Maximum value exceeded",
-            'deducted_total.min'            => "Minimum value expected",
+            'deducted_total.integer'        => "Invalid data.",
+            'deducted_total.max'            => "Maximum value exceeded.",
+            'deducted_total.min'            => "Minimum value expected.",
         ];
     }
 
@@ -128,23 +128,4 @@ class CreditSaleRegistrationRequest extends FormRequest
                                         ]
         ];
     }
-
-    /**
-     * Configure the validator instance.
-     *
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return void
-     */
-    /*public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            $input = $validator->input;
-            if (($input->quantity * $input->rate) == $input->bill_amount) {
-                $validator->errors()->add('bill_amount', 'Invalid data!!');
-            }
-            if ($input->bill_amount - $input->discount == $input->deducted_total) {
-                $validator->errors()->add('deducted_total', 'Invalid data!!');
-            }
-        });
-    }*/
 }
