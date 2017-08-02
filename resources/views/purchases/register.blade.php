@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Purchase</a></li>
-            <li class="active">Registration</li>
+            <li class="active">Purchase Registration</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -96,7 +95,7 @@
                                             <div class="col-sm-10 {{ !empty($errors->first('product_id')) ? 'has-error' : '' }}">
                                                 <select name="product_id" class="form-control product" id="product" tabindex="2" style="width: 100%">
                                                     <option value="" {{ empty(old('product_id')) ? 'selected' : '' }}>Select product</option>
-                                                    @foreach($purchasebleproducts as $purchasebleproduct)
+                                                    @foreach($purchasebleProducts as $purchasebleproduct)
                                                         <option value="{{ $purchasebleproduct->id }}" {{ (old('product_id') == $purchasebleproduct->id) ? 'selected' : '' }}>{{ $purchasebleproduct->name }}</option>
                                                     @endforeach
                                                 </select>
@@ -160,7 +159,7 @@
                         <h3 class="box-title">Last 5 Purchase Records</h3>
                     </div>
                     <div class="box-body">
-                        @if(!empty($purchase_records))
+                        @if(!empty($purchaseRecords))
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
@@ -171,7 +170,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($purchase_records as $purchase_record)
+                                    @foreach($purchaseRecords as $purchase_record)
                                         <tr>
                                             <td>{{ $purchase_record->date_time }}</td>
                                             <td>{{ $purchase_record->purchasebleProduct->name }}</td>
@@ -196,5 +195,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/purchaseRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/registration/purchaseRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

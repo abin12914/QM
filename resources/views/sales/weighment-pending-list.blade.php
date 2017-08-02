@@ -116,16 +116,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($sales as $index => $sales_record)
+                                    @foreach($sales as $index => $saleRecord)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $sales_record->date_time }}</td>
-                                            <td>{{ $sales_record->vehicle->reg_number }}</td>
-                                            <td>{{ $sales_record->transaction->debitAccount->account_name }}</td>
-                                            <td>{{ $sales_record->product->name }}</td>
+                                            <td>{{ $saleRecord->date_time }}</td>
+                                            <td>{{ $saleRecord->vehicle->reg_number }}</td>
+                                            <td>{{ $saleRecord->transaction->debitAccount->account_name }}</td>
+                                            <td>{{ $saleRecord->product->name }}</td>
                                             <td>
                                                 <form action="{{route('sales-weighment-register-view')}}" id="sale_weighment_registration_form_{{ $index }}" method="get">
-                                                <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
+                                                <input type="hidden" name="sale_id" value="{{ $saleRecord->id }}">
                                                 <button type="submit" class="bg-aqua" type="button">Add</button>
                                                 </form>
                                             </td>

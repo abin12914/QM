@@ -4,7 +4,7 @@
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Sale List
+            Sale<small>List</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>

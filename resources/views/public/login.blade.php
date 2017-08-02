@@ -4,7 +4,7 @@
 @if (Session::has('message'))
     <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
         <h4>
-            {{ Session::get('message') }}
+            {!! Session::get('message') !!}
         </h4>
     </div>
 @endif
@@ -15,7 +15,7 @@
         </h4>
     </div>
 @endif
-<div class="login-box" style="background-color: #3c8dbc;">{{-- height: 400px; --}}
+<div class="login-box" style="background-color: #3c8dbc;">
     <div class="login-logo">
         <div>
             <b style="color: white;">
@@ -46,7 +46,7 @@
             </div>
         </form>
         <br>
-        Forgot your password? Click<a href="#"> here </a>to reset password.<br>
+        Forgot your password? Click<a href="{{ route('under-construction-view') }}"> here </a>to reset password.<br>
         <a class="pull-right" href="{{ route('licence-view') }}">License</a>
     </div>
   <!-- /.login-box-body -->

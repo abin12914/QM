@@ -61,29 +61,29 @@ class SalesController extends Controller
         if(!empty($salesAccount) && !empty($salesAccount->id)) {
             $salesAccountId = $salesAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Sales account not found!. Code :02/01/01")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'> Error Code :02/01</small>")->with("alert-class","alert-danger");
         }
 
         $royaltyAccount = Account::where('account_name','Sale Royalty')->first();
         if(!empty($royaltyAccount) && !empty($royaltyAccount->id)) {
             $royaltyAccountId = $royaltyAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Sale Royalty account not found!. Code :02/01/02")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> Error Code :02/02</small>")->with("alert-class","alert-danger");
         }
 
         $royaltyOwnerAccount = Account::where('relation', 'royalty owner')->first();
         if($royaltyOwnerAccount && !empty($royaltyOwnerAccount->id)) {
             $royaltyOwnerAccountId = $royaltyOwnerAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Sale Royalty owner account not found!. Code :02/01/03")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> Error Code :02/03</small>")->with("alert-class","alert-danger");
         }
 
         if($measureType == 1) {
             if(($quantity * $rate) != $billAmount) {
-                return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Bill Amount calculation error!. Code :02/01/04")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> Error Code :02/04</small>")->with("alert-class","alert-danger");
             }
             if(($billAmount - $discount) != $deductedTotal) {
-                return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Discount deduction error!. Code :02/01/05")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> Error Code :02/05</small>")->with("alert-class","alert-danger");
             }
         }
 
@@ -127,16 +127,16 @@ class SalesController extends Controller
                     $transaction->delete();
                     $sale->delete();
 
-                    return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Royalty calculation error!. Code :02/01/06/".$royaltyFlag)->with("alert-class","alert-danger");
+                    return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> Error Code :02/06/".$royaltyFlag."</small>")->with("alert-class","alert-danger");
                 }
             } else {
                 //delete the transaction record if associated sale saving failed.
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Code :02/01/07")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> Error Code :02/07</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Code :02/01/08")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> Error Code :02/08</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -166,42 +166,42 @@ class SalesController extends Controller
         if($cashAccount) {
             $cashAccountId = $cashAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Cash account not found!. Code :02/01/09")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'>Cash account not found!.  Error Code :02/09</small>")->with("alert-class","alert-danger");
         }
 
         $salesAccount = Account::where('account_name','Sales')->first();
         if($salesAccount) {
             $salesAccountId = $salesAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Sales account not found!. Code :02/01/10")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'>Sales account not found!.  Error Code :02/10</small>")->with("alert-class","alert-danger");
         }
 
         $royaltyAccount = Account::where('account_name','Sale Royalty')->first();
         if($royaltyAccount && !empty($royaltyAccount->id)) {
             $royaltyAccountId = $royaltyAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Sale Royalty account not found!. Code :02/01/11")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'>Sale Royalty account not found!.  Error Code :02/11</small>")->with("alert-class","alert-danger");
         }
 
         $royaltyOwnerAccount = Account::where('relation', 'royalty owner')->first();
         if($royaltyOwnerAccount && !empty($royaltyOwnerAccount->id)) {
             $royaltyOwnerAccountId = $royaltyOwnerAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Sale royalty owner account not found!. Code :02/01/12")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'>Sale royalty owner account not found!.  Error Code :02/12</small>")->with("alert-class","alert-danger");
         }
 
         if($measureType == 1) {
             if(($quantity * $rate) != $billAmount) {
-                return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Bill Amount calculation error!. Code :02/01/13")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'>Bill Amount calculation error!.  Error Code :02/13</small>")->with("alert-class","alert-danger");
             }
             if(($billAmount - $discount) != $deductedTotal) {
-                return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Discount deduction error!. Code :02/01/14")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'>Discount deduction error!.  Error Code :02/14</small>")->with("alert-class","alert-danger");
             }
             if(($deductedTotal + $oldBalance) != $total) {
-                return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Total bill amount calculation error!. Code :02/01/15")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'>Total bill amount calculation error!.  Error Code :02/15</small>")->with("alert-class","alert-danger");
             }
             if(($total - $payment) != $balance) {
-                return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Balance amount calculation error!. Code :02/01/16")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'>Balance amount calculation error!.  Error Code :02/16</small>")->with("alert-class","alert-danger");
             }
         }
 
@@ -238,7 +238,7 @@ class SalesController extends Controller
                     $transaction->delete();
                     $sale->delete();
 
-                    return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Royalty calculation error!. Code :02/01/17/".$royaltyFlag)->with("alert-class","alert-danger");
+                    return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'> Error Code :02/17/".$royaltyFlag."</small>")->with("alert-class","alert-danger");
                 }
 
                 $userIssuedCreditSale = new UserIssuedCreditSale;
@@ -261,16 +261,16 @@ class SalesController extends Controller
                     $transaction->delete();
                     $sale->delete();
 
-                    return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Code :02/01/18")->with("alert-class","alert-danger");
+                    return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'> Error Code :02/18</small>")->with("alert-class","alert-danger");
                 }
             } else {
                 //delete the transaction if associated sale saving failed.
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Code :02/01/19")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'> Error Code :02/19</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the sale details.<br>Code :02/01/20")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'> Error Code :02/20</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -342,6 +342,8 @@ class SalesController extends Controller
         $vehicleTypeId  = !empty($request->get('vehicle_type_id')) ? $request->get('vehicle_type_id') : 0;
 
         $accounts       = Account::where('type', 'personal')->where('status', '1')->get();
+        $cashAccount    = Account::find(1);
+        $accounts->push($cashAccount); //attaching cash account to the accounts
         $vehicles       = Vehicle::where('status', '1')->get();
         $vehicleTypes   = VehicleType::where('status', '1')->get();
         $products       = Product::where('status', '1')->get();
@@ -458,10 +460,10 @@ class SalesController extends Controller
             $sale = Sale::where('id', $saleId)->where('measure_type', 2)->where('quantity', 0)->with(['vehicle', 'product', 'transaction.debitAccount'])->first();
 
             if(empty($sale) || empty($sale->id)) {
-                return redirect(route('sales-weighment-pending-view'))->with("message","Something went wrong! Selected record not found.<br>Code :02/01/21")->with("alert-class","alert-danger");
+                return redirect(route('sales-weighment-pending-view'))->with("message","Something went wrong! Selected record not found. Try again after reloading the page!<small class='pull-right'> Error Code :02/21</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect(route('sales-weighment-pending-view'))->with("message","Something went wrong! Selected record not found.<br>Code :02/01/22")->with("alert-class","alert-danger");
+            return redirect(route('sales-weighment-pending-view'))->with("message","Something went wrong! Selected record not found. Try again after reloading the page!<small class='pull-right'> Error Code :02/22</small>")->with("alert-class","alert-danger");
         }
 
         return view('sales.weighment-register',[
@@ -485,10 +487,10 @@ class SalesController extends Controller
             $sale = Sale::find($saleId);
             if(!empty($sale) && !empty($sale->id) && $sale->measure_type == 2 && $sale->quantity == 0) {
                 if(($quantity * $rate) != $billAmount) {
-                    return redirect()->back()->withInput()->with("message","Failed to save the weighment details.<br>Bill Amount calculation error!. Code :02/01/23")->with("alert-class","alert-danger");
+                    return redirect()->back()->withInput()->with("message","Failed to save the weighment details. Try again after reloading the page!<small class='pull-right'>Bill Amount calculation error!. Error Code :02/23</small>")->with("alert-class","alert-danger");
                 }
                 if(($billAmount - $discount) != $deductedTotal) {
-                    return redirect()->back()->withInput()->with("message","Failed to save the weighment details.<br>Discount deduction error!. Code :02/01/24")->with("alert-class","alert-danger");
+                    return redirect()->back()->withInput()->with("message","Failed to save the weighment details. Try again after reloading the page!<small class='pull-right'> Error Code :02/24</small>")->with("alert-class","alert-danger");
                 }
 
                 $transaction = Transaction::find($sale->transaction->id);
@@ -508,16 +510,16 @@ class SalesController extends Controller
                         $transaction->particulars   = "Credit sale (Weighment pending)";
                         $transaction->save();
 
-                        return redirect(route('sales-weighment-pending-view'))->with("message","Failed to save the weighment details.<br>Code :02/01/25")->with("alert-class","alert-danger");
+                        return redirect(route('sales-weighment-pending-view'))->with("message","Failed to save the weighment details. Try again after reloading the page!<small class='pull-right'> Error Code :02/25</small>")->with("alert-class","alert-danger");
                     }
                 } else {
-                    return redirect(route('sales-weighment-pending-view'))->with("message","Failed to save the weighment details.<br>Code :02/01/26")->with("alert-class","alert-danger");
+                    return redirect(route('sales-weighment-pending-view'))->with("message","Failed to save the weighment details. Try again after reloading the page!<small class='pull-right'> Error Code :02/26</small>")->with("alert-class","alert-danger");
                 }
             } else {
-                return redirect()->back()->with("message","Failed to save the weighment details.<br>Code :02/01/27")->with("alert-class","alert-danger");
+                return redirect()->back()->with("message","Failed to save the weighment details. Try again after reloading the page!<small class='pull-right'> Error Code :02/27</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->with("message","Failed to save the weighment details.<br>Code :02/01/28")->with("alert-class","alert-danger");
+            return redirect()->back()->with("message","Failed to save the weighment details. Try again after reloading the page!<small class='pull-right'> Error Code :02/28</small>")->with("alert-class","alert-danger");
         }
     }
 

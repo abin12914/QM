@@ -26,7 +26,8 @@ class LoginController extends Controller
     	return view('public.login');
     }
 
-    public function lockscreen(){
+    public function lockscreen()
+    {
         $user = Auth::user();
         Auth::logout();
 
@@ -52,7 +53,9 @@ class LoginController extends Controller
             if(!empty($user->valid_till) && $today > $userValidDate) {
                 //logout user
                 Auth::logout();
-                return redirect(route('login-view'))->with("fixed-message",'Your account "'. $user->user_name . '" has been expired. Please click <a href="#">here</a> for more info.')->with("fixed-alert-class","alert-warning");
+                return redirect(route('user-expired'))->with("expired-user", $user->user_name);
+            } else if(!empty($user->valid_till) && (($userValidDate - $today) <= 172800)){
+                return redirect(route('user-dashboard'))->with("message",("Welcome " . $user->name . ". Your trial pack ends on " . $user->valid_till . ". Please contact developer team for more info."))->with("alert-class","alert-warning");
             }
             return redirect(route('user-dashboard'))->with("message","Welcome " . $user->name . ". You are successfully logged in to the Quarry Manager.")->with("alert-class","alert-success");
         } else {
@@ -109,5 +112,13 @@ class LoginController extends Controller
     public function underConstruction()
     {
         return view('public.under-construction');
+    }
+
+    /**
+     * Return view for expired users
+     */
+    public function userExpired()
+    {
+        return view('public.expired');
     }
 }

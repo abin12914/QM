@@ -32,41 +32,35 @@ class DailyStatementController extends Controller
         $presentjackhammerReadings  = [];
         $today = Carbon::now('Asia/Kolkata');
         
-        $employeeAttendance = EmployeeAttendance::where('date',$today->format('Y-m-d'))->get();
+        $employeeAttendance = EmployeeAttendance::where('date',$today->format('Y-m-d'))->with(['employee.account.accountDetail'])->get();
         /*foreach ($employeeAttendance as $attendance) {
             $presentEmployees[]         = $attendance->employee_id;
             $presentEmployeeAccounts[]  = $attendance->employee->account->id;
         }*/
-        $excavatorReadings = ExcavatorReading::where('date',$today->format('Y-m-d'))->get();
+        $excavatorReadings = ExcavatorReading::where('date',$today->format('Y-m-d'))->with(['excavator.account'])->get();
         /*foreach ($excavatorReadings as $excavatorReading) {
             $presentexcavatorReadings[] = $excavatorReading->excavator_id;
         }*/
-        $jackhammerReadings = JackhammerReading::where('date',$today->format('Y-m-d'))->get();
+        $jackhammerReadings = JackhammerReading::where('date',$today->format('Y-m-d'))->with(['jackhammer.account'])->get();
         /*foreach ($jackhammerReadings as $jackhammerReading) {
             $presentjackhammerReadings[] = $jackhammerReading->jackhammer_id;
         }*/
 
-        $employeeAccounts   = Account::where('relation','employee')->whereNotIn('id', $presentEmployeeAccounts)->get();
-        $employees          = Employee::whereNotIn('id', $presentEmployees)->get();
-        $excavators         = Excavator::whereNotIn('id', $presentexcavatorReadings)->get();
-        $jackhammers        = Jackhammer::whereNotIn('id', $presentjackhammerReadings)->get();
+        $employeeAccounts   = Account::where('status', 1)->where('relation','employee')->whereNotIn('id', $presentEmployeeAccounts)->get();
+        $employees          = Employee::where('status', 1)->whereNotIn('id', $presentEmployees)->with(['account.accountDetail'])->get();
+        $excavators         = Excavator::where('status', 1)->whereNotIn('id', $presentexcavatorReadings)->with(['account'])->get();
+        $jackhammers        = Jackhammer::where('status', 1)->whereNotIn('id', $presentjackhammerReadings)->get();
 
-        if(!empty($employeeAccounts) && !empty($employeeAttendance) && !empty($employees) && !empty($excavators) && !empty($excavatorReadings) && !empty($jackhammers)) {
-            return view('daily-statement.register',[
-                    'today' => $today,
-                    'employeeAccounts'   => $employeeAccounts,
-                    'employeeAttendance' => $employeeAttendance,
-                    'employees'          => $employees,
-                    'excavators'         => $excavators,
-                    'excavatorReadings'  => $excavatorReadings,
-                    'jackhammers'        => $jackhammers,
-                    'jackhammerReadings' => $jackhammerReadings,
-                ]);
-        } else {
-            return view('daily-statement.register',[
-                    'today' => $today
-                ]);
-        }
+        return view('daily-statement.register',[
+                'today' => $today,
+                'employeeAccounts'   => $employeeAccounts,
+                'employeeAttendance' => $employeeAttendance,
+                'employees'          => $employees,
+                'excavators'         => $excavators,
+                'excavatorReadings'  => $excavatorReadings,
+                'jackhammers'        => $jackhammers,
+                'jackhammerReadings' => $jackhammerReadings,
+            ]);
     }
 
     /**

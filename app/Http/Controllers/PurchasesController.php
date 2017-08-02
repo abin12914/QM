@@ -20,12 +20,12 @@ class PurchasesController extends Controller
     {
         $accounts               = Account::where('type','personal')->get();
         $purchasebleProducts    = PurchasebleProduct::get();
-        $purchases              = Purchase::orderBy('date_time', 'desc')->take(5)->get();
+        $purchases              = Purchase::with(['purchasebleProduct', 'transaction.creditAccount'])->orderBy('date_time', 'desc')->take(5)->get();
 
         return view('purchases.register',[
                 'accounts'              => $accounts,
-                'purchasebleproducts'   => $purchasebleProducts,
-                'purchase_records'      => $purchases,
+                'purchasebleProducts'   => $purchasebleProducts,
+                'purchaseRecords'      => $purchases,
             ]);
     }
 
@@ -47,7 +47,7 @@ class PurchasesController extends Controller
         if($purchaseAccount) {
             $purchaseAccountId = $purchaseAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Purchase account not found.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> Error Code :03/01</small>")->with("alert-class","alert-danger");
         }
 
         if($transactionType == 2) {
@@ -55,7 +55,7 @@ class PurchasesController extends Controller
             if($cashAccount) {
                 $cashAccountId = $cashAccount->id;
             } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Cash account not found.!")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> Error Code :03/02</small>")->with("alert-class","alert-danger");
             }
         }
 
@@ -82,10 +82,13 @@ class PurchasesController extends Controller
             if($purchase->save()) {
                 return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
             } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the purchase details. Try after reloading the page.")->with("alert-class","alert-danger");
+                //delete the transaction if associated purchase saving failed.
+                $transaction->delete();
+
+                return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> Error Code :03/03</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the purchase details. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> Error Code :03/04</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -103,33 +106,12 @@ class PurchasesController extends Controller
         $cashAccount    = Account::find(1);
         $accounts->push($cashAccount); //attaching cash account to the accounts
         $products       = PurchasebleProduct::where('status', '1')->get();
-        
-
-        if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $selectedAccountName = $selectedAccount->account_name;
-            }
-        } else {
-            $selectedAccountName = '';
-        }
-
-        if(!empty($productId) && $productId != 0) {
-            $selectedProduct = PurchasebleProduct::find($productId);
-            if(!empty($selectedProduct) && !empty($selectedProduct->id)) {
-                $selectedProductName = $selectedProduct->name;
-            }
-        } else {
-            $selectedProductName = '';
-        }
 
         $query = Purchase::where('status', 1);
 
         if(!empty($accountId) && $accountId != 0) {
-            $query = $query->whereHas('transaction', function ($q) use($accountId) {
-                $q->whereHas('creditAccount', function ($qry) use($accountId) {
-                    $qry->where('id', $accountId);
-                });
+            $query = $query->whereHas('transaction', function ($qry) use($accountId) {
+                $qry->where('credit_account_id', $accountId);
             });
         }
 
@@ -149,7 +131,7 @@ class PurchasesController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $purchases = $query->with(['transaction.creditAccount'])->orderBy('date_time','desc')->paginate(10);
+        $purchases = $query->with(['transaction.creditAccount', 'purchasebleProduct'])->orderBy('date_time','desc')->paginate(10);
         
         return view('purchases.list',[
                 'accounts'              => $accounts,
