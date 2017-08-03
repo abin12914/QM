@@ -21,22 +21,16 @@ class VoucherController extends Controller
     {
         $today = Carbon::now('Asia/Kolkata');
         
-        $cashVouchers   = Voucher::orderBy('date_time', 'desc')->where('voucher_type','Cash')->take(5)->get();
-        $creditVouchers = Voucher::orderBy('date_time', 'desc')->where('voucher_type','Credit')->take(5)->get();
+        $cashVouchers   = Voucher::where('voucher_type','Cash')->with(['transaction.creditAccount'])->orderBy('date_time', 'desc')->take(5)->get();
+        $creditVouchers = Voucher::where('voucher_type','Credit')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('date_time', 'desc')->take(5)->get();
         $accounts       = Account::where('type','personal')->get();
 
-        if(!empty($accounts)) {
-            return view('voucher.register',[
-                    'today' => $today,
-                    'accounts'          => $accounts,
-                    'cashVouchers'      => $cashVouchers,
-                    'creditVouchers'    => $creditVouchers,
-                ]);
-        } else {
-            return view('voucher.register',[
-                    'today' => $today
-                ]);
-        }
+        return view('voucher.register',[
+                'today' => $today,
+                'accounts'          => $accounts,
+                'cashVouchers'      => $cashVouchers,
+                'creditVouchers'    => $creditVouchers,
+            ]);
     }
 
     /**
@@ -44,25 +38,25 @@ class VoucherController extends Controller
      */
     public function cashVoucherRegistrationAction(CashVoucherRegistrationRequest $request)
     {
-        $date           = $request->get('cash_voucher_date');
-        $time           = $request->get('cash_voucher_time');
-        $accountId      = $request->get('cash_voucher_account_id');
+        $date                   = $request->get('cash_voucher_date');
+        $time                   = $request->get('cash_voucher_time');
+        $accountId              = $request->get('cash_voucher_account_id');
         $voucherTransactionType = $request->get('cash_voucher_type');
-        $voucherAmount  = $request->get('cash_voucher_amount');
-        $description    = $request->get('cash_voucher_description');
+        $voucherAmount          = $request->get('cash_voucher_amount');
+        $description            = $request->get('cash_voucher_description');
 
         $cashAccount = Account::where('account_name','Cash')->first();
         if($cashAccount) {
             $cashAccountId = $cashAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Cash account not found.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/01</small>")->with("alert-class","alert-danger");
         }
 
         $account = Account::where('id',$accountId)->first();
         if($account) {
             $name = $account->accountDetail->name;
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Selected account not found.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/02</small>")->with("alert-class","alert-danger");
         }
 
         if($voucherTransactionType == 1) {
@@ -99,10 +93,13 @@ class VoucherController extends Controller
             if($voucher->save()) {
                 return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
             } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher. Try after reloading the page.")->with("alert-class","alert-danger");
+                //delete transaction if associated voucher record saving failed.
+                $transaction->delete();
+
+                return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/03</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/04</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -122,14 +119,15 @@ class VoucherController extends Controller
         if($debitAccount) {
             $debitAccountName = $debitAccount->accountDetail->name;
         } else{
-            return redirect()->back()->withInput()->with("message","Something went wrong! Selected debit account not found.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/05</small>")->with("alert-class","alert-danger");
+
         }
 
         $creditAccount = Account::where('id', $creditAccountId)->first();
         if($creditAccount) {
             $creditAccountName = $creditAccount->accountDetail->name;
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Selected credit account not found.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/06</small>")->with("alert-class","alert-danger");
         }
 
         //converting date and time to sql datetime format
@@ -156,28 +154,13 @@ class VoucherController extends Controller
             if($voucher->save()) {
                 return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
             } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher. Try after reloading the page.")->with("alert-class","alert-danger");
+                //delete transaction if associated voucher record saving failed.
+                $transaction->delete();
+
+                return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/07</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the voucher. Try after reloading the page.")->with("alert-class","alert-danger");
-        }
-    }
-
-    /**
-     * Return account name for given account id
-     */
-    public function getAccountDetailsByaccountId($accountId)
-    {
-        $account = Account::where('id', $accountId)->first();
-        if(!empty($account)) {
-            return ([
-                    'flag' => true,
-                    'name' => $account->accountDetail->name,
-                ]);
-        } else {
-            return ([
-                    'flag'      => false
-                ]);            
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/08</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -196,25 +179,16 @@ class VoucherController extends Controller
         $query = Voucher::where('status', 1)->where('voucher_type', 'Cash');
 
         if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $selectedAccountName = $selectedAccount->account_name;
-
-                /*$query = $query->whereHas('transaction', function ($q) use($accountId) {
-                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
-                        $qry->where('id', $accountId);
-                    })->orWhereHas('debitAccount', function ($qry) use($accountId) {
-                        $qry->where('id', $accountId);
-                    });
-                });*/
-                $query = $query->whereHas('transaction', function ($q) use($accountId) {
-                    $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
+            /*$query = $query->whereHas('transaction', function ($q) use($accountId) {
+                $q->whereHas('creditAccount', function ($qry) use($accountId) {
+                    $qry->where('id', $accountId);
+                })->orWhereHas('debitAccount', function ($qry) use($accountId) {
+                    $qry->where('id', $accountId);
                 });
-            } else {
-                $accountId = 0;
-            }
-        } else {
-            $selectedAccountName = '';
+            });*/
+            $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
+            });
         }
 
         if(!empty($transactionType) && $transactionType != 0) {
@@ -260,18 +234,9 @@ class VoucherController extends Controller
         $query = Voucher::where('status', 1)->where('voucher_type', 'Credit');
 
         if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $selectedAccountName = $selectedAccount->account_name;
-
-                $query = $query->whereHas('transaction', function ($q) use($accountId) {
-                    $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
-                });
-            } else {
-                $accountId = 0;
-            }
-        } else {
-            $selectedAccountName = '';
+            $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
+            });
         }
 
         if(!empty($fromDate)) {
@@ -296,5 +261,23 @@ class VoucherController extends Controller
                 'toDate'          => $toDate,
                 'cashVouchers'    => []
             ]);
+    }
+
+    /**
+     * Return account name for given account id
+     */
+    public function getAccountDetailsByaccountId($accountId)
+    {
+        $account = Account::where('id', $accountId)->first();
+        if(!empty($account)) {
+            return ([
+                    'flag' => true,
+                    'name' => $account->accountDetail->name,
+                ]);
+        } else {
+            return ([
+                    'flag'      => false
+                ]);            
+        }
     }
 }

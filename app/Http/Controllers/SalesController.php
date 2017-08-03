@@ -121,7 +121,7 @@ class SalesController extends Controller
             if($sale->save()) {
                 $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId);
                 if($royaltyFlag == 0) {
-                    return redirect()->back()->with("message","Sale details successfully saved.")->with("alert-class","alert-success");
+                    return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
                 } else {
                     //delete the sale and transaction if associated sale royality saving failed.
                     $transaction->delete();

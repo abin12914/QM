@@ -4,7 +4,7 @@
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Vouchers
+            Voucher
             <small>Registration</small>
         </h1>
         <ol class="breadcrumb">
@@ -322,5 +322,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/voucherRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/registration/voucherRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

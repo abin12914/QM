@@ -157,7 +157,7 @@ class AccountController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $transactions = $query->orderBy('date_time','desc')->paginate(3);
+        $transactions = $query->orderBy('date_time','desc')->paginate(10);
         
         return view('account-statement.statement',[
                 'accounts'              => $accounts,

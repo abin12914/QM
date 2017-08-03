@@ -80,22 +80,22 @@ class DailyStatementController extends Controller
         $employee = Employee::where('account_id', $employeeAccountId)->first();
         if(!empty($employee) && $employeeId == $employee->id) {
             if($employee->employee_type == "staff") {
-                return redirect()->back()->with("message","Selected employee has monthly salary scheme; Use monthly statement for this user.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');    
+                return redirect()->back()->with("message","Failed to save the attendance details.<br>Selected employee has monthly salary scheme; Use monthly statement for this employee!<small class='pull-right'> Error Code :04/01</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
             }
         } else {
-            return redirect()->back()->with("message","Something went wrong! Employee not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> Error Code :04/02</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $recordFlag = EmployeeAttendance::where('date',$date)->where('employee_id', $employeeId)->get();
         if(count($recordFlag) > 0) {
-            return redirect()->back()->with("message","Error! Attendance of this user has already marked for ".$date)->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->with("message","Failed to save the attendance details.<br>Attendance of this user has already marked for ".$date. "!<small class='pull-right'> Error Code :04/03</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $labouAttendanceAccount = Account::where('account_name','Labour Attendance')->first();
         if($labouAttendanceAccount) {
             $labouAttendanceAccountId = $labouAttendanceAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Labour attendance account not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> Error Code :04/04</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $transaction = new Transaction;
@@ -118,10 +118,13 @@ class DailyStatementController extends Controller
             if($employeeAttendance->save()) {
                 return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'employee');
             } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the attendance details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+                //delete the transaction if associated attendance record saving failed.
+                $transaction->delete();
+
+                return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> Error Code :04/05</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the attendance details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> Error Code :04/06</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
     }
 
@@ -153,19 +156,19 @@ class DailyStatementController extends Controller
                 $rentTypeFlag = 1;
             }
         } else {
-            return redirect()->back()->with("message","Something went wrong! Excavator not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> Error Code :04/07</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $recordFlag = ExcavatorReading::where('date',$date)->where('excavator_id', $excavatorId)->get();
         if(count($recordFlag) > 0) {
-            return redirect()->back()->with("message","Error! Reading of this excavator has already marked for ".date('d-m-Y', strtotime($date)))->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Reading of this excavator has already marked for ". date('d-m-Y', strtotime($date)). "!<small class='pull-right'> Error Code :04/08</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $excavatorReadingAccount = Account::where('account_name','Excavator Reading')->first();
         if($excavatorReadingAccount) {
             $excavatorReadingAccountId = $excavatorReadingAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Excavator reading account not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> Error Code :04/09</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $temp = ("Excavator Rent : Bucket : ".$bucketHour." * ".$bucketRate." = ".($bucketHour*$bucketRate)." / Breaker : ".$breakerHour." * ".$breakerRate." = ".($breakerHour * $breakerRate)." / Bata : ".$operatorBata);
@@ -191,7 +194,7 @@ class DailyStatementController extends Controller
                 $excavatorReading->bata             = $operatorBata;
                 $excavatorReading->status           = 1;
             } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+                return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> Error Code :04/10</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
             }
         } else {
             $excavatorReading = new ExcavatorReading;
@@ -207,7 +210,11 @@ class DailyStatementController extends Controller
         if($excavatorReading->save()) {
             return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'excavator');
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            if($rentTypeFlag == 0) { //if the excavator rent type is hourly based.
+                //delete the transaction if associated excavator reading record saving failed.
+                $transaction->delete();
+            }
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> Error Code :04/11</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
     }
 
@@ -234,22 +241,22 @@ class DailyStatementController extends Controller
                 $bill = ($totalPitDepth * $rentPerFeet);
             } else {
                 //$rentTypeFlag   = 1;
-                return redirect()->back()->with("message","Error! Selected jackhammer has a diffrent rent scheme.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');    
+                return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.<br>Selected jackhammer has a diffrent rent scheme!<small class='pull-right'> Error Code :04/12</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
             }
         } else {
-            return redirect()->back()->with("message","Something went wrong! Jackhammer not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> Error Code :04/13</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
 
         $recordFlag = JackhammerReading::where('date',$date)->where('jackhammer_id', $jackhammerId)->get();
         if(count($recordFlag) > 0) {
-            return redirect()->back()->with("message","Error! Reading of this jackhammer has already marked for ".date('d-m-Y', strtotime($date)))->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.<br>Reading of this jackhammer has already marked for ".date('d-m-Y', strtotime($date)). "!<small class='pull-right'> Error Code :04/14</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
 
         $jackhammerReadingAccount = Account::where('account_name','Jackhammer Reading')->first();
         if($jackhammerReadingAccount) {
             $jackhammerReadingAccountId = $jackhammerReadingAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Jackhammer reading account not found.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> Error Code :04/15</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
 
         $temp = ("Jackhammer rent : ".$depthPerPit." * ".$noOfPit." * ".$rentPerFeet." = ".($depthPerPit*$noOfPit*$rentPerFeet));
@@ -275,10 +282,13 @@ class DailyStatementController extends Controller
             if($jackhammerReading->save()) {
                 return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'jackhammer');
             } else {
-                return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+                //delete the transaction if associated jackhammer reading record saving failed.
+                $transaction->delete();
+
+                return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> Error Code :04/16</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the reading details. Try after reloading the page.")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> Error Code :04/17</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
         /*} else {
             $jackhammerReading = new JackhammerReading;
@@ -305,33 +315,13 @@ class DailyStatementController extends Controller
         $query = EmployeeAttendance::where('status', 1);
 
         if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $selectedAccountName = $selectedAccount->account_name;
-
-                $query = $query->whereHas('transaction', function ($q) use($accountId) {
-                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
-                        $qry->where('id', $accountId);
-                    });
-                });
-            } else {
-                $accountId = 0;
-            }
-        } else {
-            $selectedAccountName = '';
+            $query = $query->whereHas('transaction', function ($qry) use($accountId) {
+                $qry->where('credit_account_id', $accountId);
+            });
         }
 
         if(!empty($employeeId) && $employeeId != 0) {
-            $selectedEmployee = Employee::find($employeeId);
-            if(!empty($selectedEmployee) && !empty($selectedEmployee->id)) {
-                $selectedEmployeeName = $selectedEmployee->name;
-
-                $query = $query->where('employee_id', $employeeId);
-            } else {
-                $employeeId = 0;
-            }
-        } else {
-            $selectedProductName = '';
+            $query = $query->where('employee_id', $employeeId);
         }
 
         if(!empty($fromDate)) {
@@ -377,33 +367,13 @@ class DailyStatementController extends Controller
         $query = ExcavatorReading::where('status', 1);
 
         if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $selectedAccountName = $selectedAccount->account_name;
-
-                $query = $query->whereHas('transaction', function ($q) use($accountId) {
-                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
-                        $qry->where('id', $accountId);
-                    });
-                });
-            } else {
-                $accountId = 0;
-            }
-        } else {
-            $selectedAccountName = '';
+            $query = $query->whereHas('transaction', function ($qry) use($accountId) {
+                $qry->where('credit_account_id', $accountId);
+            });
         }
 
         if(!empty($excavatorId) && $excavatorId != 0) {
-            $selectedExcavator = Excavator::find($excavatorId);
-            if(!empty($selectedExcavator) && !empty($selectedExcavator->id)) {
-                $selectedExcavatorName = $selectedExcavator->name;
-
-                $query = $query->where('excavator_id', $excavatorId);
-            } else {
-                $excavatorId = 0;
-            }
-        } else {
-            $selectedExcavatorName = '';
+            $query = $query->where('excavator_id', $excavatorId);
         }
 
         if(!empty($fromDate)) {
@@ -460,33 +430,13 @@ class DailyStatementController extends Controller
         $query = JackhammerReading::where('status', 1);
 
         if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $selectedAccountName = $selectedAccount->account_name;
-
-                $query = $query->whereHas('transaction', function ($q) use($accountId) {
-                    $q->whereHas('creditAccount', function ($qry) use($accountId) {
-                        $qry->where('id', $accountId);
-                    });
-                });
-            } else {
-                $accountId = 0;
-            }
-        } else {
-            $selectedAccountName = '';
+            $query = $query->whereHas('transaction', function ($qry) use($accountId) {
+                $qry->where('credit_account_id', $accountId);
+            });
         }
 
         if(!empty($jackhammerId) && $jackhammerId != 0) {
-            $selectedJackhammer = Jackhammer::find($jackhammerId);
-            if(!empty($selectedJackhammer) && !empty($selectedJackhammer->id)) {
-                $selectedExcavatorName = $selectedJackhammer->name;
-
-                $query = $query->where('jackhammer_id', $jackhammerId);
-            } else {
-                $jackhammerId = 0;
-            }
-        } else {
-            $selectedExcavatorName = '';
+            $query = $query->where('jackhammer_id', $jackhammerId);
         }
 
         if(!empty($fromDate)) {
@@ -521,18 +471,18 @@ class DailyStatementController extends Controller
      */
     public function dailySatementSearch(Request $request)
     {
-        $sales = 0;
-        $purchases = 0;
-        $labourWage = 0;
-        $excavatorReadingRent = 0;
-        $jackhammerRent = 0;
-        $employeeSalary = 0;
-        $excavatorMonthlyRent = 0;
-        $royalty = 0;
-        $fromDate = 0;
-        $toDate = 0;
-        $totalDebit = 0;
-        $totalCredit = 0;
+        $sales                  = 0;
+        $purchases              = 0;
+        $labourWage             = 0;
+        $excavatorReadingRent   = 0;
+        $jackhammerRent         = 0;
+        $employeeSalary         = 0;
+        $excavatorMonthlyRent   = 0;
+        $royalty                = 0;
+        $fromDate               = 0;
+        $toDate                 = 0;
+        $totalDebit             = 0;
+        $totalCredit            = 0;
 
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';

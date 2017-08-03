@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Account Registration')
+@section('title', 'Account Statement')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
@@ -8,8 +8,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Account Statement</a></li>
-            <li class="active">Statement</li>
+            <li class="active">Account Statement</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -17,7 +16,7 @@
         @if(Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                   <?php session()->forget('message'); ?>
                 </h4>
             </div>
@@ -64,11 +63,18 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div><br>
-                            <div class="row">
-                                <div class="col-md-5"></div>
+                            <div class="row no-print">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-2">
+                                    <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
+                                </div>
                                 <div class="col-md-2">
                                     <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
                                 </div>
+                                {{-- <div class="col-md-5"></div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                </div> --}}
                             </div>
                         </form>
                         <!-- /.form end -->
@@ -79,9 +85,9 @@
                             <div class="col-md-6">
                                 @if(!empty($selectedAccountName) && !empty($totalDebit) && !empty($totalCredit))
                                     <div class="box-header">
-                                        <div class="pad margin no-print">
+                                        <div class="pad margin">
                                             <div class="callout callout-default">
-                                                <h4 style="color: green;">Account Overview</h4>
+                                                <h4 class="no-print" style="color: green;">Account Overview</h4>
                                                 <div class="table-responsive">
                                                     <table class="table" style="color: orangered;">
                                                         <tr>
@@ -90,7 +96,7 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-light-blue" style="width:100%;">{{ $selectedAccountName }}</span>
+                                                                <span class="badge bg-light-blue" style="width:100%; font-size: 15px;">{{ $selectedAccountName }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -99,7 +105,7 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-yellow" style="width:100%">{{ $totalDebit }}</span>
+                                                                <span class="badge bg-yellow" style="width:100%; font-size: 15px;">{{ $totalDebit }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -108,7 +114,7 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-orange" style="width:100%">{{ $totalCredit }}</span>
+                                                                <span class="badge bg-orange" style="width:100%; font-size: 15px;">{{ $totalCredit }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -118,7 +124,7 @@
                                                                     <b class="pull-right">:</b>
                                                                 </th>
                                                                 <td>
-                                                                    <span class="badge bg-green" style="width:100%">{{ $totalDebit - $totalCredit }}</span>
+                                                                    <span class="badge bg-green" style="width:100%; font-size: 15px;">{{ $totalDebit - $totalCredit }}</span>
                                                                 </td>
                                                             @else
                                                                 <th>
@@ -126,7 +132,7 @@
                                                                     <b class="pull-right">:</b>
                                                                 </th>
                                                                 <td>
-                                                                    <span class="badge bg-red" style="width:100%">{{ $totalCredit - $totalDebit }}</span>
+                                                                    <span class="badge bg-red" style="width:100%; font-size: 15px;">{{ $totalCredit - $totalDebit }}</span>
                                                                 </td>
                                                             @endif
                                                         </tr>
@@ -189,7 +195,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row no-print">
                             <div class="col-md-12">
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">
