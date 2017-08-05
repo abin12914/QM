@@ -78,7 +78,7 @@ $(function () {
     });
 });
 function dismissAlert() {
-	$("#alert-message").fadeTo(5000, 500).slideUp(3000, function(){
+	$("#alert-message").fadeTo(5000, 500).slideUp(5000, function(){
         $("#alert-message").slideUp(500);
     });
 }

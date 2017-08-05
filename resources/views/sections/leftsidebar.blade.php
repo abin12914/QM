@@ -211,7 +211,7 @@
                         </li>
                         <li class="{{ Request::is('statement/daily-statement')? 'active' : '' }}">
                             <a href="{{route('daily-statement-list-search')}}">
-                                <i class="fa fa-circle-o"></i> Daily Statement
+                                <i class="fa fa-circle-o"></i> Transaction Statement
                             </a>
                         </li>
                     </ul>

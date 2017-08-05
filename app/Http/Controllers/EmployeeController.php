@@ -26,7 +26,7 @@ class EmployeeController extends Controller
     public function registerAction(EmployeeRegistrationRequest $request)
     {
         $destination        = '/images/employee/'; // image file upload path
-        $flag =0;
+        $flag = 0;
 
         $name               = $request->get('name');
         $phone              = $request->get('phone');
@@ -38,6 +38,13 @@ class EmployeeController extends Controller
         $financialStatus    = $request->get('financial_status');
         $openingBalance     = $request->get('opening_balance');
 
+        $openingBalanceAccount = Account::where('account_name','Account Opening Balance')->first();
+        if(!empty($openingBalanceAccount) && !empty($openingBalanceAccount->id)) {
+            $openingBalanceAccountId = $openingBalanceAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the employee details. Try again after reloading the page!<small class='pull-right'> Error Code :08/01</small>")->with("alert-class","alert-danger");
+        }
+
         if ($request->hasFile('image_file')) {
             $file               = $request->file('image_file');
             $extension          = $file->getClientOriginalExtension(); // getting image extension
@@ -45,56 +52,96 @@ class EmployeeController extends Controller
             $file->move(public_path().$destination, $fileName); // uploading file to given path
         }
 
-        $account = new Account;
-        $account->account_name          = $accountName;
         if($employeeType == 'staff') {
-            $account->description       = "Category : Staff. Payment mode : Monthly";
+            $description = "Category : Staff. Payment mode : Monthly";
         } else {
-            $account->description       = "Category : Labour.  Payment mode : Daily";
+            $description = "Category : Labour.  Payment mode : Daily";
         }
+
+        if(!empty($fileName)) {
+            $image   = $destination.$fileName;
+        } else {
+            $image   = $destination."default_employee.jpg";
+        }
+
+        $account = new Account;
+        $account->account_name      = $accountName;
+        $account->description       = $description;
         $account->type              = "personal";
         $account->relation          = 'employee';
         $account->financial_status  = $financialStatus;
         $account->opening_balance   = $openingBalance;
         $account->status            = 1;
         if($account->save()) {
-            $employee = new Employee;
-            $employee->employee_type    = $employeeType;
-            $employee->salary           = $salary;
-            $employee->wage             = $wage;
-            $employee->account_id       = $account->id;
-            $employee->status           = 1;
-
-            if($employee->save()){
-                $flag =0;
-            } else {
-                $flag = 3;
-            }
-
             $accountDetail = new AccountDetail;
             $accountDetail->account_id  = $account->id;
             $accountDetail->name        = $name;
             $accountDetail->phone       = $phone;
             $accountDetail->address     = $address;
-            if(!empty($fileName)) {
-                $accountDetail->image   = $destination.$fileName;
-            } else {
-                $accountDetail->image   = $destination."default_employee.jpg";
-            }
+            $accountDetail->image       = $image;
             $accountDetail->status      = 1;
+
             if($accountDetail->save()){
-                $flag =0;
+                $employee = new Employee;
+                $employee->employee_type    = $employeeType;
+                $employee->salary           = $salary;
+                $employee->wage             = $wage;
+                $employee->account_id       = $account->id;
+                $employee->status           = 1;
+
+                if($employee->save()){
+                    if($financialStatus == 'debit') {//incoming [account holder gives cash to company, after this transaction company owes account holder] [Creditor]
+                        $debitAccountId     = $openingBalanceAccountId;
+                        $creditAccountId    = $account->id;
+                        $particulars        = "Opening balance of ". $name . " - Debit [Creditor]";
+                    } else if($financialStatus == 'credit'){//outgoing [company gives cash to account holder] [after this transaction account holder owes company] [Debitor]
+                        $debitAccountId     = $account->id;
+                        $creditAccountId    = $openingBalanceAccountId;
+                        $particulars        = "Opening balance of ". $name . " - Credit [Debitor]";
+                    } else {
+                        $debitAccountId     = $openingBalanceAccountId;
+                        $creditAccountId    = $account->id;
+                        $particulars        = "Opening balance of ". $name . " - None";
+                    }
+                    $transaction = new Transaction;
+                    $transaction->debit_account_id  = $debitAccountId;
+                    $transaction->credit_account_id = $creditAccountId;
+                    $transaction->amount            = !empty($openingBalance) ? $openingBalance : '0';
+                    $transaction->date_time         = $dateTime;
+                    $transaction->particulars       = $particulars;
+                    $transaction->status            = 1;
+                    $transaction->created_user_id   = Auth::user()->id;
+                    if($transaction->save()) {
+                        $saveFlag = 1;
+                    } else {
+                        //delete the account, account detail if opening balance transaction saving failed
+                        $account->delete();
+                        $accountDetails->delete();
+                        $employee->delete();
+
+                        $saveFlag = 2;
+                    }
+                } else {
+                    //delete the account, account detail if employee saving failed
+                    $account->delete();
+                    $accountDetails->delete();
+
+                    $flag = 3;
+                }
             } else {
-                $flag = 2;
+                //delete the account if account detail saving failed
+                $account->delete();
+
+                $flag = 4;
             }
         } else {
-            $flag = 1;
+            $flag = 5;
         }
 
-        if($flag == 0) {
-            return redirect()->back()->with("message","Staff details saved successfully.")->with("alert-class","alert-success");
+        if($flag == 1) {
+            return redirect()->back()->with("message","Successfully Saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the staff data. Try after reloading the page. Error code : 00".$flag)->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the employee details. Try again after reloading the page!<small class='pull-right'> Error Code :08/02/". $flag ."</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -113,21 +160,11 @@ class EmployeeController extends Controller
         $query = Employee::where('status', '1');
 
         if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $query = $query->where('account_id', $accountId);
-            } else {
-                $accountId = 0;
-            }
+            $query = $query->where('account_id', $accountId);
         }
 
         if(!empty($employeeId) && $employeeId != 0) {
-            $selectedEmployee = Account::find($employeeId);
-            if(!empty($selectedEmployee) && !empty($selectedEmployee->id)) {
-                $query = $query->where('id', $employeeId);
-            } else {
-                $employeeId = 0;
-            }
+            $query = $query->where('id', $employeeId);
         }
 
         if(!empty($type) && $type != '0') {

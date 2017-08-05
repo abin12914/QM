@@ -47,7 +47,7 @@ class AccountRegistrationRequest extends FormRequest
             'account_type'          => [
                                             'required',
                                             'max:8',
-                                            Rule::in(['real','nominal','personal'])
+                                            Rule::in([/*'real','nominal',*/'personal'])
                                         ],
             'financial_status'      => [
                                             'required',
@@ -62,7 +62,7 @@ class AccountRegistrationRequest extends FormRequest
                                             'sometimes',
                                             'required',
                                             'max:10',
-                                            Rule::in(['employee','supplier','customer','contractor','general'])
+                                            Rule::in(['supplier','customer','contractor','general'])
                                         ],
         ];
     }

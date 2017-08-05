@@ -1,15 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Account Registration')
+@section('title', 'Transaction Statement')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Account Statement
+            Transaction Statement
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Account Statement</a></li>
-            <li class="active">Statement</li>
+            <li class="active">Transaction Statement</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -17,7 +16,7 @@
         @if(Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                   <?php session()->forget('message'); ?>
                 </h4>
             </div>

@@ -1,5 +1,15 @@
 $(function () {
 
+    //Initialize Select2 Element for contractor account select box
+    $("#contractor_account_id").select2({
+        minimumResultsForSearch: 5
+    });
+
+    //Initialize Select2 Element for rent type select box
+    $("#rent_type").select2({
+        minimumResultsForSearch: 5
+    });
+
     $('body').on("change", "#rent_type", function () {
         rentType = $(this).val();
         if(rentType == 'monthly') {

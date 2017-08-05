@@ -8,6 +8,7 @@ use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Transaction;
 use DateTime;
+
 class AccountController extends Controller
 {
     /**
@@ -35,6 +36,13 @@ class AccountController extends Controller
         $address            = $request->get('address');
         $relation           = $request->get('relation_type');
 
+        $openingBalanceAccount = Account::where('account_name','Account Opening Balance')->first();
+        if(!empty($openingBalanceAccount) && !empty($openingBalanceAccount->id)) {
+            $openingBalanceAccountId = $openingBalanceAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the account details. Try again after reloading the page!<small class='pull-right'> Error Code :07/01</small>")->with("alert-class","alert-danger");
+        }
+
         $account = new Account;
         $account->account_name      = $accountName;
         $account->description       = $description;
@@ -52,24 +60,54 @@ class AccountController extends Controller
                 $accountDetails->phone      = $phone;
                 $accountDetails->address    = $address;
             } else {
-                $accountDetails->name       = $accountName;
+                $accountDetails->name       = $accountName . " Account";
             }
             $accountDetails->status     = 1;
-            if(2 == 1){//$accountDetails->save()) {
-                $saveFlag = 1;
+            if($accountDetails->save()) {
+                if($financialStatus == 'debit') {//incoming [account holder gives cash to company] [Creditor]
+                    $debitAccountId     = $openingBalanceAccountId;
+                    $creditAccountId    = $account->id;
+                    $particulars        = "Opening balance of ". $name . " - Debit [Creditor]";
+                } else if($financialStatus == 'credit'){//outgoing [company gives cash to account holder] [Debitor]
+                    $debitAccountId     = $account->id;
+                    $creditAccountId    = $openingBalanceAccountId;
+                    $particulars        = "Opening balance of ". $name . " - Credit [Debitor]";
+                } else {
+                    $debitAccountId     = $openingBalanceAccountId;
+                    $creditAccountId    = $account->id;
+                    $particulars        = "Opening balance of ". $name . " - None";
+                }
+                $transaction = new Transaction;
+                $transaction->debit_account_id  = $debitAccountId;
+                $transaction->credit_account_id = $creditAccountId;
+                $transaction->amount            = !empty($openingBalance) ? $openingBalance : '0';
+                $transaction->date_time         = $dateTime;
+                $transaction->particulars       = $particulars;
+                $transaction->status            = 1;
+                $transaction->created_user_id   = Auth::user()->id;
+                if($transaction->save()) {
+                    $saveFlag = 1;
+                } else {
+                    //delete the account, account detail if opening balance transaction saving failed
+                    $account->delete();
+                    $accountDetails->delete();
+
+                    $saveFlag = 2;
+                }
             } else {
-                $saveFlag = 0;
-                //delete the account if account details save failed
+                //delete the account if account details saving failed
                 $account->delete();
+
+                $saveFlag = 3;
             }
         } else {
-            $saveFlag = 0;
+            $saveFlag = 4;
         }
 
         if($saveFlag == 1) {
-            return redirect()->back()->with("message","Account saved successfully.")->with("alert-class","alert-success");
+            return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the account details. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the account details. Try again after reloading the page!<small class='pull-right'> Error Code :07/02/". $saveFlag ."</small>")->with("alert-class","alert-danger");
         }
 
     }
@@ -125,7 +163,7 @@ class AccountController extends Controller
 
         $accounts = Account::where('type', 'personal')->where('status', '1')->get();
         if(empty($accounts)) {
-            session()->flash('message', 'No accounts available to show!');
+            session()->flash('fixed-message', 'No accounts available to show!');
             return view('account-statement.statement');
         }
 

@@ -45,9 +45,9 @@ class ExcavatorController extends Controller
         $excavator->rent_hourly_breaker     = $rentHourlyBreaker;
         $excavator->status                  = 1;
         if($excavator->save()) {
-            return redirect()->back()->with("message","Excavator details saved successfully.")->with("alert-class","alert-success");
+            return redirect()->back()->with("message","Successfully Saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the excavator details. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator details. Try again after reloading the page!<small class='pull-right'> Error Code :09/01</small>")->with("alert-class","alert-danger");
         }
     }
 

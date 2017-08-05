@@ -92,6 +92,15 @@ class AccountsTableSeeder extends Seeder
                 'financial_status'  => 'none',
                 'opening_balance'   => '0',
                 'status'            => '1'  
+            ],
+            [
+                'account_name'      => 'Account Opening Balance', //account id : 10
+                'description'       => 'Account opening Balance account',
+                'type'              => 'nominal',
+                'relation'          => 'nominal',
+                'financial_status'  => 'none',
+                'opening_balance'   => '0',
+                'status'            => '1'  
             ]
         ]);
 
@@ -155,6 +164,13 @@ class AccountsTableSeeder extends Seeder
             [
                 'account_id'    => '09',
                 'name'          => 'Sale Royalty account',
+                'address'       => '',
+                'image'         => '/images/real.jpg',
+                'status'        => '1'  
+            ],
+            [
+                'account_id'    => '10',
+                'name'          => 'Account Opening Balance account',
                 'address'       => '',
                 'image'         => '/images/real.jpg',
                 'status'        => '1'  

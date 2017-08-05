@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Excavator</a></li>
-            <li class="active">Registration</li>
+            <li class="active">Excavator Registration</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -67,7 +66,7 @@
                                         <select class="form-control" name="contractor_account_id" id="contractor_account_id" tabindex="3">
                                             <option value="" {{ empty(old('contractor_account_id')) ? 'selected' : '' }}>Select contractor or provider account</option>
                                             @foreach($accounts as $account)
-                                                <option value="{{ $account->id }}" {{ $account->id == old('contractor_account_id') ? 'selected' : '' }}>{{ $account->account_name }} - ({{ $account->relation }} account)</option>
+                                                <option value="{{ $account->id }}" {{ $account->id == old('contractor_account_id') ? 'selected' : '' }}>{{ $account->account_name }}</option>
                                             @endforeach
                                         </select>
                                         @if(!empty($errors->first('contractor_account_id')))
@@ -146,5 +145,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/excavatorRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/registration/excavatorRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

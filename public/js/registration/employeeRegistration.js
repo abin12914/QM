@@ -1,5 +1,15 @@
 $(function () {
 
+    //Initialize Select2 Element for employee type select box
+    $("#employee_type").select2({
+        minimumResultsForSearch: 4
+    });
+
+    //Initialize Select2 Element for financial status select box
+    $("#financial_status").select2({
+        minimumResultsForSearch: 5
+    });
+
     $('body').on("change", "#employee_type", function () {
         employeeType = $(this).val();
         if(employeeType == 'staff') {

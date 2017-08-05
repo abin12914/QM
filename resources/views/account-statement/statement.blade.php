@@ -21,8 +21,15 @@
                 </h4>
             </div>
         @endif
+        @if(Session::has('fixed-message'))
+            <div class="alert alert-warning" id="fixed-message">
+                <h4>
+                  {!! Session::get('fixed-message') !!}
+                </h4>
+            </div>
+        @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
@@ -69,7 +76,7 @@
                                     <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Get</button>
                                 </div>
                                 {{-- <div class="col-md-5"></div>
                                 <div class="col-md-2">
@@ -85,9 +92,9 @@
                             <div class="col-md-6">
                                 @if(!empty($selectedAccountName) && !empty($totalDebit) && !empty($totalCredit))
                                     <div class="box-header">
-                                        <div class="pad margin">
+                                        <div class="pad margin no-print">
                                             <div class="callout callout-default">
-                                                <h4 class="no-print" style="color: green;">Account Overview</h4>
+                                                <h4 style="color: green;">Account Overview</h4>
                                                 <div class="table-responsive">
                                                     <table class="table" style="color: orangered;">
                                                         <tr>
@@ -178,12 +185,12 @@
                                                     <td>{{ $transaction->particulars }}</td>
                                                     @if($transaction->debit_account_id == $accountId)
                                                         <td>{{ $transaction->amount }}</td>
-                                                        <td>0</td>
-                                                         <?php /*$debitAmount = $debitAmount + $transaction->amount;*/ ?>
+                                                        <td>-</td>
+                                                         {{-- $debitAmount = $debitAmount + $transaction->amount; --}}
                                                     @elseif($transaction->credit_account_id == $accountId)
-                                                        <td>0</td>
+                                                        <td>-</td>
                                                         <td>{{ $transaction->amount }}</td>
-                                                        <?php /*$creditAmount = $creditAmount + $transaction->amount;*/ ?>
+                                                        {{-- $creditAmount = $creditAmount + $transaction->amount; --}}
                                                     @else
                                                         <td>0</td>
                                                         <td>0</td>
