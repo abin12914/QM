@@ -117,7 +117,7 @@ class ExcavatorController extends Controller
                 ]);
         } else {
             return ([
-                    'flag'          => false
+                    'flag' => false
                 ]);
         }
     }

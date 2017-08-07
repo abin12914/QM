@@ -17,13 +17,9 @@ class ProductController extends Controller
     {
         $vehicleTypes = VehicleType::where('status', '1')->get();
 
-        if(count($vehicleTypes)) {
-            return view('product.register', [
-                    'vehicleTypes' => $vehicleTypes 
-                ]);
-        } else {
-            return view('product.register');
-        }
+        return view('product.register', [
+                'vehicleTypes' => $vehicleTypes 
+            ]);
     }
 
      /**
@@ -36,6 +32,8 @@ class ProductController extends Controller
         $ratePerFeet    = $request->get('rate_feet');
         $ratePerton     = $request->get('rate_ton');
         $royalty        = $request->get('royalty');
+
+        $vehicleTypeCount = VehicleType::where('status', 1)->count();
 
         $product = new Product;
         $product->name          = $name;
@@ -53,15 +51,18 @@ class ProductController extends Controller
                 }
             
                 if($product->vehicleTypes()->sync($royaltyArray)) {
-                    return redirect()->back()->with("message","Product details saved successfully.")->with("alert-class","alert-success");
+                    return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
                 } else {
-                    return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the product details. Try after reloading the page.")->with("alert-class","alert-danger");   
+                    //delete product record associated with the royalty saving
+                    $product->delete();
+
+                    return redirect()->back()->withInput()->with("message","Failed to save the product details. Try again after reloading the page!<small class='pull-right'> Error Code :12/01</small>")->with("alert-class","alert-danger");
                 }
             } else {
                 return redirect()->back()->with("message","Product details saved successfully.")->with("alert-class","alert-success");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the product details. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the product details. Try again after reloading the page!<small class='pull-right'> Error Code :12/02</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -71,13 +72,12 @@ class ProductController extends Controller
     public function list()
     {
         $products = Product::paginate(10);
-        if(!empty($products)) {
-            return view('product.list',[
-                    'products' => $products
-                ]);
-        } else {
+        if(empty($products) || count($products) == 0) {
             session()->flash('message', 'No product records available to show!');
-            return view('product.list');
         }
+        
+        return view('product.list',[
+            'products' => $products
+        ]);
     }
 }

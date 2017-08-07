@@ -350,7 +350,7 @@
                 </li>
                 <li class="treeview {{ Request::is('vehicle-type/*')? 'active' : '' }}">
                     <a href="#">
-                        <i class="fa fa-pie-chart"></i> <span>Royalty</span>
+                        <i class="fa fa-pie-chart"></i> <span>Truck Type & Royalty</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>

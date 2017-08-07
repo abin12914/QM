@@ -41,9 +41,9 @@ class JackhammerController extends Controller
         $jackhammer->rent_feet              = $rentPerFeet;
         $jackhammer->status                 = 1;
         if($jackhammer->save()) {
-            return redirect()->back()->with("message","Jackhammer details saved successfully.")->with("alert-class","alert-success");
+            return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the jackhammer details. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the Jackhammer details. Try again after reloading the page!<small class='pull-right'> Error Code :10/01</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -61,21 +61,11 @@ class JackhammerController extends Controller
         $query = Jackhammer::where('status', '1');
 
         if(!empty($accountId) && $accountId != 0) {
-            $selectedAccount = Account::find($accountId);
-            if(!empty($selectedAccount) && !empty($selectedAccount->id)) {
-                $query = $query->where('contractor_account_id', $accountId);
-            } else {
-                $accountId = 0;
-            }
+            $query = $query->where('contractor_account_id', $accountId);
         }
 
         if(!empty($jackhammerId) && $jackhammerId != 0) {
-            $selectedExcavator = Account::find($jackhammerId);
-            if(!empty($selectedExcavator) && !empty($selectedExcavator->id)) {
-                $query = $query->where('id', $jackhammerId);
-            } else {
-                $jackhammerId = 0;
-            }
+            $query = $query->where('id', $jackhammerId);
         }
 
         $jackhammers = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(10);

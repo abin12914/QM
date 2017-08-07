@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Product</a></li>
-            <li class="active">Registration</li>
+            <li class="active">Product Registration</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -18,7 +17,7 @@
         @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                 </h4>
             </div>
         @endif
@@ -85,9 +84,9 @@
                                     </div><br>
                                     @foreach($vehicleTypes as $vehicleType)
                                         <div class="form-group">
-                                            <label for="royalty{{ $vehicleType->id }}" class="col-sm-2 control-label"><b style="color: red;">* </b> {{ $vehicleType->name}}: </label>
+                                            <label for="royalty_{{ $vehicleType->id }}" class="col-sm-2 control-label"><b style="color: red;">* </b> {{ $vehicleType->name}}: </label>
                                             <div class="col-sm-10 {{ !empty($errors->first('royalty.'.$vehicleType->id)) ? 'has-error' : '' }}">
-                                                <input type="text" class="form-control decimal_number_only" name="royalty[{{ $vehicleType->id }}]" id="royalty{{ $vehicleType->id }}" placeholder="Royalty amount for {{ $vehicleType->name }}" value="{{ old('royalty.'.$vehicleType->id) }}" tabindex="4">
+                                                <input type="text" class="form-control decimal_number_only" name="royalty[{{ $vehicleType->id }}]" id="royalty_{{ $vehicleType->id }}" placeholder="Royalty amount for {{ $vehicleType->name }}" value="{{ old('royalty.'.$vehicleType->id) }}" tabindex="4">
                                             @if(!empty($errors->first('royalty.'.$vehicleType->id)))
                                                 <p style="color: red;" >{{$errors->first('royalty.'.$vehicleType->id)}}</p>
                                             @endif

@@ -16,10 +16,9 @@ class VehicleController extends Controller
     public function register()
     {
         $vehicleTypes   = VehicleType::orderBy('name')->get();
-        //$accounts       = Account::orderBy('account_name')->get();
+
     	return view('vehicle.register',[
-                'vehicleTypes'  => $vehicleTypes,
-                //'accounts'      => $accounts
+                'vehicleTypes'  => $vehicleTypes
             ]);
     }
 
@@ -46,7 +45,7 @@ class VehicleController extends Controller
         if($vehicle->save()) {
             return redirect()->back()->with("message","Truck details saved successfully.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the truck details. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the truck details. Try again after reloading the page!<small class='pull-right'> Error Code :11/01</small>")->with("alert-class","alert-danger");
         }
     }
 

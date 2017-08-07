@@ -1,4 +1,15 @@
 $(function () {
+
+    //Initialize Select2 Element for vehicle type select box
+    $("#vehicle_type").select2({
+        minimumResultsForSearch: 5
+    });
+
+    //Initialize Select2 Element for body type select box
+    $("#body_type").select2({
+        minimumResultsForSearch: 5
+    });
+
     //append to another textbox
     $('body').on("keyup", ".number_only", function (evt) {
         var fieldValue  = $(this).val();

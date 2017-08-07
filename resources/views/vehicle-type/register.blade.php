@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Truck Type And Royalty')
+@section('title', 'Truck Type And Royalty Registration')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Truck Type And Royalty</a></li>
-            <li class="active">Registration</li>
+            <li class="active">Truck Type And Royalty Registration</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -18,7 +17,7 @@
         @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                 </h4>
             </div>
         @endif

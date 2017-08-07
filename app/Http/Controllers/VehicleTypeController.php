@@ -16,13 +16,9 @@ class VehicleTypeController extends Controller
     {   
         $products = Product::where('status','1')->get();
 
-        if(count($products)) {
-        	return view('vehicle-type.register',[
-                    'products' => $products
-                ]);
-        } else {
-            return view('vehicle-type.register');
-        }
+    	return view('vehicle-type.register',[
+                'products' => $products
+            ]);
     }
 
      /**
