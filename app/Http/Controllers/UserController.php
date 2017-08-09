@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Owner;
+use App\Models\transaction;
 
 class UserController extends Controller
 {
@@ -62,9 +63,9 @@ class UserController extends Controller
             $user->valid_till = $validTill;
         }
         if($user->save()) {
-            return redirect()->back()->with("message","User saved successfully.")->with("alert-class","alert-success");
+            return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the user data. Try reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the user details. Try again after reloading the page!<small class='pull-right'> Error Code :14/01</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -96,6 +97,18 @@ class UserController extends Controller
         $openingBalance     = $request->get('opening_balance');
         $royaltyOwner       = !empty($request->get('royalty_owner')) ? $request->get('royalty_owner') : 0;
 
+        $openingBalanceAccount = Account::where('account_name','Account Opening Balance')->first();
+        if(!empty($openingBalanceAccount) && !empty($openingBalanceAccount->id)) {
+            $openingBalanceAccountId = $openingBalanceAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the owner details. Try again after reloading the page!<small class='pull-right'> Error Code :14/02</small>")->with("alert-class","alert-danger");
+        }
+
+        $royaltyAccountFlag = Account::where('relation', 'royalty owner')->first();
+        if(!empty($royaltyAccountFlag) && !empty($royaltyAccountFlag->id)) {
+            return redirect()->back()->withInput()->with("message","Failed to save the owner details.<br>Royalty ownership already assigned!<small class='pull-right'> Error Code :14/03</small>")->with("alert-class","alert-danger");
+        }
+
         if ($request->hasFile('image_file')) {
             $file               = $request->file('image_file');
             $extension          = $file->getClientOriginalExtension(); // getting image extension
@@ -103,9 +116,10 @@ class UserController extends Controller
             $file->move(public_path().$destination, $fileName); // uploading file to given path
         }
 
-        $royaltyAccountFlag = Account::where('relation', 'royalty owner')->first();
-        if(!empty($royaltyAccountFlag) && !empty($royaltyAccountFlag->id)) {
-            return redirect()->back()->with("message","Failed to save owner. Royalty ownership already assigned.")->with("alert-class","alert-danger");
+        if(!empty($fileName)) {
+            $image = $destination.$fileName;
+        } else {
+            $image = $destination."default_user.jpg";
         }
 
     	$user = new User;
@@ -114,11 +128,7 @@ class UserController extends Controller
         $user->email        = $email;
         $user->phone        = $phone;
         $user->password     = Hash::make($password);
-        if(!empty($fileName)) {
-            $user->image    = $destination.$fileName;
-        } else {
-            $user->image    = $destination."default_user.jpg";
-        }
+        $user->image        = $image;
         $user->role         = 'admin';
         $user->status       = 1;
 
@@ -127,8 +137,6 @@ class UserController extends Controller
             $validTill = date('Y-m-d H:i:s', strtotime($validTill.' '.'23:59:00'));
             $user->valid_till = $validTill;
         }
-        /*$validTill          = DateTime::createFromFormat('d/m/Y H:i:s',$validTill.' 23:59:00');
-        $user->valid_till   = $validTill->format('Y-m-d H:i:s');*/
 
         if($user->save()) {
             $account = new Account;
@@ -146,38 +154,78 @@ class UserController extends Controller
                 $accountDetails->phone      = $phone;
                 $accountDetails->email      = $email;
                 $accountDetails->address    = $address;
-                if(!empty($fileName)) {
-                    $accountDetails->image   = $destination.$fileName;
-                } else {
-                    $accountDetails->image   = "/images/owner/default_owner.jpg";
-                }
+                $user->image                = $image;
                 $accountDetails->status     = 1;
                 if($accountDetails->save()) {
-                    $flag = 0;
+                    if($financialStatus == 'debit') {//incoming [account holder gives cash to company] [Creditor]
+                        $debitAccountId     = $openingBalanceAccountId;
+                        $creditAccountId    = $account->id;
+                        $particulars        = "Opening balance of ". $name . " - Debit [Creditor]";
+                    } else if($financialStatus == 'credit'){//outgoing [company gives cash to account holder] [Debitor]
+                        $debitAccountId     = $account->id;
+                        $creditAccountId    = $openingBalanceAccountId;
+                        $particulars        = "Opening balance of ". $name . " - Credit [Debitor]";
+                    } else {
+                        $debitAccountId     = $openingBalanceAccountId;
+                        $creditAccountId    = $account->id;
+                        $particulars        = "Opening balance of ". $name . " - None";
+                    }
+
+                    $dateTime = date('Y-m-d H:i:s', strtotime('now'));
+
+                    $transaction = new Transaction;
+                    $transaction->debit_account_id  = $debitAccountId;
+                    $transaction->credit_account_id = $creditAccountId;
+                    $transaction->amount            = !empty($openingBalance) ? $openingBalance : '0';
+                    $transaction->date_time         = $dateTime;
+                    $transaction->particulars       = $particulars;
+                    $transaction->status            = 1;
+                    $transaction->created_user_id   = Auth::user()->id;
+                    if($transaction->save()) {
+                        $owner = new Owner;
+                        $owner->user_id     = $user->id;
+                        $owner->account_id  = $account->id;
+                        $owner->status      = 1;
+                        if($owner->save()){
+                            $flag = 1;
+                        } else {
+                            //delete the transaction, user, account, account detail if owner saving failed
+                            $user->delete();
+                            $account->delete();
+                            $accountDetails->delete();
+                            $transaction->delete();
+
+                            $flag = 2;
+                        }
+                    } else {
+                        //delete the user, account, account detail if opening balance transaction saving failed
+                        $user->delete();
+                        $account->delete();
+                        $accountDetails->delete();
+
+                        $flag = 3;
+                    }
                 } else {
+                    //delete the user, account if account detail saving failed
+                    $user->delete();
+                    $account->delete();
+                    
                     $flag = 4;
                 }
-
-                $owner = new Owner;
-                $owner->user_id     = $user->id;
-                $owner->account_id  = $account->id;
-                $owner->status      =1;
-                if($owner->save()){
-                    $flag =0;
-                } else {
-                    $flag = 3;
-                }
             } else {
-                $flag = 2;
+                //delete the user if account saving failed
+                $user->delete();
+
+                $flag = 5;
             }
         } else {
-            $flag = 1;
+            $flag = 6;
         }
 
-        if($flag == 0) {
+        if($flag == 1) {
             return redirect()->back()->with("message","Owner successfully saved as the Admin.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the owner data. Try after reloading the page. Error code : 00".$flag)->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the owner details. Try again after reloading the page!<small class='pull-right'> Error Code :14/04/". $flag ."</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -198,14 +246,13 @@ class UserController extends Controller
     public function userList()
     {
         $users = User::paginate(10);
-        if(!empty($users)) {
-            return view('user.list',[
+
+        if(empty($users)) {
+            session()->flash('message', 'No users available to show!');
+        }
+        return view('user.list',[
                     'users' => $users
                 ]);
-        } else {
-            session()->flash('message', 'No users available to show!');
-            return view('user.list');
-        }
     }
 
     /**
@@ -213,14 +260,14 @@ class UserController extends Controller
      */
     public function ownerList()
     {
-        $owners = Owner::paginate(10);
-        if(!empty($owners)) {
-            return view('owners.list',[
+        $owners = Owner::with(['account.accountDetail', 'user'])->paginate(10);
+
+        if(empty($owners)) {
+            session()->flash('message', 'No owner record available to show!');
+        }
+
+        return view('owners.list',[
                     'owners' => $owners
                 ]);
-        } else {
-            session()->flash('message', 'No owners available to show!');
-            return view('owners.list');
-        }
     }
 }

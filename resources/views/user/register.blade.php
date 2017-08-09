@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> User</a></li>
-            <li class="active">Registration</li>
+            <li class="active">User Registration</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -18,12 +17,12 @@
         @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                 </h4>
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
@@ -149,5 +148,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/userRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/registration/userRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

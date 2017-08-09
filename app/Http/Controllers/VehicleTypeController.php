@@ -46,15 +46,18 @@ class VehicleTypeController extends Controller
                 }
                 
                 if($vehicleType->products()->sync($royaltyArray)) {
-                    return redirect()->back()->with("message","Vehicle type details saved successfully.")->with("alert-class","alert-success");
+                    return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
                 } else {
-                    return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the vehicle type details. Try after reloading the page.")->with("alert-class","alert-danger");    
+                    //delete vehicle type record associated with the royalty saving
+                    $vehicleType->delete();
+
+                    return redirect()->back()->withInput()->with("message","Failed to save the truck type and royalty details. Try again after reloading the page!<small class='pull-right'> Error Code :13/01</small>")->with("alert-class","alert-danger");
                 }
             } else {
-                return redirect()->back()->with("message","Vehicle type details saved successfully.")->with("alert-class","alert-success");
+                return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Something went wrong! Failed to save the vehicle type details. Try after reloading the page.")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the truck type and royalty details. Try again after reloading the page!<small class='pull-right'> Error Code :13/02</small>")->with("alert-class","alert-danger");
         }	
     }
 

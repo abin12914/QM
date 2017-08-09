@@ -22,7 +22,7 @@
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
             <div class="col-md-2"></div>
             <div class="col-md-8">
@@ -124,8 +124,8 @@
                                         <select class="form-control" name="financial_status" id="financial_status" tabindex="8">
                                             <option value="" {{ empty(old('financial_status')) ? 'selected' : '' }}>Select Status</option>
                                             <option value="none" {{ old('financial_status') == 'none' ? 'selected' : '' }}>None (No pending transactions)</option>
-                                            <option value="credit" {{ old('financial_status') == 'debit' ? 'selected' : '' }}>Debitor (Account Holder Owe Company)</option>
-                                            <option value="debit" {{ old('financial_status') == 'credit' ? 'selected' : '' }}>Creditor (Company Owe Account Holder)</option>
+                                            <option value="credit" {{ old('financial_status') == 'credit' ? 'selected' : '' }}>Debitor (Account Holder Owe Company)</option>
+                                            <option value="debit" {{ old('financial_status') == 'debit' ? 'selected' : '' }}>Creditor (Company Owe Account Holder)</option>
                                         </select>
                                         @if(!empty($errors->first('financial_status')))
                                             <p style="color: red;" >{{$errors->first('financial_status')}}</p>

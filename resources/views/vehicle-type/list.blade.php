@@ -1,10 +1,10 @@
 @extends('layouts.app')
-@section('title', 'Vehicle Types And Royalty')
+@section('title', 'Truck Types And Royalty List')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Truck Type And Royalty
+            Truck Type And Royalty<small>List</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -17,7 +17,7 @@
         @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                   <?php session()->forget('message'); ?>
                 </h4>
             </div>
@@ -92,13 +92,11 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            @if(!empty($vehicleTypes))
-                                                <th>#</th>
-                                                <th>Generic Name</th>
-                                                <th>Generic Quantity</th>
-                                                <th>Product</th>
-                                                <th>Royalty Amount</th>
-                                            @endif
+                                            <th>#</th>
+                                            <th>Generic Name</th>
+                                            <th>Generic Quantity</th>
+                                            <th>Product</th>
+                                            <th>Royalty Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -131,13 +129,13 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row no-print">
                             <div class="col-md-12">
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">
                                     <div class="pull-right">
                                         @if(!empty($vehicleTypes))
-                                            {{ $vehicleTypes->links() }}
+                                            {{ $vehicleTypes->appends(Request::all())->links() }}
                                         @endif
                                     </div>
                                 </div>

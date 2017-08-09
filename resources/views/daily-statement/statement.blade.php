@@ -22,7 +22,7 @@
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
@@ -64,101 +64,101 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
-                    <div class="box-body">
-                        @if(!empty($selectedAccountName))
-                            <div class="box-header">
-                                <h4>Ledger of <b>{{ $selectedAccountName }}</b> {{ !empty($fromDate) ? ' [ '.$fromDate.' - ' : '[ starting - ' }} {{ !empty($toDate) ? $toDate.' ]' : 'end ]' }}</h4>
-                            </div>
+                    <div class="box-header">
+                        @if(empty($fromDate) && !empty($toDate))
+                            <h4>Date : {{ $toDate }}</h4>
+                        @elseif(!empty($fromDate) && empty($toDate))
+                            <h4>Date : {{ $fromDate }}</h4>
+                        @elseif(!empty($fromDate) && !empty($toDate))
+                            <h4>From : {{ $fromDate }} &nbsp;&nbsp;&nbsp; To : {{ $toDate }}</h4>
                         @endif
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Particulars</th>
-                                            <th>Debit</th>
-                                            <th>Credit</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if(!empty($sales))
-                                            <tr>
-                                                <td>Sales</td>
-                                                <td>-</td>
-                                                <td>{{ $sales }}</td>
-                                            </tr>
-                                        @endif
-                                        @if(!empty($purchases))
-                                            <tr>
-                                                <td>Purchases and other expences</td>
-                                                <td>{{ $purchases }}</td>
-                                                <td>-</td>
-                                            </tr>
-                                        @endif
-                                        @if(!empty($labourWage))
-                                            <tr>
-                                                <td>Labour Wage</td>
-                                                <td>{{ $labourWage }}</td>
-                                                <td>-</td>
-                                            </tr>
-                                        @endif
-                                        @if(!empty($excavatorReadingRent))
-                                            <tr>
-                                                <td>Excavator reading rent</td>
-                                                <td>{{ $excavatorReadingRent }}</td>
-                                                <td>-</td>
-                                            </tr>
-                                        @endif
-                                        @if(!empty($jackhammerRent))
-                                            <tr>
-                                                <td>Jackhammer rent</td>
-                                                <td>{{ $jackhammerRent }}</td>
-                                                <td>-</td>
-                                            </tr>
-                                        @endif
-                                        @if(!empty($employeeSalary))
-                                            <tr>
-                                                <td>Employee Salary</td>
-                                                <td>{{ $employeeSalary }}</td>
-                                                <td>-</td>
-                                            </tr>
-                                        @endif
-                                        @if(!empty($excavatorMonthlyRent))
-                                            <tr>
-                                                <td>Excavator monthly rent</td>
-                                                <td>{{ $excavatorMonthlyRent }}</td>
-                                                <td>-</td>
-                                            </tr>
-                                        @endif
-                                        @if(!empty($royalty))
-                                            <tr>
-                                                <td>Royalty</td>
-                                                <td>{{ $royalty }}</td>
-                                                <td>-</td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th>
-                                            <th>{{ $totalDebit }}</th>
-                                            <th>{{ $totalCredit }}</th>
-                                        </tr>
-                                        <tr>
-                                            @if($totalDebit <= $totalCredit)
-                                                <th>{{ 'Balance' }}</th>
-                                                <th>{{ $totalCredit - $totalDebit }}</th>
-                                                <th>-</th>
-                                            @else
-                                                <th>{{ 'Over expence' }}</th>
-                                                <th>-</th>
-                                                <th>{{ $totalDebit - $totalCredit }}</th>
-                                            @endif
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Particulars</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(!empty($sales))
+                                    <tr>
+                                        <td>Sales</td>
+                                        <td>-</td>
+                                        <td>{{ $sales }}</td>
+                                    </tr>
+                                @endif
+                                @if(!empty($purchases))
+                                    <tr>
+                                        <td>Purchases and other expences</td>
+                                        <td>{{ $purchases }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                @endif
+                                @if(!empty($labourWage))
+                                    <tr>
+                                        <td>Labour Wage</td>
+                                        <td>{{ $labourWage }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                @endif
+                                @if(!empty($excavatorReadingRent))
+                                    <tr>
+                                        <td>Excavator reading rent</td>
+                                        <td>{{ $excavatorReadingRent }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                @endif
+                                @if(!empty($jackhammerRent))
+                                    <tr>
+                                        <td>Jackhammer rent</td>
+                                        <td>{{ $jackhammerRent }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                @endif
+                                @if(!empty($employeeSalary))
+                                    <tr>
+                                        <td>Employee Salary</td>
+                                        <td>{{ $employeeSalary }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                @endif
+                                @if(!empty($excavatorMonthlyRent))
+                                    <tr>
+                                        <td>Excavator monthly rent</td>
+                                        <td>{{ $excavatorMonthlyRent }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                @endif
+                                @if(!empty($royalty))
+                                    <tr>
+                                        <td>Royalty</td>
+                                        <td>{{ $royalty }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th>{{ $totalDebit }}</th>
+                                    <th>{{ $totalCredit }}</th>
+                                </tr>
+                                <tr>
+                                    @if($totalDebit <= $totalCredit)
+                                        <th>{{ 'Balance' }}</th>
+                                        <th>{{ $totalCredit - $totalDebit }}</th>
+                                        <th>-</th>
+                                    @else
+                                        <th>{{ 'Over expence' }}</th>
+                                        <th>-</th>
+                                        <th>{{ $totalDebit - $totalCredit }}</th>
+                                    @endif
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                     <!-- /.box-body -->
                 </div>

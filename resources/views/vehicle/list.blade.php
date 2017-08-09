@@ -23,7 +23,7 @@
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
@@ -132,7 +132,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row no-print">
                             <div class="col-md-12">
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">

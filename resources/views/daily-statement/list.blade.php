@@ -1,10 +1,11 @@
 @extends('layouts.app')
-@section('title', 'Daily Resources List')
+@section('title', 'Daily Resource List')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Daily Resource<small>List</small>
+            Daily Resource
+            <small>List</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -26,7 +27,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
+                        <ul class="nav nav-tabs no-print">
                             <li class="{{ Request::is('daily-statement/list/employee')? 'active' : '' }}"><a href="{{ Request::is('daily-statement/list/employee')? '#' : route('daily-statement-list-employee') }}">Employee Attendance List</a></li>
                             <li class="{{ Request::is('daily-statement/list/excavator')? 'active' : '' }}"><a href="{{ Request::is('daily-statement/list/excavator')? '#' : route('daily-statement-list-excavator') }}">Excavator Readings</a></li>
                             <li class="{{ Request::is('daily-statement/list/jackhammer')? 'active' : '' }}"><a href="{{ Request::is('daily-statement/list/jackhammer')? '#' : route('daily-statement-list-jackhammer') }}">Jack-Hammer Readings</a></li>
@@ -34,7 +35,7 @@
                         <div class="tab-content">
                             <div class="{{ Request::is('daily-statement/list/employee')? 'active' : '' }} tab-pane" id="employee_tab">
                                 <!-- box-header -->
-                                <div class="box-header">
+                                <div class="box-header no-print">
                                     <form action="{{ route('daily-statement-list-employee') }}" method="get" class="form-horizontal" multipart-form-data>
                                         <div class="row">
                                             <div class="col-md-1"></div>
@@ -129,7 +130,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row no-print">
                                         <div class="col-md-12">
                                             <div class="col-md-6"></div>
                                             <div class="col-md-6">
@@ -147,7 +148,7 @@
                             <!-- /.tab-pane -->
                             <div class="{{ Request::is('daily-statement/list/excavator')? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <!-- box-header -->
-                                <div class="box-header">
+                                <div class="box-header no-print">
                                     <form action="{{ route('daily-statement-list-excavator') }}" method="get" class="form-horizontal" multipart-form-data>
                                         <div class="row">
                                             <div class="col-md-1"></div>
@@ -244,7 +245,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row no-print">
                                         <div class="col-md-12">
                                             <div class="col-md-6"></div>
                                             <div class="col-md-6">
@@ -262,7 +263,7 @@
                             <!-- /.tab-pane -->
                             <div class="{{ Request::is('daily-statement/list/jackhammer')? 'active' : '' }} tab-pane" id="jack_hammers_tab">
                                 <!-- box-header -->
-                                <div class="box-header">
+                                <div class="box-header no-print">
                                     <form action="{{ route('daily-statement-list-jackhammer') }}" method="get" class="form-horizontal" multipart-form-data>
                                         <div class="row">
                                             <div class="col-md-1"></div>
@@ -355,7 +356,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row no-print">
                                         <div class="col-md-12">
                                             <div class="col-md-6"></div>
                                             <div class="col-md-6">

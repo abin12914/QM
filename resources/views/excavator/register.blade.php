@@ -17,12 +17,12 @@
         @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                 </h4>
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
             <div class="col-md-2"></div>
             <div class="col-md-8">

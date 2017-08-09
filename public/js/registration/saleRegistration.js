@@ -236,7 +236,7 @@ $(function () {
         }
     });
 
-    //invoke modal for cash transactions
+    //execute form action
     $('body').on("click", "#btn_cash_sale_modal_submit", function (e) {
         e.preventDefault();
         $("#cash_sale_form").submit();

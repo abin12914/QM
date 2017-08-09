@@ -4,12 +4,11 @@
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            My
-            <small>Profile</small>
+            My Profile
+            <small></small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> User</a></li>
             <li class="active">Profile</li>
         </ol>
     </section>
@@ -18,7 +17,7 @@
         @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                 </h4>
             </div>
         @endif
@@ -68,11 +67,11 @@
                                             </li>
                                         </ul><br>
                                         <div class="col-md-2"></div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3  no-print">
                                             <a href="{{ route('under-construction-view') }}" class="btn btn-primary btn-block"><b>View Activity Log</b></a>
                                         </div>
                                         <div class="col-md-2"></div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3  no-print">
                                             <a href="{{ route('under-construction-view') }}" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
                                         </div>
                                         <div class="clearfix"></div><br>

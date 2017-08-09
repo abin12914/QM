@@ -1,15 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Vouchers')
+@section('title', 'Voucher List')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Vouchers
+            Voucher <small>List</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Voucher</a></li>
-            <li class="active">List</li>
+            <li class="active">Voucher List</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -17,7 +16,7 @@
         @if(Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                   <?php session()->forget('message'); ?>
                 </h4>
             </div>
@@ -27,14 +26,14 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
+                        <ul class="nav nav-tabs  no-print">
                             <li class="{{ Request::is('voucher/list/cash')? 'active' : '' }}"><a href="{{ Request::is('voucher/list/cash')? '#' : route('cash-voucher-list') }}">Cash Voucher</a></li>
                             <li class="{{ Request::is('voucher/list/credit')? 'active' : '' }}"><a href="{{ Request::is('voucher/list/credit')? '#' : route('credit-voucher-list') }}">Credit Vouchers</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="{{ Request::is('voucher/list/cash')? 'active' : '' }} tab-pane" id="cash_tab">
                                 <!-- box-header -->
-                                <div class="box-header">
+                                <div class="box-header no-print">
                                     <form action="{{ route('cash-voucher-list') }}" method="get" class="form-horizontal">
                                         <div class="row">
                                             <div class="col-md-1"></div>
@@ -136,7 +135,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row no-print">
                                         <div class="col-md-12">
                                             <div class="col-md-6"></div>
                                             <div class="col-md-6">
@@ -154,7 +153,7 @@
                             <!-- /.tab-pane -->
                             <div class="{{ Request::is('voucher/list/credit')? 'active' : '' }} tab-pane" id="credit_tab">
                                 <!-- box-header -->
-                                <div class="box-header">
+                                <div class="box-header no-print">
                                     <form action="{{ route('credit-voucher-list') }}" method="get" class="form-horizontal">
                                         <div class="row">
                                             <div class="col-md-1"></div>
@@ -241,7 +240,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row no-print">
                                         <div class="col-md-12">
                                             <div class="col-md-6"></div>
                                             <div class="col-md-6">

@@ -4,12 +4,12 @@
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Jackhammers
+            Jackhammer
             <small>List</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Jackhammers List</li>
+            <li class="active">Jackhammer List</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -23,7 +23,7 @@
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
@@ -115,7 +115,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row no-print">
                             <div class="col-md-12">
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">

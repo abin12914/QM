@@ -4,8 +4,8 @@
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Accounts
-            {{-- <small>List</small> --}}
+            Account
+            <small>List</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -23,7 +23,7 @@
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div><br>
-                            <div class="row">
+                            <div class="row no-print">
                                 <div class="col-md-4"></div>
                                 <div class="col-md-2">
                                     <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
@@ -142,7 +142,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row no-print">
                             <div class="col-md-12">
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">

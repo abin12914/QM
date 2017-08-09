@@ -26,14 +26,14 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
+                        <ul class="nav nav-tabs no-print">
                             <li class="{{ Request::is('monthly-statement/list/employee')? 'active' : '' }}"><a href="{{ Request::is('monthly-statement/list/employee')? '#' : route('monthly-statement-list-employee') }}">Employee Attendance List</a></li>
                             <li class="{{ Request::is('monthly-statement/list/excavator')? 'active' : '' }}"><a href="{{ Request::is('monthly-statement/list/excavator')? '#' : route('monthly-statement-list-excavator') }}">Excavator Readings</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="{{ Request::is('monthly-statement/list/employee')? 'active' : '' }} tab-pane" id="employee_tab">
                                 <!-- box-header -->
-                                <div class="box-header">
+                                <div class="box-header no-print">
                                     <form action="{{ route('monthly-statement-list-employee') }}" method="get" class="form-horizontal" multipart-form-data>
                                         <div class="row">
                                             <div class="col-md-1"></div>
@@ -130,7 +130,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row no-print">
                                         <div class="col-md-12">
                                             <div class="col-md-6"></div>
                                             <div class="col-md-6">
@@ -148,7 +148,7 @@
                             <!-- /.tab-pane -->
                             <div class="{{ Request::is('monthly-statement/list/excavator')? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <!-- box-header -->
-                                <div class="box-header">
+                                <div class="box-header no-print">
                                     <form action="{{ route('monthly-statement-list-excavator') }}" method="get" class="form-horizontal" multipart-form-data>
                                         <div class="row">
                                             <div class="col-md-1"></div>
@@ -245,7 +245,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row no-print">
                                         <div class="col-md-12">
                                             <div class="col-md-6"></div>
                                             <div class="col-md-6">

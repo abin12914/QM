@@ -1,4 +1,5 @@
 $(function () {
+
     var today = new Date();
     //Date picker
     $('#datepicker').datepicker({
@@ -6,5 +7,10 @@ $(function () {
         startDate: today,
         format: 'dd-mm-yyyy',
         autoclose: true,
+    });
+
+    //Initialize Select2 Element for user role select box
+    $("#role").select2({
+        minimumResultsForSearch: 5
     });
 });

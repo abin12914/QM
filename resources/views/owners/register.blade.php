@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Owner</a></li>
-            <li class="active">Registration</li>
+            <li class="active">Owner Registration</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -18,12 +17,12 @@
         @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                 </h4>
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row  no-print">
             <div class="col-md-12">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
@@ -150,8 +149,8 @@
                                                 <select class="form-control" name="financial_status" id="financial_status" tabindex="11">
                                                     <option value="" {{ empty(old('financial_status')) ? 'selected' : '' }}>Select Status</option>
                                                     <option value="none" {{ old('financial_status') == 'none' ? 'selected' : '' }}>None (No pending transactions)</option>
-                                                    <option value="debit" {{ old('financial_status') == 'debit' ? 'selected' : '' }}>Debitor (Account Holder Owe Company)</option>
-                                                    <option value="credit" {{ old('financial_status') == 'credit' ? 'selected' : '' }}>Creditor (Company Owe Account Holder)</option>
+                                                    <option value="credit" {{ old('financial_status') == 'credit' ? 'selected' : '' }}>Debitor (Account Holder Owe Company)</option>
+                                                    <option value="debit" {{ old('financial_status') == 'debit' ? 'selected' : '' }}>Creditor (Company Owe Account Holder)</option>
                                                 </select>
                                                 @if(!empty($errors->first('financial_status')))
                                                     <p style="color: red;" >{{$errors->first('financial_status')}}</p>
@@ -189,10 +188,41 @@
             </div>
         </div>
         <!-- /.row (main row) -->
+        <div class="modal" id="royalty_owner_confirm_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Confirm Action</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal_warning">
+                            <div class="row">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-10">
+                                    <p style="color: red;">
+                                        <b> Are you sure to mark this person as the royalty owner?</b>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btn_royalty_owner_confirm_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="btn_royalty_owner_confirm_modal_confirm" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
     </section>
     <!-- /.content -->
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/ownerRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/registration/ownerRegistration.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

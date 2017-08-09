@@ -1,15 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Users')
+@section('title', 'User List')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Users
+            User <small>List</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> User</a></li>
-            <li class="active">List</li>
+            <li class="active">User List</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -17,7 +16,7 @@
         @if(Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                   <?php session()->forget('message'); ?>
                 </h4>
             </div>
@@ -27,7 +26,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">User List</h3>
+                        <h3 class="box-title">QuarryManager Users</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -46,7 +45,7 @@
                                     <tbody>
                                         @if(!empty($users))
                                             @foreach($users as $user)
-                                                <tr>
+                                                <tr class="{{ $user->role == 'admin' ? 'bg-success' : ($user->role == 'user' ? 'bg-info' : 'bg-warning') }}">
                                                     <td>{{ $user->name }}</td>
                                                     <td>{{ $user->user_name }}</td>
                                                     <td>{{ $user->phone }}</td>
@@ -60,21 +59,16 @@
                                             @endforeach
                                         @endif
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th><th></th><th></th><th></th><th></th><th></th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row  no-print">
                             <div class="col-md-12">
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">
                                     <div class="pull-right">
                                         @if(!empty($users))
-                                            {{ $users->links() }}
+                                            {{ $users->appends(Request::all())->links() }}
                                         @endif
                                     </div>
                                 </div>

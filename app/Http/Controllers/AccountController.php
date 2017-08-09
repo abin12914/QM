@@ -77,6 +77,9 @@ class AccountController extends Controller
                     $creditAccountId    = $account->id;
                     $particulars        = "Opening balance of ". $name . " - None";
                 }
+
+                $dateTime = date('Y-m-d H:i:s', strtotime('now'));
+                
                 $transaction = new Transaction;
                 $transaction->debit_account_id  = $debitAccountId;
                 $transaction->credit_account_id = $creditAccountId;

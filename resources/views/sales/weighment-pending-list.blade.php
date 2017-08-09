@@ -17,12 +17,12 @@
         @if (Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
-                  {{ Session::get('message') }}
+                  {!! Session::get('message') !!}
                 </h4>
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-1"></div>
             <div class="col-md-10">
                 <div class="box">
@@ -112,7 +112,7 @@
                                         <th>Truck Number</th>
                                         <th>Purchaser</th>
                                         <th>Product</th>
-                                        <th>Action</th>
+                                        <th class=" no-print">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -123,7 +123,7 @@
                                             <td>{{ $saleRecord->vehicle->reg_number }}</td>
                                             <td>{{ $saleRecord->transaction->debitAccount->account_name }}</td>
                                             <td>{{ $saleRecord->product->name }}</td>
-                                            <td>
+                                            <td class=" no-print">
                                                 <form action="{{route('sales-weighment-register-view')}}" id="sale_weighment_registration_form_{{ $index }}" method="get">
                                                 <input type="hidden" name="sale_id" value="{{ $saleRecord->id }}">
                                                 <button type="submit" class="bg-aqua" type="button">Add</button>
@@ -139,7 +139,7 @@
                                 <label>No sales records available to show!!</label>
                             </div>
                         @endif
-                        <div class="row">
+                        <div class="row no-print">
                             <div class="col-md-12">
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">
