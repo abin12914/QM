@@ -1,15 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Purchase Registration')
+@section('title', 'Purchase & Expense Registration')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Purchase
+            Purchase & Expense
             <small>Registartion</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Purchase Registration</li>
+            <li class="active">Purchase & Expense Registration</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -28,7 +28,7 @@
                 <div class="col-md-8">
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title" style="float: left;">Purchase Registration</h3>
+                            <h3 class="box-title" style="float: left;">Purchase & Expense Registration</h3>
                                 <p>&nbsp&nbsp&nbsp(Fields marked with <b style="color: red;">* </b>are mandatory.)</p>
                         </div>
                         <!-- form start -->

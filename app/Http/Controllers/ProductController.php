@@ -56,13 +56,13 @@ class ProductController extends Controller
                     //delete product record associated with the royalty saving
                     $product->delete();
 
-                    return redirect()->back()->withInput()->with("message","Failed to save the product details. Try again after reloading the page!<small class='pull-right'> Error Code :12/01</small>")->with("alert-class","alert-danger");
+                    return redirect()->back()->withInput()->with("message","Failed to save the product details. Try again after reloading the page!<small class='pull-right'> #12/01</small>")->with("alert-class","alert-danger");
                 }
             } else {
                 return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the product details. Try again after reloading the page!<small class='pull-right'> Error Code :12/02</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the product details. Try again after reloading the page!<small class='pull-right'> #12/02</small>")->with("alert-class","alert-danger");
         }
     }
 

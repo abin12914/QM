@@ -12,7 +12,7 @@ use App\Models\User;
 use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Owner;
-use App\Models\transaction;
+use App\Models\Transaction;
 
 class UserController extends Controller
 {
@@ -65,7 +65,7 @@ class UserController extends Controller
         if($user->save()) {
             return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the user details. Try again after reloading the page!<small class='pull-right'> Error Code :14/01</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the user details. Try again after reloading the page!<small class='pull-right'> #14/01</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -101,12 +101,14 @@ class UserController extends Controller
         if(!empty($openingBalanceAccount) && !empty($openingBalanceAccount->id)) {
             $openingBalanceAccountId = $openingBalanceAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the owner details. Try again after reloading the page!<small class='pull-right'> Error Code :14/02</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the owner details. Try again after reloading the page!<small class='pull-right'> #14/02</small>")->with("alert-class","alert-danger");
         }
 
-        $royaltyAccountFlag = Account::where('relation', 'royalty owner')->first();
-        if(!empty($royaltyAccountFlag) && !empty($royaltyAccountFlag->id)) {
-            return redirect()->back()->withInput()->with("message","Failed to save the owner details.<br>Royalty ownership already assigned!<small class='pull-right'> Error Code :14/03</small>")->with("alert-class","alert-danger");
+        if(!empty($royaltyOwner) && $royaltyOwner == 1){
+            $royaltyAccountFlag = Account::where('relation', 'royalty owner')->first();
+            if(!empty($royaltyAccountFlag) && !empty($royaltyAccountFlag->id)) {
+                return redirect()->back()->withInput()->with("message","Failed to save the owner details.<br>Royalty ownership already assigned!<small class='pull-right'> #14/03</small>")->with("alert-class","alert-danger");
+            }
         }
 
         if ($request->hasFile('image_file')) {
@@ -225,7 +227,7 @@ class UserController extends Controller
         if($flag == 1) {
             return redirect()->back()->with("message","Owner successfully saved as the Admin.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the owner details. Try again after reloading the page!<small class='pull-right'> Error Code :14/04/". $flag ."</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the owner details. Try again after reloading the page!<small class='pull-right'> #14/04/". $flag ."</small>")->with("alert-class","alert-danger");
         }
     }
 

@@ -143,6 +143,11 @@
                             <tfoot>
                                 <tr>
                                     <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <th>Total Amount</th>
                                     <th>{{ $totalDebit }}</th>
                                     <th>{{ $totalCredit }}</th>
                                 </tr>
@@ -150,10 +155,10 @@
                                     @if($totalDebit <= $totalCredit)
                                         <th>{{ 'Balance' }}</th>
                                         <th>{{ $totalCredit - $totalDebit }}</th>
-                                        <th>-</th>
+                                        <th></th>
                                     @else
                                         <th>{{ 'Over expence' }}</th>
-                                        <th>-</th>
+                                        <th></th>
                                         <th>{{ $totalDebit - $totalCredit }}</th>
                                     @endif
                                 </tr>

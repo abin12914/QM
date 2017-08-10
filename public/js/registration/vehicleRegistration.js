@@ -20,10 +20,16 @@ $(function () {
                 if(fieldValue.length >=2 && !(evt.keyCode == 9 || evt.keyCode == 16)) {
                     //$(this).data("original-title", "Maximum two digits are allowed for regional code").tooltip("show");
                     $('#vehicle_reg_number_unique_alphabet').focus();
+                    if(fieldValue.length > 2) {
+                        $('#vehicle_reg_number_region_code').val('');
+                    }
                 }
             } else if(elementId == 'vehicle_reg_number_unique_digit') {
                 if(fieldValue.length >=4 && !(evt.keyCode == 9 || evt.keyCode == 16)) {
                     $("#vehicle_reg_number_unique_digit").data("title", "Maximum four digits are allowed in this section").tooltip("show");
+                    if(fieldValue.length > 4) {
+                        $('#vehicle_reg_number_unique_digit').val('');
+                    }
                 }
             }
             //append to another textbox
@@ -45,12 +51,18 @@ $(function () {
                     //$(this).data("original-title", "Maximum two characters are allowed for state code").tooltip("show");
                     evt.preventDefault();
                     $('#vehicle_reg_number_region_code').focus();
+                    if(fieldValue.length > 2) {
+                        $('#vehicle_reg_number_state_code').val('');
+                    }
                 }
             } else if(elementId == 'vehicle_reg_number_unique_alphabet') {
                 if(fieldValue.length >= 2 && !(evt.keyCode == 9 || evt.keyCode == 16)) {
                     evt.preventDefault();
                     //$(this).data("original-title", "Maximum two characters are allowed in this section").tooltip("show");
                     $('#vehicle_reg_number_unique_digit').focus();
+                    if(fieldValue.length > 2) {
+                        $('#vehicle_reg_number_unique_alphabet').val('');
+                    }
                 }
             }
 

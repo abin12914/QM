@@ -114,7 +114,7 @@
                 <li class="treeview {{ Request::is('purchases/*')? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-arrow-down"></i>
-                        <span>Purchases</span>
+                        <span>Purchase & Expense</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>

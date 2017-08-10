@@ -47,7 +47,7 @@ class PurchasesController extends Controller
         if($purchaseAccount) {
             $purchaseAccountId = $purchaseAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> Error Code :03/01</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> #03/01</small>")->with("alert-class","alert-danger");
         }
 
         if($transactionType == 2) {
@@ -55,7 +55,7 @@ class PurchasesController extends Controller
             if($cashAccount) {
                 $cashAccountId = $cashAccount->id;
             } else {
-                return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> Error Code :03/02</small>")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> #03/02</small>")->with("alert-class","alert-danger");
             }
         }
 
@@ -85,10 +85,10 @@ class PurchasesController extends Controller
                 //delete the transaction if associated purchase saving failed.
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> Error Code :03/03</small>")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> #03/03</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> Error Code :03/04</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the purchase details. Try again after reloading the page!<small class='pull-right'> #03/04</small>")->with("alert-class","alert-danger");
         }
     }
 

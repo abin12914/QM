@@ -45,7 +45,7 @@ class VehicleController extends Controller
         if($vehicle->save()) {
             return redirect()->back()->with("message","Truck details saved successfully.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the truck details. Try again after reloading the page!<small class='pull-right'> Error Code :11/01</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the truck details. Try again after reloading the page!<small class='pull-right'> #11/01</small>")->with("alert-class","alert-danger");
         }
     }
 

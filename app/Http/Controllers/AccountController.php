@@ -8,6 +8,7 @@ use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Transaction;
 use DateTime;
+use Auth;
 
 class AccountController extends Controller
 {
@@ -40,7 +41,7 @@ class AccountController extends Controller
         if(!empty($openingBalanceAccount) && !empty($openingBalanceAccount->id)) {
             $openingBalanceAccountId = $openingBalanceAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the account details. Try again after reloading the page!<small class='pull-right'> Error Code :07/01</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the account details. Try again after reloading the page!<small class='pull-right'> #07/01</small>")->with("alert-class","alert-danger");
         }
 
         $account = new Account;
@@ -110,7 +111,7 @@ class AccountController extends Controller
         if($saveFlag == 1) {
             return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the account details. Try again after reloading the page!<small class='pull-right'> Error Code :07/02/". $saveFlag ."</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the account details. Try again after reloading the page!<small class='pull-right'> #07/02/". $saveFlag ."</small>")->with("alert-class","alert-danger");
         }
 
     }

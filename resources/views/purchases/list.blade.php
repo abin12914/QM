@@ -4,7 +4,7 @@
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Purchase
+            Purchase & Expense
             <small>List</small>
         </h1>
         <ol class="breadcrumb">

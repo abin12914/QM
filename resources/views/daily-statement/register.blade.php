@@ -304,6 +304,7 @@
                                                 <th>#</th>
                                                 <th>Jackhammer</th>
                                                 <th>Contractor Account</th>
+                                                <th>No of Pit [5 feet depth]</th>
                                                 <th>Total Pit Depth</th>
                                             </tr>
                                         </thead>
@@ -313,6 +314,7 @@
                                                     <td>{{ $index+1 }}</td>
                                                     <td>{{ $jackhammerReading->jackhammer->name }}</td>
                                                     <td>{{ $jackhammerReading->jackhammer->account->account_name }}</td>
+                                                    <td>{{ ($jackhammerReading->total_pit_depth / 5) }}</td>
                                                     <td>{{ $jackhammerReading->total_pit_depth }}</td>
                                                 </tr>
                                             @endforeach

@@ -80,22 +80,22 @@ class DailyStatementController extends Controller
         $employee = Employee::where('account_id', $employeeAccountId)->first();
         if(!empty($employee) && $employeeId == $employee->id) {
             if($employee->employee_type == "staff") {
-                return redirect()->back()->with("message","Failed to save the attendance details.<br>Selected employee has monthly salary scheme; Use monthly statement for this employee!<small class='pull-right'> Error Code :04/01</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+                return redirect()->back()->with("message","Failed to save the attendance details.<br>Selected employee has monthly salary scheme; Use monthly statement for this employee!<small class='pull-right'> #04/01</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> Error Code :04/02</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> #04/02</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $recordFlag = EmployeeAttendance::where('date',$date)->where('employee_id', $employeeId)->get();
         if(count($recordFlag) > 0) {
-            return redirect()->back()->with("message","Failed to save the attendance details.<br>Attendance of this user has already marked for ".$date. "!<small class='pull-right'> Error Code :04/03</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->with("message","Failed to save the attendance details.<br>Attendance of this user has already marked for ".$date. "!<small class='pull-right'> #04/03</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $labouAttendanceAccount = Account::where('account_name','Labour Attendance')->first();
         if($labouAttendanceAccount) {
             $labouAttendanceAccountId = $labouAttendanceAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> Error Code :04/04</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> #04/04</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $transaction = new Transaction;
@@ -121,10 +121,10 @@ class DailyStatementController extends Controller
                 //delete the transaction if associated attendance record saving failed.
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> Error Code :04/05</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+                return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> #04/05</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> Error Code :04/06</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the attendance details. Try again after reloading the page!<small class='pull-right'> #04/06</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
     }
 
@@ -156,19 +156,19 @@ class DailyStatementController extends Controller
                 $rentTypeFlag = 1;
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> Error Code :04/07</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> #04/07</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $recordFlag = ExcavatorReading::where('date',$date)->where('excavator_id', $excavatorId)->get();
         if(count($recordFlag) > 0) {
-            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Reading of this excavator has already marked for ". date('d-m-Y', strtotime($date)). "!<small class='pull-right'> Error Code :04/08</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Reading of this excavator has already marked for ". date('d-m-Y', strtotime($date)). "!<small class='pull-right'> #04/08</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $excavatorReadingAccount = Account::where('account_name','Excavator Reading')->first();
         if($excavatorReadingAccount) {
             $excavatorReadingAccountId = $excavatorReadingAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> Error Code :04/09</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> #04/09</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $temp = ("Excavator Rent : Bucket : ".$bucketHour." * ".$bucketRate." = ".($bucketHour*$bucketRate)." / Breaker : ".$breakerHour." * ".$breakerRate." = ".($breakerHour * $breakerRate)." / Bata : ".$operatorBata);
@@ -194,7 +194,7 @@ class DailyStatementController extends Controller
                 $excavatorReading->bata             = $operatorBata;
                 $excavatorReading->status           = 1;
             } else {
-                return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> Error Code :04/10</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+                return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> #04/10</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
             }
         } else {
             $excavatorReading = new ExcavatorReading;
@@ -214,7 +214,7 @@ class DailyStatementController extends Controller
                 //delete the transaction if associated excavator reading record saving failed.
                 $transaction->delete();
             }
-            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> Error Code :04/11</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> #04/11</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
     }
 
@@ -241,22 +241,22 @@ class DailyStatementController extends Controller
                 $bill = ($totalPitDepth * $rentPerFeet);
             } else {
                 //$rentTypeFlag   = 1;
-                return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.<br>Selected jackhammer has a diffrent rent scheme!<small class='pull-right'> Error Code :04/12</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+                return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.<br>Selected jackhammer has a diffrent rent scheme!<small class='pull-right'> #04/12</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> Error Code :04/13</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> #04/13</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
 
         $recordFlag = JackhammerReading::where('date',$date)->where('jackhammer_id', $jackhammerId)->get();
         if(count($recordFlag) > 0) {
-            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.<br>Reading of this jackhammer has already marked for ".date('d-m-Y', strtotime($date)). "!<small class='pull-right'> Error Code :04/14</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.<br>Reading of this jackhammer has already marked for ".date('d-m-Y', strtotime($date)). "!<small class='pull-right'> #04/14</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
 
         $jackhammerReadingAccount = Account::where('account_name','Jackhammer Reading')->first();
         if($jackhammerReadingAccount) {
             $jackhammerReadingAccountId = $jackhammerReadingAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> Error Code :04/15</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> #04/15</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
 
         $temp = ("Jackhammer rent : ".$depthPerPit." * ".$noOfPit." * ".$rentPerFeet." = ".($depthPerPit*$noOfPit*$rentPerFeet));
@@ -285,10 +285,10 @@ class DailyStatementController extends Controller
                 //delete the transaction if associated jackhammer reading record saving failed.
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> Error Code :04/16</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+                return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> #04/16</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> Error Code :04/17</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
+            return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> #04/17</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
         /*} else {
             $jackhammerReading = new JackhammerReading;

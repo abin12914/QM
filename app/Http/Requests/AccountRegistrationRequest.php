@@ -55,11 +55,10 @@ class AccountRegistrationRequest extends FormRequest
                                             Rule::in(['none','credit','debit'])
                                         ],
             'opening_balance'       => 'required|numeric|max:9999999',
-            'name'                  => 'sometimes|required|max:200',
-            'phone'                 => 'sometimes|required|numeric|digits_between:10,13|unique:account_details',
-            'address'               => 'sometimes|nullable|max:200',
+            'name'                  => 'required|max:200',
+            'phone'                 => 'required|numeric|digits_between:10,13|unique:account_details',
+            'address'               => 'nullable|max:200',
             'relation_type'         => [
-                                            'sometimes',
                                             'required',
                                             'max:10',
                                             Rule::in(['supplier','customer','contractor','general'])

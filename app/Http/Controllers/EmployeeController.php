@@ -8,7 +8,9 @@ use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Employee;
 use App\Models\EmployeeSalary;
+use App\Models\Transaction;
 use DateTime;
+use Auth;
 
 class EmployeeController extends Controller
 {
@@ -42,7 +44,7 @@ class EmployeeController extends Controller
         if(!empty($openingBalanceAccount) && !empty($openingBalanceAccount->id)) {
             $openingBalanceAccountId = $openingBalanceAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the employee details. Try again after reloading the page!<small class='pull-right'> Error Code :08/01</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the employee details. Try again after reloading the page!<small class='pull-right'> #08/01</small>")->with("alert-class","alert-danger");
         }
 
         if ($request->hasFile('image_file')) {
@@ -115,14 +117,14 @@ class EmployeeController extends Controller
                     $transaction->status            = 1;
                     $transaction->created_user_id   = Auth::user()->id;
                     if($transaction->save()) {
-                        $saveFlag = 1;
+                        $flag = 1;
                     } else {
                         //delete the account, account detail if opening balance transaction saving failed
                         $account->delete();
                         $accountDetails->delete();
                         $employee->delete();
 
-                        $saveFlag = 2;
+                        $flag = 2;
                     }
                 } else {
                     //delete the account, account detail if employee saving failed
@@ -144,7 +146,7 @@ class EmployeeController extends Controller
         if($flag == 1) {
             return redirect()->back()->with("message","Successfully Saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the employee details. Try again after reloading the page!<small class='pull-right'> Error Code :08/02/". $flag ."</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the employee details. Try again after reloading the page!<small class='pull-right'> #08/02/". $flag ."</small>")->with("alert-class","alert-danger");
         }
     }
 

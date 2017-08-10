@@ -43,7 +43,7 @@ class JackhammerController extends Controller
         if($jackhammer->save()) {
             return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the Jackhammer details. Try again after reloading the page!<small class='pull-right'> Error Code :10/01</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the Jackhammer details. Try again after reloading the page!<small class='pull-right'> #10/01</small>")->with("alert-class","alert-danger");
         }
     }
 

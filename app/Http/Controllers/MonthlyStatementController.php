@@ -54,10 +54,10 @@ class MonthlyStatementController extends Controller
         if(!empty($employee) && $employeeId == $employee->id) {
             $employeeName = $employee->account->accountDetail->name;
             if($employee->employee_type == "labour") {
-                return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.<br>Selected employee has daily wage scheme; Use daily statement for this employee!<small class='pull-right'> Error Code :05/01</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+                return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.<br>Selected employee has daily wage scheme; Use daily statement for this employee!<small class='pull-right'> #05/01</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.Try again after reloading the page!<small class='pull-right'> Error Code :05/02</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.Try again after reloading the page!<small class='pull-right'> #05/02</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $recordFlag = EmployeeSalary::where('employee_id', $employeeId)->where(function ($query) use($startDate, $endDate) {
@@ -70,14 +70,14 @@ class MonthlyStatementController extends Controller
         })->get();*/
         //$recordFlag = EmployeeSalary::where('employee_id', $employeeId)->where('to_date', '<=', $startDate)->get();
         if(count($recordFlag) > 0) {
-            return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.<br>Salary of this user for the selected date period has already generated!<small class='pull-right'> Error Code :05/03</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.<br>Salary of this user for the selected date period has already generated!<small class='pull-right'> #05/03</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $employeeSalaryAccount = Account::where('account_name','Employee Salary')->first();
         if($employeeSalaryAccount) {
             $employeeSalaryAccountId = $employeeSalaryAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.Try again after reloading the page!<small class='pull-right'> Error Code :05/04</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.Try again after reloading the page!<small class='pull-right'> #05/04</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
 
         $transaction = new Transaction;
@@ -104,10 +104,10 @@ class MonthlyStatementController extends Controller
                 //delete transaction if associated employee salary saving fails
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.Try again after reloading the page!<small class='pull-right'> Error Code :05/05</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+                return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.Try again after reloading the page!<small class='pull-right'> #05/05</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.Try again after reloading the page!<small class='pull-right'> Error Code :05/06</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+            return redirect()->back()->withInput()->with("message","Failed to save the employee salary details.Try again after reloading the page!<small class='pull-right'> #05/06</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
         }
     }
 
@@ -130,10 +130,10 @@ class MonthlyStatementController extends Controller
             if($excavator->rent_type == 'monthly'){
                 $excavatorContractorAccountId = $excavator->contractor_account_id;
             } else {
-                return redirect()->back()->with("message","Failed to save the excavator rent details.<br>Selected excavator has hourly rental scheme; Use daily statement for this machine!<small class='pull-right'> Error Code :05/07</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+                return redirect()->back()->with("message","Failed to save the excavator rent details.<br>Selected excavator has hourly rental scheme; Use daily statement for this machine!<small class='pull-right'> #05/07</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the excavator rent details.Try again after reloading the page!<small class='pull-right'> Error Code :05/08</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator rent details.Try again after reloading the page!<small class='pull-right'> #05/08</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $recordFlag = ExcavatorRent::where('excavator_id', $excavatorId)->where(function ($query) use($fromDate, $toDate) {
@@ -143,14 +143,14 @@ class MonthlyStatementController extends Controller
         })->get();
 
         if(count($recordFlag) > 0) {
-            return redirect()->back()->with("message","Failed to save the excavator rent details.<br>Rent of this excavator for the selected period has already allotted!<small class='pull-right'> Error Code :05/09</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->with("message","Failed to save the excavator rent details.<br>Rent of this excavator for the selected period has already allotted!<small class='pull-right'> #05/09</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $excavatorRentAccount = Account::where('account_name','Excavator Rent')->first();
         if($excavatorRentAccount) {
             $excavatorRentAccountId = $excavatorRentAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the excavator rent details.Try again after reloading the page!<small class='pull-right'> Error Code :05/10</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator rent details.Try again after reloading the page!<small class='pull-right'> #05/10</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
         $transaction = new Transaction;
@@ -177,10 +177,10 @@ class MonthlyStatementController extends Controller
                 //delete transaction if associated employee salary saving fails
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the excavator rent details.Try again after reloading the page!<small class='pull-right'> Error Code :05/11</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+                return redirect()->back()->withInput()->with("message","Failed to save the excavator rent details.Try again after reloading the page!<small class='pull-right'> #05/11</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the excavator rent details.Try again after reloading the page!<small class='pull-right'> Error Code :05/12</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator rent details.Try again after reloading the page!<small class='pull-right'> #05/12</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
     }
 

@@ -51,13 +51,13 @@ class VehicleTypeController extends Controller
                     //delete vehicle type record associated with the royalty saving
                     $vehicleType->delete();
 
-                    return redirect()->back()->withInput()->with("message","Failed to save the truck type and royalty details. Try again after reloading the page!<small class='pull-right'> Error Code :13/01</small>")->with("alert-class","alert-danger");
+                    return redirect()->back()->withInput()->with("message","Failed to save the truck type and royalty details. Try again after reloading the page!<small class='pull-right'> #13/01</small>")->with("alert-class","alert-danger");
                 }
             } else {
                 return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the truck type and royalty details. Try again after reloading the page!<small class='pull-right'> Error Code :13/02</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the truck type and royalty details. Try again after reloading the page!<small class='pull-right'> #13/02</small>")->with("alert-class","alert-danger");
         }	
     }
 

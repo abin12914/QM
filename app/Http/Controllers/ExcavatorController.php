@@ -47,7 +47,7 @@ class ExcavatorController extends Controller
         if($excavator->save()) {
             return redirect()->back()->with("message","Successfully Saved.")->with("alert-class","alert-success");
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the excavator details. Try again after reloading the page!<small class='pull-right'> Error Code :09/01</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator details. Try again after reloading the page!<small class='pull-right'> #09/01</small>")->with("alert-class","alert-danger");
         }
     }
 

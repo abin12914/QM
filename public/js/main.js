@@ -78,7 +78,13 @@ $(function () {
     });
 });
 function dismissAlert() {
-	$("#alert-message").fadeTo(5000, 500).slideUp(5000, function(){
-        $("#alert-message").slideUp(500);
-    });
+    if($("#alert-message").hasClass('alert-success')) {
+    	$("#alert-message").fadeTo(3000, 500).slideUp(500, function(){
+            $("#alert-message").slideUp(500);
+        });
+    } else {
+        $("#alert-message").fadeTo(8000, 500).slideUp(1000, function(){
+            $("#alert-message").slideUp(500);
+        });
+    }
 }

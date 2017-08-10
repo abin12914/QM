@@ -49,14 +49,14 @@ class VoucherController extends Controller
         if($cashAccount) {
             $cashAccountId = $cashAccount->id;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/01</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> #06/01</small>")->with("alert-class","alert-danger");
         }
 
         $account = Account::where('id',$accountId)->first();
         if($account) {
             $name = $account->accountDetail->name;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/02</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> #06/02</small>")->with("alert-class","alert-danger");
         }
 
         if($voucherTransactionType == 1) {
@@ -96,10 +96,10 @@ class VoucherController extends Controller
                 //delete transaction if associated voucher record saving failed.
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/03</small>")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> #06/03</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/04</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> #06/04</small>")->with("alert-class","alert-danger");
         }
     }
 
@@ -119,7 +119,7 @@ class VoucherController extends Controller
         if($debitAccount) {
             $debitAccountName = $debitAccount->accountDetail->name;
         } else{
-            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/05</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> #06/05</small>")->with("alert-class","alert-danger");
 
         }
 
@@ -127,7 +127,7 @@ class VoucherController extends Controller
         if($creditAccount) {
             $creditAccountName = $creditAccount->accountDetail->name;
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/06</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> #06/06</small>")->with("alert-class","alert-danger");
         }
 
         //converting date and time to sql datetime format
@@ -157,10 +157,10 @@ class VoucherController extends Controller
                 //delete transaction if associated voucher record saving failed.
                 $transaction->delete();
 
-                return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/07</small>")->with("alert-class","alert-danger");
+                return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> #06/07</small>")->with("alert-class","alert-danger");
             }
         } else {
-            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> Error Code :06/08</small>")->with("alert-class","alert-danger");
+            return redirect()->back()->withInput()->with("message","Failed to save the voucher details. Try again after reloading the page!<small class='pull-right'> #06/08</small>")->with("alert-class","alert-danger");
         }
     }
 
