@@ -29,7 +29,7 @@ class WeighmentRegistrationRequest extends FormRequest
             'sale_id.integer'       => "Something went wrong. Please try again after reloading the page.",
             'sale_id.in'            => "Something went wrong. Please try again after reloading the page.",
             'quantity.required'     => "Required field.",
-            'quantity.integer'      => "Invalid data",
+            'quantity.numeric'      => "Invalid data",
             'quantity.max'          => "Maximum value exceeded",
             'quantity.min'          => "Minimum value expected",
             'rate.required'         => "Required field.",
@@ -66,7 +66,7 @@ class WeighmentRegistrationRequest extends FormRequest
                                 ],
             'quantity'          => [
                                     'required',
-                                    'integer',
+                                    'numeric',
                                     'max:200',
                                     'min:1'
                                 ],

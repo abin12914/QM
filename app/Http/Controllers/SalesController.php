@@ -45,10 +45,12 @@ class SalesController extends Controller
      */
     public function multipleSaleRegister()
     {
-        $vehicles = Vehicle::with('vehicleType')->get();
-        $accounts = Account::where('type','personal')->get();
-        $products = Product::get();
-        $sales    = Sale::with(['vehicle', 'transaction.debitAccount', 'product'])->orderBy('date_time', 'desc')->take(5)->get();
+        $vehicles       = Vehicle::with('vehicleType')->get();
+        $accounts       = Account::where('type','personal')->get();
+        $cashAccount    = Account::find(1);
+        $accounts->push($cashAccount); //attaching cash account to the accounts
+        $products       = Product::get();
+        $sales      = Sale::with(['vehicle', 'transaction.debitAccount', 'product'])->orderBy('date_time', 'desc')->take(5)->get();
 
         return view('sales.multiple-register',[
                 'vehicles'      => $vehicles,
@@ -321,8 +323,8 @@ class SalesController extends Controller
         }
 
         $royaltyTransaction = new Transaction;
-        $royaltyTransaction->debit_account_id  = $royaltyOwnerAccountId;
-        $royaltyTransaction->credit_account_id = $royaltyAccountId; //royalty account id
+        $royaltyTransaction->debit_account_id  = $royaltyAccountId; //royalty account id
+        $royaltyTransaction->credit_account_id = $royaltyOwnerAccountId;
         $royaltyTransaction->amount            = !empty($royaltyAmount) ? $royaltyAmount : '0';
         $royaltyTransaction->date_time         = $dateTime;
         $royaltyTransaction->particulars       = "Royalty credited for ". $quantity ." Load. [sale ". $saleId ."]";
@@ -553,6 +555,7 @@ class SalesController extends Controller
         $vehicleId          = $request->get('vehicle_id');
         $purchaserAccountId = $request->get('purchaser_account_id');
         $date               = $request->get('date');
+        $time               = $request->get('time');
         $productId          = $request->get('product_id');
         $quantity           = $request->get('quantity');
         $rate               = $request->get('rate');
@@ -584,7 +587,7 @@ class SalesController extends Controller
         }
 
         //converting date and time to sql datetime format
-        $dateTime = date('Y-m-d H:i:s', strtotime($date.' 01:00:00'));
+        $dateTime = date('Y-m-d H:i:s', strtotime($date.' '.$time.':00'));
 
         $transaction = new Transaction;
         $transaction->debit_account_id  = $purchaserAccountId;

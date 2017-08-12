@@ -1,19 +1,19 @@
 @extends('layouts.app')
-@section('title', 'Truck Types And Royalty List')
+@section('title', 'Royalty Statement')
 @section('content')
 <div class="content-wrapper">
      <section class="content-header">
         <h1>
-            Truck Type And Royalty<small>List</small>
+            Royalty Statement
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Vehicle Types And Royalty List</li>
+            <li class="active">Royalty Statement</li>
         </ol>
     </section>
     <!-- Main content -->
     <section class="content">
-        @if (Session::has('message'))
+        @if(Session::has('message'))
             <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
                 <h4>
                   {!! Session::get('message') !!}
@@ -22,15 +22,15 @@
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
-            <div class="col-md-12">
+        <div class="row no-print">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Filter List</h3>
+                        <h3 class="box-title">Filter Search</h3>
                     </div>
-                    <!-- /.box-header -->
                     <div class="box-header">
-                        <form action="{{ route('vehicle-type-list') }}" method="get" class="form-horizontal">
+                        <form action="{{ route('sale-statement-list-search') }}" method="get" class="form-horizontal" multipart-form-data>
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">
@@ -61,58 +61,62 @@
                             </div>
                         </form>
                         <!-- /.form end -->
-                    </div><br>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
                 <div class="box">
+                    <div class="box-header">
+                        @if(empty($fromDate) && !empty($toDate))
+                            <h4>Date : {{ $toDate }}</h4>
+                        @elseif(!empty($fromDate) && empty($toDate))
+                            <h4>Date : {{ $fromDate }}</h4>
+                        @elseif(!empty($fromDate) && !empty($toDate))
+                            <h4>From : {{ $fromDate }} &nbsp;&nbsp;&nbsp; To : {{ $toDate }}</h4>
+                        @endif
+                    </div>
                     <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Date & Time</th>
-                                            <th>Truck Number</th>
-                                            <th>Truck Type</th>
-                                            <th>Royalty Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if(!empty($royaltyRecords))
-                                            @foreach($royaltyRecords as $index => $royalty)
-                                                <tr>
-                                                    <td>{{ $index + $royaltyRecords->firstItem() }}</td>
-                                                    <td>{{ $royalty->date_time }}</td>
-                                                    <td>{{ $royalty->vehicle->reg_number }}</td>
-                                                    <td>{{ $royalty->vehicle->vehicleType->name }}</td>
-                                                    <td>{{ $royalty->transaction->amount }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row no-print">
-                            <div class="col-md-12">
-                                <div class="col-md-6"></div>
-                                <div class="col-md-6">
-                                    <div class="pull-right">
-                                        @if(!empty($royaltyRecords))
-                                            {{ $royaltyRecords->appends(Request::all())->links() }}
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">#</th>
+                                    <th>Truck Type</th>
+                                    <th>No Of Load</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($vehicleTypes as $key => $vehicleType)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $vehicleType->name }}</td>
+                                        <td>{{ $salesCount[$key][$vehicleType->id] }}</td>
+                                        <td>{{ $vehicleType->products->pivot->amount }}</td>
+                                        <td>{{ ($salesCount[$key][$vehicleType->id] * $vehicleType->products->pivot->amount) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <th></th>
+                                    <th>{{ $totalSaleCount }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                     <!-- /.box-body -->
                 </div>
-                <!-- /.boxy -->
+                <!-- /.box -->
             </div>
             <!-- /.col-md-12 -->
         </div>
@@ -122,5 +126,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/list/vehicleType.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/statements/DailyStatement.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection

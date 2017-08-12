@@ -200,7 +200,7 @@ class AccountController extends Controller
         }
 
         $transactions = $query->orderBy('date_time','desc')->paginate(10);
-        
+
         return view('account-statement.statement',[
                 'accounts'              => $accounts,
                 'transactions'          => $transactions,

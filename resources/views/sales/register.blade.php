@@ -375,7 +375,15 @@
                                             <td>{{ $sales_record->vehicle->reg_number }}</td>
                                             <td>{{ $sales_record->transaction->debitAccount->account_name }}</td>
                                             <td>{{ $sales_record->product->name }}</td>
-                                            <td>{{ $sales_record->quantity }} -{{ ($sales_record->measure_type == 3)? 'Load' : 'Cubic feet' }}</td>
+                                            @if($sales_record->measure_type == 3)
+                                                <td>{{ $sales_record->quantity }} -Load</td>
+                                            @elseif($sales_record->measure_type == 1)
+                                                <td>{{ $sales_record->quantity }} -Cubic feet</td>
+                                            @elseif($sales_record->measure_type == 2 && $sales_record->quantity != 0)
+                                                <td>{{ $sales_record->quantity }} -Ton</td>
+                                            @else
+                                                <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

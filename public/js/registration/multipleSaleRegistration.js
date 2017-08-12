@@ -13,6 +13,13 @@ $(function () {
         autoclose: true,
     });
 
+    //Timepicker
+    $(".timepicker").timepicker({
+        minuteStep : 1,
+        showInputs : false,
+        showMeridian : false
+    });
+
     //setting current date as selected
     $('.datepicker').datepicker('setDate', today);
 

@@ -76,12 +76,12 @@
                                                 @endif
                                             </div>
                                             <div class="col-sm-5 {{ !empty($errors->first('time')) ? 'has-error' : '' }}">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <input type="radio" checked>
-                                                    </span>
-                                                    <label class="form-control">Random time will be added</label>
+                                                <div class="bootstrap-timepicker">
+                                                    <input type="text" class="form-control timepicker" name="time" id="time_credit" placeholder="Time" value="{{ old('time') }}" tabindex="23">
                                                 </div>
+                                                @if(!empty($errors->first('time')))
+                                                    <p style="color: red;" >{{$errors->first('time')}}</p>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="form-group">

@@ -90,7 +90,7 @@
                         <div class="row">
                             <div class="col-md-3"></div>
                             <div class="col-md-6">
-                                @if(!empty($selectedAccountName) && !empty($totalDebit) && !empty($totalCredit))
+                                @if(!empty($selectedAccountName))
                                     <div class="box-header">
                                         <div class="pad margin no-print">
                                             <div class="callout callout-default">

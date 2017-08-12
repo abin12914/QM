@@ -138,7 +138,7 @@
                                 <div class="col-md-6">
                                     <div class="pull-right">
                                         @if(!empty($vehicles))
-                                            {{ $vehicles->links() }}
+                                            {{ $vehicles->appends(Request::all())->links() }}
                                         @endif
                                     </div>
                                 </div>

@@ -140,5 +140,6 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/statement/account-statement', 'AccountController@accountSatementSearch')->name('account-statement-list-search');
 		Route::get('/statement/daily-statement', 'DailyStatementController@dailySatementSearch')->name('daily-statement-list-search');
 		Route::get('/statement/sale', 'SalesController@statement')->name('sale-statement-list-search');
+		Route::get('/statement/royalty', 'VehicleTypeController@statement')->name('royalty-statement-list-search');
 	});
 });

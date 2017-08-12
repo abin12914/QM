@@ -73,6 +73,9 @@ class MultipleCreditSaleRegistrationRequest extends FormRequest
                                             'required',
                                             'date_format:d-m-Y',
                                         ],
+            'time'                  => [
+                                            'required',
+                                        ],
             'product_id'            => [
                                             'required',
                                             'integer',
