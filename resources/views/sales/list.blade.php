@@ -141,6 +141,7 @@
                                             <th>Truck Type</th>
                                             <th>Product</th>
                                             <th>Purchaser</th>
+                                            <th>Quantity</th>
                                             <th>Bill Amount</th>
                                         </tr>
                                     </thead>
@@ -156,7 +157,9 @@
                                                     <td>{{ $sale->transaction->debitAccount->account_name }}</td>
                                                     @if($sale->measure_type == 2 && ($sale->quantity <= 0))
                                                         <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                        <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
                                                     @else
+                                                        <td>{{ $sale->quantity }} -{{ ($sale->measure_type == 3)? 'Load' : 'Cubic feet' }}</td>
                                                         <td  title="{{ $sale->quantity }} * {{ $sale->rate }}">{{ $sale->total_amount }}</td>
                                                     @endif
                                                 </tr>

@@ -52,7 +52,8 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//vehicle type
 		Route::get('/vehicle-type/register', 'VehicleTypeController@register')->name('vehicle-type-register-view');
 		Route::post('/vehicle-type/register/action', 'VehicleTypeController@registerAction')->name('vehicle-type-register-action');
-		Route::get('/vehicle-type/list', 'VehicleTypeController@list')->name('vehicle-type-list');		
+		Route::get('/vehicle-type/list', 'VehicleTypeController@list')->name('vehicle-type-list');
+		Route::get('/vehicle-type/chart', 'VehicleTypeController@chart')->name('vehicle-type-chart');
 	});
 
 	//user routes
@@ -91,6 +92,9 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/sales/register', 'SalesController@register')->name('sales-register-view');
 		Route::post('/sales/credit/register/action', 'SalesController@creditSaleRegisterAction')->name('credit-sales-register-action');
 		Route::post('/sales/cash/register/action', 'SalesController@cashSaleRegisterAction')->name('cash-sales-register-action');
+		Route::get('/sales/multiple/register', 'SalesController@multipleSaleRegister')->name('multiple-sales-register-view');
+		Route::post('/sales/multiple/credit/register/action', 'SalesController@multipleCreditSaleRegisterAction')->name('multiple-credit-sales-register-action');
+
 		Route::get('/sales/list', 'SalesController@list')->name('sales-list-search');
 		Route::get('/sales/get/last/vehicle/{id}', 'SalesController@getLastSaleByVehicleId')->name('sale-get-last-by-vehicle-id');
 
@@ -135,5 +139,6 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//final statement
 		Route::get('/statement/account-statement', 'AccountController@accountSatementSearch')->name('account-statement-list-search');
 		Route::get('/statement/daily-statement', 'DailyStatementController@dailySatementSearch')->name('daily-statement-list-search');
+		Route::get('/statement/sale', 'SalesController@statement')->name('sale-statement-list-search');
 	});
 });

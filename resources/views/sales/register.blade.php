@@ -365,6 +365,7 @@
                                         <th>Truck Number</th>
                                         <th>Purchaser</th>
                                         <th>Product</th>
+                                        <th>Quantity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -374,6 +375,7 @@
                                             <td>{{ $sales_record->vehicle->reg_number }}</td>
                                             <td>{{ $sales_record->transaction->debitAccount->account_name }}</td>
                                             <td>{{ $sales_record->product->name }}</td>
+                                            <td>{{ $sales_record->quantity }} -{{ ($sales_record->measure_type == 3)? 'Load' : 'Cubic feet' }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

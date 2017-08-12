@@ -109,6 +109,11 @@
                                 <i class="fa fa-circle-o"></i> Weighment Registration
                             </a>
                         </li>
+                        <li class="{{ Request::is('sales/multiple/*')? 'active' : '' }}">
+                            <a href="{{route('multiple-sales-register-view')}}">
+                                <i class="fa fa-circle-o"></i> Multiple Sale Registration
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="treeview {{ Request::is('purchases/*')? 'active' : '' }}">
@@ -212,6 +217,11 @@
                         <li class="{{ Request::is('statement/daily-statement')? 'active' : '' }}">
                             <a href="{{route('daily-statement-list-search')}}">
                                 <i class="fa fa-circle-o"></i> Transaction Statement
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('statement/sale')? 'active' : '' }}">
+                            <a href="{{route('sale-statement-list-search')}}">
+                                <i class="fa fa-circle-o"></i> Sales Statement
                             </a>
                         </li>
                     </ul>
@@ -363,7 +373,12 @@
                         </li>
                         <li class="{{ Request::is('vehicle-type/list')? 'active' : '' }}">
                             <a href="{{route('vehicle-type-list') }}">
-                                <i class="fa fa-circle-o"></i> List
+                                <i class="fa fa-circle-o"></i> Royalty List
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('vehicle-type/chart')? 'active' : '' }}">
+                            <a href="{{route('vehicle-type-chart') }}">
+                                <i class="fa fa-circle-o"></i> Royalty Chart
                             </a>
                         </li>
                     </ul>

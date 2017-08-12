@@ -108,7 +108,7 @@
                                 <div class="form-group">
                                     <label for="vehicle_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Vehicle Type : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('vehicle_type')) ? 'has-error' : '' }}">
-                                        <select class="form-control" name="vehicle_type" id="vehicle_type" tabindex="8">
+                                        <select class="form-control" name="vehicle_type" id="vehicle_type" tabindex="7">
                                             <option value="" {{ empty(old('vehicle_type')) ? 'selected' : '' }}selected>Select vehicle type</option>
                                             @foreach($vehicleTypes as $vehicleType)
                                                 <option value="{{ $vehicleType->id }}" {{ (old('vehicle_type') == $vehicleType->id) ? 'selected' : '' }}>{{ $vehicleType->name }} - {{ $vehicleType->generic_quantity }} cubic unit class</option>
@@ -131,7 +131,7 @@
                                 <div class="form-group">
                                     <label for="body_type" class="col-sm-2 control-label"><b style="color: red;">* </b> Body Type : </label>
                                     <div class="col-sm-10 {{ !empty($errors->first('body_type')) ? 'has-error' : '' }}">
-                                        <select class="form-control" name="body_type" id="body_type" tabindex="10">
+                                        <select class="form-control" name="body_type" id="body_type" tabindex="9">
                                             <option value="" {{ empty(old('body_type')) ? 'selected' : '' }}>Select body type</option>
                                             <option value="level" {{ (old('body_type') == 'level') ? 'selected' : '' }}>Level</option>
                                             <option value="extra-1" {{ (old('body_type') == 'extra-1') ? 'selected' : '' }}>Extended Body</option>
@@ -148,11 +148,11 @@
                             <div class="row">
                                 <div class="col-xs-3"></div>
                                 <div class="col-xs-3">
-                                    <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="12">Clear</button>
+                                    <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="11">Clear</button>
                                 </div>
                                 {{-- <div class="col-sm-1"></div> --}}
                                 <div class="col-xs-3">
-                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="11">Submit</button>
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="10">Submit</button>
                                 </div>
                                 <!-- /.col -->
                             </div><br>

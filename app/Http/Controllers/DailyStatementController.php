@@ -506,7 +506,31 @@ class DailyStatementController extends Controller
             $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
         }
 
-        $transactions = $query->get();
+        $salesQuery = clone $query;
+        $sales = $salesQuery->where('credit_account_id', 2)->sum('amount');
+
+        $purchasesQuery = clone $query;
+        $purchases = $purchasesQuery->where('debit_account_id', 3)->sum('amount');
+
+        $labourWageQuery = clone $query;
+        $labourWage = $labourWageQuery->where('debit_account_id', 4)->sum('amount');
+
+        $excavatorReadingRentQuery = clone $query;
+        $excavatorReadingRent = $excavatorReadingRentQuery->where('debit_account_id', 5)->sum('amount');
+
+        $jackhammerRentQuery = clone $query;
+        $jackhammerRent = $jackhammerRentQuery->where('debit_account_id', 6)->sum('amount');
+
+        $employeeSalaryQuery = clone $query;
+        $employeeSalary = $employeeSalaryQuery->where('debit_account_id', 7)->sum('amount');
+
+        $excavatorMonthlyRentQuery = clone $query;
+        $excavatorMonthlyRent = $excavatorMonthlyRentQuery->where('debit_account_id', 8)->sum('amount');
+
+        $royaltyQuery = clone $query;
+        $royalty = $royaltyQuery->where('debit_account_id', 9)->sum('amount');
+
+        /*$transactions = $query->get(); //alternate code if cloning has ay issue
         
         foreach ($transactions as $key => $transaction) {
             if($transaction->credit_account_id == 2) {
@@ -538,7 +562,7 @@ class DailyStatementController extends Controller
                 default:
                     break;
             }
-        }
+        }*/
 
         $totalCredit    = $sales;
         $totalDebit     = $purchases + $labourWage + $excavatorReadingRent + $jackhammerRent + $employeeSalary + $excavatorMonthlyRent + $royalty;

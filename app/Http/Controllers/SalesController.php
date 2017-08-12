@@ -10,18 +10,20 @@ use App\Models\Sale;
 use App\Models\Transaction;
 use App\Models\UserIssuedCreditSale;
 use App\Models\VehicleType;
-use App\Models\RoyaltyChart;
+//use App\Models\RoyaltyChart;
 use App\Models\Royalty;
 use Auth;
 use DateTime;
+use Carbon\Carbon;
 use App\Http\Requests\CreditSaleRegistrationRequest;
 use App\Http\Requests\CashSaleRegistrationRequest;
 use App\Http\Requests\WeighmentRegistrationRequest;
+use App\Http\Requests\MultipleCreditSaleRegistrationRequest;
 
 class SalesController extends Controller
 {
     /**
-     * Return view for account registration
+     * Return view for sale registration
      */
     public function register()
     {
@@ -31,6 +33,24 @@ class SalesController extends Controller
         $sales    = Sale::with(['vehicle', 'transaction.debitAccount', 'product'])->orderBy('date_time', 'desc')->take(5)->get();
 
         return view('sales.register',[
+                'vehicles'      => $vehicles,
+                'accounts'      => $accounts,
+                'products'      => $products,
+                'sales_records' => $sales,
+            ]);
+    }
+
+    /**
+     * Return view for multiple sales registration
+     */
+    public function multipleSaleRegister()
+    {
+        $vehicles = Vehicle::with('vehicleType')->get();
+        $accounts = Account::where('type','personal')->get();
+        $products = Product::get();
+        $sales    = Sale::with(['vehicle', 'transaction.debitAccount', 'product'])->orderBy('date_time', 'desc')->take(5)->get();
+
+        return view('sales.multiple-register',[
                 'vehicles'      => $vehicles,
                 'accounts'      => $accounts,
                 'products'      => $products,
@@ -95,7 +115,7 @@ class SalesController extends Controller
         $transaction->credit_account_id = $salesAccountId; //sale account id
         $transaction->amount            = !empty($deductedTotal) ? $deductedTotal : '0';
         $transaction->date_time         = $dateTime;
-        $transaction->particulars       = ("Credit sale".(($measureType == 2) ? ' (Weighment pending)' : ''));
+        $transaction->particulars       = ("Credit sale [1 Load]".(($measureType == 2) ? ' (Weighment pending)' : ''));
         $transaction->status            = 1;
         $transaction->created_user_id   = Auth::user()->id;
         if($transaction->save()) {
@@ -119,7 +139,7 @@ class SalesController extends Controller
             $sale->status           = 1;
             
             if($sale->save()) {
-                $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId);
+                $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, 1, $royaltyAccountId, $royaltyOwnerAccountId);
                 if($royaltyFlag == 0) {
                     return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
                 } else {
@@ -214,7 +234,7 @@ class SalesController extends Controller
         $transaction->credit_account_id = $salesAccountId; //sale account id
         $transaction->amount            = $deductedTotal;
         $transaction->date_time         = $dateTime;
-        $transaction->particulars       = "Cash sale";
+        $transaction->particulars       = "Cash sale [1 Load]";
         $transaction->status            = 1;
         $transaction->created_user_id   = $userId;
         if($transaction->save()) {
@@ -232,7 +252,7 @@ class SalesController extends Controller
             
             if($sale->save()) {
 
-                $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId);
+                $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, 1, $royaltyAccountId, $royaltyOwnerAccountId);
                 if($royaltyFlag != 0) {
                     //delete the sale and transaction if associated sale royality saving failed.
                     $transaction->delete();
@@ -277,9 +297,9 @@ class SalesController extends Controller
     /**
      * Handle royalty save for each sale [call from sale save action]
      */
-    public function saveRoyalty($saleId, $vehicleId, $productId, $dateTime, $royaltyAccountId, $royaltyOwnerAccountId)
+    public function saveRoyalty($saleId, $vehicleId, $productId, $dateTime, $quantity, $royaltyAccountId, $royaltyOwnerAccountId)
     {
-        if(empty($saleId) || empty($vehicleId) || empty($productId) || empty($dateTime) || empty($royaltyAccountId) || empty($royaltyOwnerAccountId)) {
+        if(empty($saleId) || empty($vehicleId) || empty($productId) || empty($dateTime) || empty($quantity) || empty($royaltyAccountId) || empty($royaltyOwnerAccountId)) {
             return 1;
         }
 
@@ -290,7 +310,7 @@ class SalesController extends Controller
             if(!empty($vehicleTypeRecord) && !empty($vehicleTypeRecord->id)) {
                 foreach($vehicleTypeRecord->products as $product) {
                     if($product->id == $productId) {
-                        $royaltyAmount = $product->pivot->amount;
+                        $royaltyAmount = ($product->pivot->amount * $quantity);
                     }
                 }
             } else {
@@ -305,7 +325,7 @@ class SalesController extends Controller
         $royaltyTransaction->credit_account_id = $royaltyAccountId; //royalty account id
         $royaltyTransaction->amount            = !empty($royaltyAmount) ? $royaltyAmount : '0';
         $royaltyTransaction->date_time         = $dateTime;
-        $royaltyTransaction->particulars       = "Royalty credited for sale ".$saleId;
+        $royaltyTransaction->particulars       = "Royalty credited for ". $quantity ." Load. [sale ". $saleId ."]";
         $royaltyTransaction->status            = 1;
         $royaltyTransaction->created_user_id   = Auth::user()->id;
         if($royaltyTransaction->save()) {
@@ -524,6 +544,155 @@ class SalesController extends Controller
     }
 
     /**
+     * Handle multiple credit sale registrations
+     */
+    public function multipleCreditSaleRegisterAction(MultipleCreditSaleRegistrationRequest $request)
+    {
+        $saveFlag       = 0;
+
+        $vehicleId          = $request->get('vehicle_id');
+        $purchaserAccountId = $request->get('purchaser_account_id');
+        $date               = $request->get('date');
+        $productId          = $request->get('product_id');
+        $quantity           = $request->get('quantity');
+        $rate               = $request->get('rate');
+        $billAmount         = $request->get('bill_amount');
+
+        $salesAccount = Account::where('account_name','Sales')->first();
+        if(!empty($salesAccount) && !empty($salesAccount->id)) {
+            $salesAccountId = $salesAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'> #02/29</small>")->with("alert-class","alert-danger");
+        }
+
+        $royaltyAccount = Account::where('account_name','Sale Royalty')->first();
+        if(!empty($royaltyAccount) && !empty($royaltyAccount->id)) {
+            $royaltyAccountId = $royaltyAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/30</small>")->with("alert-class","alert-danger");
+        }
+
+        $royaltyOwnerAccount = Account::where('relation', 'royalty owner')->first();
+        if($royaltyOwnerAccount && !empty($royaltyOwnerAccount->id)) {
+            $royaltyOwnerAccountId = $royaltyOwnerAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/31</small>")->with("alert-class","alert-danger");
+        }
+
+        if(($quantity * $rate) != $billAmount) {
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/32</small>")->with("alert-class","alert-danger");
+        }
+
+        //converting date and time to sql datetime format
+        $dateTime = date('Y-m-d H:i:s', strtotime($date.' 01:00:00'));
+
+        $transaction = new Transaction;
+        $transaction->debit_account_id  = $purchaserAccountId;
+        $transaction->credit_account_id = $salesAccountId; //sale account id
+        $transaction->amount            = !empty($billAmount) ? $billAmount : 0;
+        $transaction->date_time         = $dateTime;
+        $transaction->particulars       = ("Credit sale - ". $quantity ." Load");
+        $transaction->status            = 1;
+        $transaction->created_user_id   = Auth::user()->id;
+        if($transaction->save()) {
+            $sale = new Sale;
+            $sale->transaction_id   = $transaction->id;
+            $sale->vehicle_id       = $vehicleId;
+            $sale->date_time        = $dateTime;
+            $sale->product_id       = $productId;
+            $sale->measure_type     = 3;
+            $sale->quantity         = $quantity;
+            $sale->rate             = $rate;
+            $sale->discount         = 0;
+            $sale->total_amount     = $billAmount;
+            $sale->status           = 1;
+            
+            if($sale->save()) {
+                $royaltyFlag = $this->saveRoyalty($sale->id, $vehicleId, $productId, $dateTime, $quantity, $royaltyAccountId, $royaltyOwnerAccountId);
+                if($royaltyFlag == 0) {
+                    return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success");
+                } else {
+                    //delete the sale and transaction if associated sale royality saving failed.
+                    $transaction->delete();
+                    $sale->delete();
+
+                    return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/33/".$royaltyFlag."</small>")->with("alert-class","alert-danger");
+                }
+            } else {
+                //delete the transaction record if associated sale saving failed.
+                $transaction->delete();
+
+                return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/34</small>")->with("alert-class","alert-danger");
+            }
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/35</small>")->with("alert-class","alert-danger");
+        }
+    }
+
+    /**
+     * Return view for sale statement
+     */
+    public function statement(Request $request)
+    {
+        $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
+        $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
+
+        $vehicleTypes = VehicleType::where('status', 1)->get();
+
+        $query = Sale::where('status', 1);
+
+        if(empty($fromDate) && empty($toDate)) {
+            $query = $query->whereDate('date_time', Carbon::today()->toDateString());
+        } else if(!empty($fromDate) && empty($toDate)){
+            $searchFromDate = Carbon::createFromFormat('d-m-Y', $fromDate);
+
+            $query = $query->whereDate('date_time', $searchFromDate->toDateString());
+        } else if(empty($fromDate) && !empty($toDate)) {
+            $searchToDate = Carbon::createFromFormat('d-m-Y', $toDate);
+
+            $query = $query->whereDate('date_time', $searchToDate->toDateString());
+        } else {
+            $searchFromDate = Carbon::createFromFormat('d-m-Y H:i:s', $fromDate." 00:00:00");
+            $searchToDate = Carbon::createFromFormat('d-m-Y H:i:s', $toDate." 23:59:59");
+
+            $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
+        }
+
+        $salesCount         = [];
+        $totalSaleCount     = 0;
+        $singleSalecount    = 0;
+        $multipleSalecount  = 0;
+
+        foreach ($vehicleTypes as $vehicleType) {
+            $singleSaleCountQuery   = clone $query; //cloning query
+            $multipleSaleCountQuery = clone $query; //cloning query
+
+            $vehicleTypeId = $vehicleType->id;
+            $singleSalecount = $singleSaleCountQuery->whereHas('vehicle', function ($qry) use($vehicleTypeId) {
+                                $qry->where('vehicle_type_id', $vehicleTypeId);
+                            })->whereIn('measure_type', [1, 2])->count();
+
+            $multipleSalecount = $multipleSaleCountQuery->whereHas('vehicle', function ($qry) use($vehicleTypeId) {
+                                $qry->where('vehicle_type_id', $vehicleTypeId);
+                            })->where('measure_type', 3)->sum('quantity');
+
+            $totalSaleCount = $totalSaleCount + $singleSalecount + $multipleSalecount;
+
+            $salesCount[] = [
+                $vehicleType->id => ($singleSalecount + $multipleSalecount)
+            ];
+        }
+
+        return view('sales.statement',[
+                'vehicleTypes'      => $vehicleTypes,
+                'salesCount'        => $salesCount,
+                'totalSaleCount'    => $totalSaleCount,
+                'fromDate'          => $fromDate,
+                'toDate'            => $toDate
+            ]);
+    }
+
+    /**
      * /Return sales details for given vehicle id
      * /Return old balance for user issued credit on cash transactions
      */
@@ -534,7 +703,7 @@ class SalesController extends Controller
         $sale = Sale::where('vehicle_id',$vehicleId)->orderBy('created_at', 'desc')->first();
         $userIssuedCreditSales = UserIssuedCreditSale::where('vehicle_id',$vehicleId)->get();
 
-        if(!empty($userIssuedCreditSales)) {
+        if(!empty($userIssuedCreditSales) && count($userIssuedCreditSales) > 0) {
             foreach ($userIssuedCreditSales as $userIssuedCreditSale) {
                 $totalCredit    = $totalCredit + $userIssuedCreditSale->credit_amount;
                 $totalDebit     = $totalDebit + $userIssuedCreditSale->debit_amount;
@@ -545,12 +714,14 @@ class SalesController extends Controller
             $productId          = $sale->product_id;
             $purchaserAccountId = $sale->transaction->debit_account_id;
             $measureType        = $sale->measure_type;
+            $rate               = $sale->rate;
 
             return([
                     'flag'                  => true,
                     'productId'             => $productId,
                     'purchaserAccountId'    => $purchaserAccountId,
                     'measureType'           => $measureType,
+                    'rate'                  => $rate,
                     'oldBalance'            => $oldBalance
                 ]);
         } else {

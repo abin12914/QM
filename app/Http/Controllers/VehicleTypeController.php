@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\VehicleTypeRegistrationRequest;
 use App\Models\VehicleType;
 use App\Models\Product;
+use App\Models\Royalty;
+use Carbon\Carbon;
 
 class VehicleTypeController extends Controller
 {
@@ -64,7 +66,7 @@ class VehicleTypeController extends Controller
     /**
      * Return view for vehicle type listing
      */
-    public function list(Request $request)
+    public function chart(Request $request)
     {
         $vehicleTypeId  = !empty($request->get('vehicle_type_id')) ? $request->get('vehicle_type_id') : 0;
         $productId      = !empty($request->get('product_id')) ? $request->get('product_id') : 0;
@@ -84,14 +86,52 @@ class VehicleTypeController extends Controller
             });
         }
 
-        $vehicleTypes = $query->with('products')->orderBy('generic_quantity','desc')->paginate(10);
+        $vehicleTypes = $query->with('products')->orderBy('generic_quantity','desc')->paginate(5);
 
-        return view('vehicle-type.list',[
+        return view('vehicle-type.chart',[
                 'vehicleTypesCombobox'  => $vehicleTypesCombobox,
                 'products'              => $products,
                 'vehicleTypes'          => $vehicleTypes,
                 'vehicleTypeId'         => $vehicleTypeId,
                 'productId'              => $productId
+            ]);
+    }
+
+    /**
+     * Return view for vehicle type listing
+     */
+    public function list(Request $request)
+    {
+        $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
+        $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
+
+        $vehicleTypes = VehicleType::where('status', 1)->get();
+
+        $query = Royalty::where('status', 1);
+
+        if(empty($fromDate) && empty($toDate)) {
+            $query = $query->whereDate('date_time', Carbon::today()->toDateString());
+        } else if(!empty($fromDate) && empty($toDate)){
+            $searchFromDate = Carbon::createFromFormat('d-m-Y', $fromDate);
+
+            $query = $query->whereDate('date_time', $searchFromDate->toDateString());
+        } else if(empty($fromDate) && !empty($toDate)) {
+            $searchToDate = Carbon::createFromFormat('d-m-Y', $toDate);
+
+            $query = $query->whereDate('date_time', $searchToDate->toDateString());
+        } else {
+            $searchFromDate = Carbon::createFromFormat('d-m-Y H:i:s', $fromDate." 00:00:00");
+            $searchToDate = Carbon::createFromFormat('d-m-Y H:i:s', $toDate." 23:59:59");
+
+            $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
+        }
+
+        $royaltyRecords = $query->with(['transaction', 'vehicle.vehicleType'])->orderBy('date_time','desc')->paginate(10);
+
+        return view('vehicle-type.list',[
+                'royaltyRecords'   => $royaltyRecords,
+                'fromDate'  => $fromDate,
+                'toDate'    => $toDate,
             ]);
     }
 }
