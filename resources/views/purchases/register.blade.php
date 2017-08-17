@@ -32,7 +32,7 @@
                                 <p>&nbsp&nbsp&nbsp(Fields marked with <b style="color: red;">* </b>are mandatory.)</p>
                         </div>
                         <!-- form start -->
-                        <form action="{{route('purchases-register-action')}}" id="purchase_form" method="post" class="form-horizontal" multipart-form-data>
+                        <form action="{{route('purchases-register-action')}}" id="purchase_form" method="post" class="form-horizontal">
                             <div class="box-body">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <div class="row">
@@ -101,6 +101,21 @@
                                                 </select>
                                                 @if(!empty($errors->first('product_id')))
                                                     <p style="color: red;" >{{$errors->first('product_id')}}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="explosive_quantity_div" {{ (old('product_id') != '2') ? 'hidden' : '' }}>
+                                            <label for="explosive_quantity_div" class="col-sm-2 control-label"><b style="color: red;">* </b> No of Cap & Gel : </label>
+                                            <div class="col-sm-5 {{ !empty($errors->first('explosive_quantity_cap')) ? 'has-error' : '' }}">
+                                                <input type="text" class="form-control number_only" name="explosive_quantity_cap" id="explosive_quantity_cap" placeholder="No of cap/detonator" value="{{ old('explosive_quantity_cap') }}">
+                                                @if(!empty($errors->first('explosive_quantity_cap')))
+                                                    <p style="color: red;" >{{$errors->first('explosive_quantity_cap')}}</p>
+                                                @endif
+                                            </div>
+                                            <div class="col-sm-5 {{ !empty($errors->first('explosive_quantity_gel')) ? 'has-error' : '' }}">
+                                                <input type="text" class="form-control number_only" name="explosive_quantity_gel" id="explosive_quantity_gel" placeholder="No of gel" value="{{ old('explosive_quantity_gel') }}">
+                                                @if(!empty($errors->first('explosive_quantity_gel')))
+                                                    <p style="color: red;" >{{$errors->first('explosive_quantity_gel')}}</p>
                                                 @endif
                                             </div>
                                         </div>

@@ -34,14 +34,17 @@ class PurchasesController extends Controller
      */
     public function registerAction(PurchaseRegistrationRequest $request)
     {
-        $transactionType    = $request->get('transaction_type');
-        $supplierAccountId  = $request->get('supplier_account_id');
-        $date               = $request->get('date');
-        $time               = $request->get('time');
-        $productId          = $request->get('product_id');
-        $billNo             = $request->get('bill_no');
-        $description        = $request->get('description');
-        $billAmount         = $request->get('bill_amount');
+        $tempDescription        = '';
+        $transactionType        = $request->get('transaction_type');
+        $supplierAccountId      = $request->get('supplier_account_id');
+        $date                   = $request->get('date');
+        $time                   = $request->get('time');
+        $productId              = $request->get('product_id');
+        $explosiveQuantityCap   = $request->get('explosive_quantity_cap');
+        $explosiveQuantityGel   = $request->get('explosive_quantity_gel');
+        $billNo                 = $request->get('bill_no');
+        $description            = $request->get('description');
+        $billAmount             = $request->get('bill_amount');
 
         $purchaseAccount = Account::where('account_name','Purchases')->first();
         if($purchaseAccount) {
@@ -59,6 +62,16 @@ class PurchasesController extends Controller
             }
         }
 
+        if($productId == 2) {
+            $tempDescription = ("Cap : " . $explosiveQuantityCap . " Gel : " . $explosiveQuantityGel);
+        }
+
+        if($transactionType == 1) {
+            $tempDescription = ($tempDescription . " - [Credit purchase] ");
+        } else {
+            $tempDescription = ($tempDescription . " - [Cash purchase] ");
+        }
+
         //converting date and time to sql datetime format
         $dateTime = date('Y-m-d H:i:s', strtotime($date.' '.$time.':00'));
 
@@ -67,7 +80,7 @@ class PurchasesController extends Controller
         $transaction->credit_account_id = $transactionType == 1 ? $supplierAccountId : $cashAccountId; //supplier
         $transaction->amount            = !empty($billAmount) ? $billAmount : '0';
         $transaction->date_time         = $dateTime;
-        $transaction->particulars       = ($transactionType == 1 ? "Credit purchase" : "Cash purchase")." : ".$description;
+        $transaction->particulars       = $tempDescription . $description;
         $transaction->status            = 1;
         $transaction->created_user_id   = Auth::user()->id;
         if($transaction->save()) {

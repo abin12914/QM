@@ -120,7 +120,7 @@
                                             @foreach($accounts as $index => $account)
                                                 <tr>
                                                     {{-- <td>{{ (!empty(Request::get('page')) ? Request::get('page')-1 : 0) * 10 + ($index+1) }}</td> --}}
-                                                    <td>{{ $index+1 }}</td>
+                                                    <td>{{ $index + $accounts->firstItem() }}</td>
                                                     <td>{{ $account->account_name }}</td>
                                                     <td>{{ $account->type }}</td>
                                                     <td>{{ $account->relation }}</td>

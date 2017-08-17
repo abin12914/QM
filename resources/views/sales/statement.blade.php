@@ -30,7 +30,7 @@
                         <h3 class="box-title">Filter Search</h3>
                     </div>
                     <div class="box-header">
-                        <form action="{{ route('sale-statement-list-search') }}" method="get" class="form-horizontal" multipart-form-data>
+                        <form action="{{ route('sale-statement-list-search') }}" method="get" class="form-horizontal">
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">

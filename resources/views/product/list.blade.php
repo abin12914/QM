@@ -36,6 +36,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Name</th>
                                             <th>Description</th>
                                             <th>Rate per Feet</th>
@@ -44,8 +45,9 @@
                                     </thead>
                                     <tbody>
                                         @if(!empty($products))
-                                            @foreach($products as $product)
+                                            @foreach($products as $index => $product)
                                                 <tr>
+                                                    <td>{{ $index + $products->firstItem() }}</td>
                                                     <td>{{ $product->name }}</td>
                                                     <td>{{ $product->description }}</td>
                                                     <td>{{ $product->rate_feet }}</td>

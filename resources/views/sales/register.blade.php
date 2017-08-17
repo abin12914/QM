@@ -35,7 +35,7 @@
                     <div class="tab-content">
                         <div class="{{ (empty(old('transaction_type')) || old('transaction_type') == 'credit') ? 'active' : '' }} tab-pane" id="credit_sale_tab">
                             <!-- form start -->
-                            <form action="{{route('credit-sales-register-action')}}" id="credit_sale_form" method="post" class="form-horizontal" multipart-form-data>
+                            <form action="{{route('credit-sales-register-action')}}" id="credit_sale_form" method="post" class="form-horizontal">
                                 <div class="box-body">
                                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                                     <input type="hidden" name="transaction_type" value="credit">
@@ -184,7 +184,7 @@
                         <!-- /.tab-pane -->
                         <div class="{{ (old('transaction_type') == 'cash') ? 'active' : '' }} tab-pane" id="cash_sale_tab">
                             <!-- form start -->
-                            <form action="{{route('cash-sales-register-action')}}" id="cash_sale_form" method="post" class="form-horizontal" multipart-form-data>
+                            <form action="{{route('cash-sales-register-action')}}" id="cash_sale_form" method="post" class="form-horizontal">
                                 <div class="box-body">
                                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                                     <input type="hidden" name="transaction_type" value="cash">

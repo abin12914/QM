@@ -39,6 +39,20 @@ $(function () {
     //Initialize Select2 Element for vehicler number select box
     $(".product").select2();
 
+    //show quantity options for explosive purchase only
+    $('body').on("change", "#product", function () {
+        var productId = $('#product').val();
+        if(productId == 2) {
+            $('#explosive_quantity_cap').prop('disabled',false);
+            $('#explosive_quantity_gel').prop('disabled',false);
+            $('#explosive_quantity_div').show();
+        } else {
+            $('#explosive_quantity_cap').prop('disabled',true);
+            $('#explosive_quantity_gel').prop('disabled',true);
+            $('#explosive_quantity_div').hide();
+        }
+    });
+
     //show supplier options for cash transaction only
     $('body').on("change", ".transaction_type", function () {
         if($('#transaction_type_cash').is(':checked')) {

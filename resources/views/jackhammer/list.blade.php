@@ -92,6 +92,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Name</th>
                                             <th>Contractor</th>
                                             <th>Rent Type</th>
@@ -101,8 +102,9 @@
                                     </thead>
                                     <tbody>
                                         @if(!empty($jackhammers))
-                                            @foreach($jackhammers as $jackhammer)
+                                            @foreach($jackhammers as $index => $jackhammer)
                                                 <tr>
+                                                    <td>{{ $index + $jackhammers->firstItem() }}</td>
                                                     <td>{{ $jackhammer->name }}</td>
                                                     <td>{{ $jackhammer->account->account_name }}</td>
                                                     <td>{{ ($jackhammer->rent_type == 'per_feet') ? "Rent Per Feet" : "Other" }}</td>

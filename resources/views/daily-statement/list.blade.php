@@ -36,7 +36,7 @@
                             <div class="{{ Request::is('daily-statement/list/employee')? 'active' : '' }} tab-pane" id="employee_tab">
                                 <!-- box-header -->
                                 <div class="box-header no-print">
-                                    <form action="{{ route('daily-statement-list-employee') }}" method="get" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('daily-statement-list-employee') }}" method="get" class="form-horizontal">
                                         <div class="row">
                                             <div class="col-md-1"></div>
                                             <div class="col-md-10">
@@ -118,7 +118,7 @@
                                                     @if(count($employeeAttendance) > 0)
                                                         @foreach($employeeAttendance as $index => $attendance)
                                                             <tr>
-                                                                <td>{{ $index+1 }}</td>
+                                                                <td>{{ $index + $employeeAttendance->firstItem() }}</td>
                                                                 <td>{{ $attendance->date }}</td>
                                                                 <td>{{ $attendance->employee->account->accountDetail->name }}</td>
                                                                 <td>{{ $attendance->employee->account->account_name }}</td>
@@ -149,7 +149,7 @@
                             <div class="{{ Request::is('daily-statement/list/excavator')? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <!-- box-header -->
                                 <div class="box-header no-print">
-                                    <form action="{{ route('daily-statement-list-excavator') }}" method="get" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('daily-statement-list-excavator') }}" method="get" class="form-horizontal">
                                         <div class="row">
                                             <div class="col-md-1"></div>
                                             <div class="col-md-10">
@@ -232,7 +232,7 @@
                                                 <tbody>
                                                     @foreach($excavatorReadings as $index => $excavatorReading)
                                                         <tr>
-                                                            <td>{{ $index+1 }}</td>
+                                                            <td>{{ $index + $excavatorReadings->firstItem() }}</td>
                                                             <td>{{ $excavatorReading->date }}</td>
                                                             <td>{{ $excavatorReading->excavator->name }}</td>
                                                             <td>{{ $excavatorReading->excavator->account->account_name }}</td>
@@ -264,7 +264,7 @@
                             <div class="{{ Request::is('daily-statement/list/jackhammer')? 'active' : '' }} tab-pane" id="jack_hammers_tab">
                                 <!-- box-header -->
                                 <div class="box-header no-print">
-                                    <form action="{{ route('daily-statement-list-jackhammer') }}" method="get" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('daily-statement-list-jackhammer') }}" method="get" class="form-horizontal">
                                         <div class="row">
                                             <div class="col-md-1"></div>
                                             <div class="col-md-10">
@@ -346,7 +346,7 @@
                                                 <tbody>
                                                     @foreach($jackhammerReadings as $index => $jackhammerReading)
                                                         <tr>
-                                                            <td>{{ $index+1 }}</td>
+                                                            <td>{{ $index + $jackhammerReadings->firstItem() }}</td>
                                                             <td>{{ $jackhammerReading->date }}</td>
                                                             <td>{{ $jackhammerReading->jackhammer->name }}</td>
                                                             <td>{{ $jackhammerReading->jackhammer->account->account_name }}</td>

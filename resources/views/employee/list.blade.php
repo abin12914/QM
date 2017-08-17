@@ -103,6 +103,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Name</th>
                                             <th>Phone</th>
                                             <th>Type</th>
@@ -113,8 +114,9 @@
                                     </thead>
                                     <tbody>
                                         @if(!empty($employees))
-                                            @foreach($employees as $employee)
+                                            @foreach($employees as $index => $employee)
                                                 <tr>
+                                                    <td>{{ $index + $employees->firstItem() }}</td>
                                                     <td>{{ $employee->account->accountDetail->name }}</td>
                                                     <td>{{ $employee->account->accountDetail->phone }}</td>
                                                     <td>{{ $employee->employee_type }}</td>

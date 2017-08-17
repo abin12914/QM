@@ -36,7 +36,7 @@
                             <div class="{{ ((old('tab_flag') == 'employee') || (empty(Session::get('controller_tab_flag')) && empty(old('tab_flag'))) || (Session::get('controller_tab_flag') == 'employee')) ? 'active' : '' }} tab-pane" id="employee_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('monthly-statement-employee-salary-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('monthly-statement-employee-salary-action') }}" method="post" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="employee">
                                         <div class="row">
@@ -126,7 +126,7 @@
                             <div class="{{ (old('tab_flag') == 'excavator' || (!empty(Session::get('controller_tab_flag')) && Session::get('controller_tab_flag') == 'excavator')) ? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('monthly-statement-excavator-rent-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('monthly-statement-excavator-rent-action') }}" method="post" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="excavator">
                                         <div class="row">

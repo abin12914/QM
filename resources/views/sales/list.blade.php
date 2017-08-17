@@ -30,7 +30,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-header">
-                        <form action="{{ route('sales-list-search') }}" method="get" class="form-horizontal" multipart-form-data>
+                        <form action="{{ route('sales-list-search') }}" method="get" class="form-horizontal">
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">
@@ -142,6 +142,7 @@
                                             <th>Product</th>
                                             <th>Purchaser</th>
                                             <th>Quantity</th>
+                                            <th>No Of Load</th>
                                             <th>Bill Amount</th>
                                         </tr>
                                     </thead>
@@ -155,12 +156,24 @@
                                                     <td>{{ $sale->vehicle->vehicleType->name }}</td>
                                                     <td>{{ $sale->product->name }}</td>
                                                     <td>{{ $sale->transaction->debitAccount->account_name }}</td>
-                                                    @if($sale->measure_type == 2 && ($sale->quantity <= 0))
-                                                        <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
-                                                        <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                    @if($sale->measure_type == 1)
+                                                        <td>{{ $sale->quantity }} - Cubic feet</td>
+                                                        <td>1</td>
+                                                        <td title="{{ $sale->quantity }} * {{ $sale->rate }}">{{ $sale->total_amount }}</td>
+                                                    @elseif($sale->measure_type == 2)
+                                                        @if($sale->quantity <= 0)
+                                                            <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                            <td>1</td>
+                                                            <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                        @else
+                                                            <td>{{ $sale->quantity }} - Ton</td>
+                                                            <td>1</td>
+                                                            <td title="{{ $sale->quantity }} * {{ $sale->rate }}">{{ $sale->total_amount }}</td>
+                                                        @endif
                                                     @else
-                                                        <td>{{ $sale->quantity }} -{{ ($sale->measure_type == 3)? 'Load' : 'Cubic feet' }}</td>
-                                                        <td  title="{{ $sale->quantity }} * {{ $sale->rate }}">{{ $sale->total_amount }}</td>
+                                                        <td>{{ ($sale->quantity * $sale->vehicle->volume) }} - Cubic feet</td>
+                                                        <td>{{ $sale->quantity }}</td>
+                                                        <td title="{{ $sale->quantity }} * {{ $sale->rate }} - {{ $sale->discount }}">{{ $sale->total_amount }}</td>
                                                     @endif
                                                 </tr>
                                             @endforeach

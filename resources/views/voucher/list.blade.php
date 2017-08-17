@@ -114,7 +114,7 @@
                                                     @if(!empty($cashVouchers) && count($cashVouchers) > 0)
                                                         @foreach($cashVouchers as $index => $cashVoucher)
                                                             <tr>
-                                                                <td>{{ $index+1 }}</td>
+                                                                <td>{{ $index + $cashVouchers->firstItem() }}</td>
                                                                 <td>{{ $cashVoucher->date_time }}</td>
                                                                 @if($cashVoucher->transaction_type == 1)
                                                                     <td>{{ $cashVoucher->transaction->creditAccount->account_name }}</td>
@@ -220,7 +220,7 @@
                                                     @if(!empty($creditVouchers) && count($creditVouchers) > 0)
                                                     @foreach($creditVouchers as $index => $creditVoucher)
                                                         <tr>
-                                                            <td>{{ $index+1 }}</td>
+                                                            <td>{{ $index + $creditVouchers->firstItem() }}</td>
                                                             <td>{{ $creditVoucher->date_time }}</td>
                                                             @if($creditVoucher->transaction->debitAccount->id == $accountId)
                                                                 <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>

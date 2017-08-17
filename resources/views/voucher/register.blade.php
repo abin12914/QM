@@ -45,7 +45,7 @@
                             <div class="{{ (old('tab_flag') == 'cash_voucher') || (empty(Session::get('controller_tab_flag')) && empty(old('tab_flag'))) || (Session::get('controller_tab_flag') == 'cash_voucher') ? 'active' : '' }} tab-pane" id="cash_voucher_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('cash-voucher-register-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('cash-voucher-register-action') }}" method="post" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="cash_voucher">
                                         <div class="row">
@@ -181,7 +181,7 @@
                             <div class="{{ (old('tab_flag') == 'credit_voucher' || (!empty(Session::get('controller_tab_flag')) && Session::get('controller_tab_flag') == 'credit_voucher')) ? 'active' : '' }} tab-pane" id="credit_voucher_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('credit-voucher-register-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('credit-voucher-register-action') }}" method="post" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="credit_voucher">
                                         <div class="row">

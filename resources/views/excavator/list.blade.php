@@ -92,6 +92,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Name</th>
                                             <th>Contractor</th>
                                             <th>Rent Type</th>
@@ -102,8 +103,9 @@
                                     </thead>
                                     <tbody>
                                         @if(!empty($excavators))
-                                            @foreach($excavators as $excavator)
+                                            @foreach($excavators as $index => $excavator)
                                                 <tr>
+                                                    <td>{{ $index + $excavators->firstItem() }}</td>
                                                     <td>{{ $excavator->name }}</td>
                                                     <td>{{ $excavator->account->account_name }}</td>
                                                     <td>{{ $excavator->rent_type }}</td>

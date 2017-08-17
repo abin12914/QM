@@ -104,6 +104,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Registration Number</th>
                                             <th>Owner</th>
                                             <th>Vehicle Type</th>
@@ -113,8 +114,9 @@
                                     </thead>
                                     <tbody>
                                         @if(!empty($vehicles))
-                                            @foreach($vehicles as $vehicle)
+                                            @foreach($vehicles as $index => $vehicle)
                                                 <tr>
+                                                    <td>{{ $index + $vehicles->firstItem() }}</td>
                                                     <td>{{ $vehicle->reg_number }}</td>
                                                     <td>{{ $vehicle->owner_name }}</td>
                                                     <td>{{ $vehicle->vehicleType->name }}</td>

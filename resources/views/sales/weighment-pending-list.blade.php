@@ -30,7 +30,7 @@
                         <h3 class="box-title">Filter List</h3>
                     </div>
                     <div class="box-header">
-                        <form action="{{ route('sales-weighment-pending-view') }}" method="get" class="form-horizontal" multipart-form-data>
+                        <form action="{{ route('sales-weighment-pending-view') }}" method="get" class="form-horizontal">
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">

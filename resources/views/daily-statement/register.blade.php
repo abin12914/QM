@@ -46,7 +46,7 @@
                             <div class="{{ ((old('tab_flag') == 'employee') || (empty(Session::get('controller_tab_flag')) && empty(old('tab_flag'))) || (Session::get('controller_tab_flag') == 'employee')) ? 'active' : '' }} tab-pane" id="employee_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('daily-statement-employee-attendance-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('daily-statement-employee-attendance-action') }}" method="post" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="employee">
                                         <div class="row">
@@ -135,7 +135,7 @@
                             <div class="{{ (old('tab_flag') == 'excavator' || (!empty(Session::get('controller_tab_flag')) && Session::get('controller_tab_flag') == 'excavator')) ? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('daily-statement-excavator-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('daily-statement-excavator-readings-action') }}" method="post" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="excavator">
                                         <div class="row">
@@ -234,7 +234,7 @@
                             <div class="{{ (old('tab_flag') == 'jackhammer' || (!empty(Session::get('controller_tab_flag')) && Session::get('controller_tab_flag') == 'jackhammer')) ? 'active' : '' }} tab-pane" id="jack_hammers_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('daily-statement-jackhammer-readings-action') }}" method="post" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('daily-statement-jackhammer-readings-action') }}" method="post" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="jackhammer">
                                         <div class="row">

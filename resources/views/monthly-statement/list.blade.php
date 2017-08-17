@@ -34,7 +34,7 @@
                             <div class="{{ Request::is('monthly-statement/list/employee')? 'active' : '' }} tab-pane" id="employee_tab">
                                 <!-- box-header -->
                                 <div class="box-header no-print">
-                                    <form action="{{ route('monthly-statement-list-employee') }}" method="get" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('monthly-statement-list-employee') }}" method="get" class="form-horizontal">
                                         <div class="row">
                                             <div class="col-md-1"></div>
                                             <div class="col-md-10">
@@ -117,7 +117,7 @@
                                                     @if(count($employeeSalary) > 0)
                                                         @foreach($employeeSalary as $index => $salary)
                                                             <tr>
-                                                                <td>{{ $index+1 }}</td>
+                                                                <td>{{ $index + $employeeSalary->firstItem() }}</td>
                                                                 <td>{{ $salary->employee->account->accountDetail->name }}</td>
                                                                 <td>{{ $salary->employee->account->account_name }}</td>
                                                                 <td>{{ $salary->from_date }}</td>
@@ -149,7 +149,7 @@
                             <div class="{{ Request::is('monthly-statement/list/excavator')? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <!-- box-header -->
                                 <div class="box-header no-print">
-                                    <form action="{{ route('monthly-statement-list-excavator') }}" method="get" class="form-horizontal" multipart-form-data>
+                                    <form action="{{ route('monthly-statement-list-excavator') }}" method="get" class="form-horizontal">
                                         <div class="row">
                                             <div class="col-md-1"></div>
                                             <div class="col-md-10">
@@ -232,7 +232,7 @@
                                                     @if(count($excavatorRent) > 0)
                                                         @foreach($excavatorRent as $index => $rent)
                                                             <tr>
-                                                                <td>{{ $index+1 }}</td>
+                                                                <td>{{ $index + $excavatorRent->firstItem() }}</td>
                                                                 <td>{{ $rent->excavator->name }}</td>
                                                                 <td>{{ $rent->excavator->account->account_name }}</td>
                                                                 <td>{{ $rent->from_date }}</td>

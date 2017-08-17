@@ -33,7 +33,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <form action="{{ route('account-statement-list-search') }}" method="get" class="form-horizontal" multipart-form-data>
+                        <form action="{{ route('account-statement-list-search') }}" method="get" class="form-horizontal">
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">
@@ -180,7 +180,7 @@
                                         @if(!empty($transactions))
                                             @foreach($transactions as $index => $transaction)
                                                 <tr>
-                                                    <td>{{ $index+1 }}</td>
+                                                    <td>{{ $index + $transactions->firstItem() }}</td>
                                                     <td>{{ $transaction->date_time }}</td>
                                                     <td>{{ $transaction->particulars }}</td>
                                                     @if($transaction->debit_account_id == $accountId)

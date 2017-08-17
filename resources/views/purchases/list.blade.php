@@ -31,7 +31,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-header">
-                        <form action="{{ route('purchases-list-search') }}" method="get" class="form-horizontal" multipart-form-data>
+                        <form action="{{ route('purchases-list-search') }}" method="get" class="form-horizontal">
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">
@@ -112,6 +112,7 @@
                                             <th>Date & Time</th>
                                             <th>Product</th>
                                             <th>Supplier</th>
+                                            <th>Description</th>
                                             <th>Bill Amount</th>
                                         </tr>
                                     </thead>
@@ -123,6 +124,7 @@
                                                     <td>{{ $purchase->date_time }}</td>
                                                     <td>{{ $purchase->purchasebleProduct->name }}</td>
                                                     <td>{{ $purchase->transaction->creditAccount->account_name }}</td>
+                                                    <td>{{ $purchase->transaction->particulars }}</td>
                                                     <td>{{ $purchase->bill_amount }}</td>
                                                 </tr>
                                             @endforeach
