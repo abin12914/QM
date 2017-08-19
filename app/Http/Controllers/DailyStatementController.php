@@ -528,7 +528,7 @@ class DailyStatementController extends Controller
         $excavatorMonthlyRent = $excavatorMonthlyRentQuery->where('debit_account_id', 8)->sum('amount');
 
         $royaltyQuery = clone $query;
-        $royalty = $royaltyQuery->where('credit_account_id', 9)->sum('amount');
+        $royalty = $royaltyQuery->where('debit_account_id', 9)->sum('amount');
 
         /*$transactions = $query->get(); //alternate code if cloning has ay issue
         
