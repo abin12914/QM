@@ -167,7 +167,7 @@
             {
                 value: {{ $salesCount[$key][$vehicleType->id] }},
                 color: getRandomColor(),
-                highlight: getRandomColor(),
+                highlight: "#FA4D3B",
                 label: "{{ $vehicleType->name }}"
             },
         @endforeach
