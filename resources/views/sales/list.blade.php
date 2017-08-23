@@ -175,6 +175,9 @@
                                                         <td>{{ $sale->quantity }}</td>
                                                         <td title="{{ $sale->quantity }} * {{ $sale->rate }} - {{ $sale->discount }}">{{ $sale->total_amount }}</td>
                                                     @endif
+                                                    <td>
+                                                        <a href="{{ route('sales-bill-print', ['id' => $sale->id]) }}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print Bill</a>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif

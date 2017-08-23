@@ -94,6 +94,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/sales/cash/register/action', 'SalesController@cashSaleRegisterAction')->name('cash-sales-register-action');
 		Route::get('/sales/multiple/register', 'SalesController@multipleSaleRegister')->name('multiple-sales-register-view');
 		Route::post('/sales/multiple/credit/register/action', 'SalesController@multipleCreditSaleRegisterAction')->name('multiple-credit-sales-register-action');
+		Route::get('/sales/bill/print/{id}', 'SalesController@saleBillPrint')->name('sales-bill-print');
 
 		Route::get('/sales/list', 'SalesController@list')->name('sales-list-search');
 		Route::get('/sales/get/last/vehicle/{id}', 'SalesController@getLastSaleByVehicleId')->name('sale-get-last-by-vehicle-id');

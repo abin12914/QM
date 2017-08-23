@@ -696,6 +696,31 @@ class SalesController extends Controller
     }
 
     /**
+     * Return view for sale bill
+     */
+    public function saleBillPrint(Request $request)
+    {
+        $id = $request->id;
+        $sale = Sale::with(['transaction.debitAccount.accountDetail'])->where('id', $id)->first();
+
+        $date = new DateTime($sale->date_time);
+        $date = $date->format('d-m-Y');
+        $customer   = $sale->transaction->debitAccount->accountDetail->name;
+        $address    = $sale->transaction->debitAccount->accountDetail->address;
+        $saleId     = $sale->id;
+        $saleType   = (($sale->transaction->debitAccount->id == 1) ? 'Cash' : 'Credit');
+
+        return view('sales.bill',[
+                'sale'      => $sale,
+                'date'      => $date,
+                'customer'  => $customer,
+                'address'   => $address,
+                'saleId'    => $saleId,
+                'saleType'  => $saleType,
+            ]);
+    }
+
+    /**
      * /Return sales details for given vehicle id
      * /Return old balance for user issued credit on cash transactions
      */

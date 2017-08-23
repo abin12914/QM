@@ -366,6 +366,7 @@
                                         <th>Purchaser</th>
                                         <th>Product</th>
                                         <th>Quantity</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -384,6 +385,9 @@
                                             @else
                                                 <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
                                             @endif
+                                            <td>
+                                                <a href="{{ route('sales-bill-print', ['id' => $sales_record->id]) }}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print Bill</a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
