@@ -26,6 +26,7 @@
                 <h2 class="page-header">
                     <i class="fa fa-globe"></i> JSJ Quarry Products
                     <small class="pull-right">Date: {{ $date }}</small>
+                    <br><p style="margin-left: 45%;">Credit/Cash Bill</p>
                 </h2>
             </div>
         </div>
@@ -48,9 +49,11 @@
             </div>
             <!-- /.col -->
             <div class="col-sm-4 invoice-col">
-                <b>Invoice No&emsp;&emsp;: #{{ $saleId }}</b><br>
-                <b>Sale Type &emsp;&emsp;&nbsp;: </b>{{ $saleType }} <br>
-                <b>Truck Number : </b>{{ $sale->vehicle->reg_number }}
+                Invoice No&emsp;&emsp;&emsp;&emsp;&emsp;: <b>#{{ $saleId }}</b><br>
+                Transportation Mode &nbsp;&nbsp;: <b>By Road</b><br>
+                GSTIN : &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;: <b>##########</b><br>
+                Vehicle Number&nbsp;&nbsp;&nbsp;&emsp;&emsp; : <b>{{ $sale->vehicle->reg_number }}</b><br>
+                Date Of Supply&emsp;&emsp;&emsp;&nbsp;: <b>{{ $date }}</b><br>
             </div>
             <!-- /.col -->
         </div><br>
@@ -71,7 +74,13 @@
                         <tr>
                             <td>{{ $sale->product->name }}</td>
                             <td>{{ $sale->rate }}</td>
-                            <td>{{ $sale->quantity }}</td>
+                            @if($sale->measure_type == 1)
+                                <td>{{ $sale->quantity }} - Cubic Feet</td>
+                            @elseif($sale->measure_type == 2)
+                                <td>{{ $sale->quantity }} - Ton</td>
+                            @elseif($sale->measure_type == 3)
+                                <td>{{ $sale->quantity }} - Load</td>
+                            @endif
                             <td>{{ $sale->discount }}</td>
                             <td>{{ $sale->total_amount }}</td>
                         </tr>
@@ -86,8 +95,8 @@
             <div class="col-xs-6">
             <br>
                 <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg dopplr
-                    jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                    <b style="margin-left: 40%;">Terms And Conditions</b>
+                    <br>&emsp;&emsp;* Goods once sold will not be replaced or returned
                 </p>
             </div>
             <!-- /.col -->
@@ -115,6 +124,13 @@
                 </div>
             </div>
             <!-- /.col -->
+            <div class="col-xs-6 pull-right">
+            <br>
+                <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+                    <br><br><br><br><br>
+                    <p style="margin-left: 45%;">(Authorized Signatory)</p>
+                </p>
+            </div>
         </div>
         <!-- /.row -->
     </section>
@@ -122,5 +138,5 @@
 </div>
 @endsection
 @section('scripts')
-    <script src="/js/list/sales.js?rndstr={{ rand(1000,9999) }}"></script>
+    <script src="/js/bill/sale-bill.js?rndstr={{ rand(1000,9999) }}"></script>
 @endsection
