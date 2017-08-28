@@ -1,18 +1,20 @@
 $(function () {
-    var today = new Date();
+    var datepickerenddate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);//
+    datepickerenddate = datepickerenddate.getDate()+'-'+(datepickerenddate.getMonth()+1)+'-'+datepickerenddate.getFullYear();
     //new account registration link for select2
     accountRegistrationLink = "No results found. <a href='/account/register'>Register new account</a>";
     
     //Date picker
     $('.datepicker').datepicker({
         todayHighlight: true,
-        startDate: today,
+        //startDate: today,
+        endDate: datepickerenddate,
         format: 'dd-mm-yyyy',
         autoclose: true,
     });
 
     //setting current date as selected
-    $('.datepicker').datepicker('setDate', today);
+    $('.datepicker').datepicker('setDate', new Date());
 
     //Timepicker
     $(".timepicker").timepicker({
