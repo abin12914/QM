@@ -10,6 +10,7 @@
 <script src="/js/bootstrap/js/bootstrap.min.js"></script>
 <!-- Sparkline -->
 {{-- <script src="/js/plugins/sparkline/jquery.sparkline.min.js"></script> --}}
+<script src="/js/plugins/moment/moment.min.js"></script>
 <!-- datepicker -->
 <script src="/js/plugins/datepicker/bootstrap-datepicker.js"></script>
 <!-- select2 -->

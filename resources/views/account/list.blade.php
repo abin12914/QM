@@ -113,6 +113,9 @@
                                             <th>Account Holder/Head</th>
                                             <th>Opening Credit</th>
                                             <th>Opening Debit</th>
+                                            @if($currentUser->role == 'admin')
+                                                <th class=" no-print">Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -134,6 +137,16 @@
                                                     @else
                                                         <td>0</td>
                                                         <td>0</td>
+                                                    @endif
+                                                    @if($currentUser->role == 'admin')
+                                                        <td class=" no-print">
+                                                            @if($account->type == 'personal' && ($account->relation == 'supplier' || $account->relation == 'customer' || $account->relation == 'contractor' || $account->relation == 'general'))
+                                                                <form action="{{route('account-edit-view')}}" id="account_edit_{{ $index }}" method="get">
+                                                                <input type="hidden" name="account_id" value="{{ $account->id }}">
+                                                                <button type="submit" class="bg-aqua" type="button">Edit</button>
+                                                                </form>
+                                                            @endif
+                                                        </td>
                                                     @endif
                                                 </tr>
                                             @endforeach

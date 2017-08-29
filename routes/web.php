@@ -54,6 +54,14 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/vehicle-type/register/action', 'VehicleTypeController@registerAction')->name('vehicle-type-register-action');
 		Route::get('/vehicle-type/list', 'VehicleTypeController@list')->name('vehicle-type-list');
 		Route::get('/vehicle-type/chart', 'VehicleTypeController@chart')->name('vehicle-type-chart');
+
+		//edit
+		//account
+		Route::get('/account/edit', 'AccountController@edit')->name('account-edit-view');
+		Route::post('/account/updation/action', 'AccountController@updationAction')->name('account-updation-action');
+		//employee
+		Route::get('/hr/employee/edit', 'EmployeeController@edit')->name('employee-edit-view');
+		Route::post('/hr/employee/updation/action', 'EmployeeController@updationAction')->name('employee-updation-action');
 	});
 
 	//user routes

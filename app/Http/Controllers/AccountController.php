@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRegistrationRequest;
+use App\Http\Requests\AccountUpdationRequest;
 use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Transaction;
@@ -211,6 +212,62 @@ class AccountController extends Controller
                 'totalDebit'            => $totalDebit,
                 'totalCredit'           => $totalCredit,
             ]);
+    }
+
+    /**
+     * Return view for account editing
+     */
+    public function edit(Request $request)
+    {
+        $accountId = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+
+        if(!empty($accountId) && $accountId != 0) {
+            $account = Account::where('id', $accountId)->where('type', 'personal')->whereIn('relation', ['supplier','customer','contractor','general'])->with('accountDetail')->first();
+
+            if(empty($account) || empty($account->id)) {
+                return redirect(route('account-list'))->with("message","Something went wrong! Selected record not found. Try again after reloading the page!<small class='pull-right'> #07/03</small>")->with("alert-class","alert-danger");
+            }
+        } else {
+            return redirect(route('account-list'))->with("message","Something went wrong! Selected record not found. Try again after reloading the page!<small class='pull-right'> #07/04</small>")->with("alert-class","alert-danger");
+        }
+
+        return view('account.edit',[
+                'account' => $account
+            ]);
+    }
+
+    /**
+     * Handle account updation
+     */
+    public function updationAction(AccountUpdationRequest $request)
+    {
+        $accountId          = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $description        = $request->get('description');
+        $name               = $request->get('name');
+        $phone              = $request->get('phone');
+        $address            = $request->get('address');
+        $relation           = $request->get('relation_type');
+
+        $account = Account::find($accountId);
+        if(!empty($account) && $account->type == 'personal') {
+            $account->description       = $description;
+            $account->relation          = $relation;
+            if($account->save()) {
+                $accountDetails = AccountDetail::where('account_id', $account->id)->first();
+                $accountDetails->name       = $name;
+                $accountDetails->phone      = $phone;
+                $accountDetails->address    = $address;
+                if($accountDetails->save()) {
+                    return redirect()->back()->with("message","Successfully updated.")->with("alert-class","alert-success");
+                } else{
+                    return redirect(route('account-list'))->with("message","Failed to update the account details. Try again after reloading the page!<small class='pull-right'> #07/05</small>")->with("alert-class","alert-danger");
+                }
+            } else {
+                return redirect(route('account-list'))->with("message","Failed to update the account details. Try again after reloading the page!<small class='pull-right'> #07/06</small>")->with("alert-class","alert-danger");
+            }
+        } else {
+            return redirect(route('account-list'))->with("message","Failed to update the account details. Try again after reloading the page!<small class='pull-right'> #07/07</small>")->with("alert-class","alert-danger");
+        }
     }
 }
 /*$oldBalanceDate = new DateTime($fromDate." 23:59:59");
