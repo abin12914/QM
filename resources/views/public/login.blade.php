@@ -40,7 +40,7 @@
             <div class="row">
                 <div class="col-xs-4"></div>
                 <div class="col-xs-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Log In</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-flat submit-button">Log In</button>
                 </div>
                 <!-- /.col -->
             </div>

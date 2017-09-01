@@ -89,7 +89,7 @@
                                     <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4"><i class="fa fa-search"></i> Search</button>
                                 </div>
                             </div>
                         </form>
@@ -126,7 +126,7 @@
                                             <td class=" no-print">
                                                 <form action="{{route('sales-weighment-register-view')}}" id="sale_weighment_registration_form_{{ $index }}" method="get">
                                                 <input type="hidden" name="sale_id" value="{{ $saleRecord->id }}">
-                                                <button type="submit" class="bg-aqua" type="button">Add</button>
+                                                <button type="submit" class="bg-aqua submit-button" type="button">Add</button>
                                                 </form>
                                             </td>
                                         </tr>

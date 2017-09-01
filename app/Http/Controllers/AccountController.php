@@ -167,6 +167,8 @@ class AccountController extends Controller
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
 
         $accounts = Account::where('type', 'personal')->where('status', '1')->get();
+        $cashAccount    = Account::find(1);
+        $accounts->push($cashAccount); //attaching cash account to the accounts
         if(empty($accounts)) {
             session()->flash('fixed-message', 'No accounts available to show!');
             return view('account-statement.statement');
@@ -258,7 +260,7 @@ class AccountController extends Controller
                 $accountDetails->phone      = $phone;
                 $accountDetails->address    = $address;
                 if($accountDetails->save()) {
-                    return redirect()->back()->with("message","Successfully updated.")->with("alert-class","alert-success");
+                    return redirect(route('account-list'))->with("message","Successfully updated.")->with("alert-class","alert-success");
                 } else{
                     return redirect(route('account-list'))->with("message","Failed to update the account details. Try again after reloading the page!<small class='pull-right'> #07/05</small>")->with("alert-class","alert-danger");
                 }

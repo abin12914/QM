@@ -173,7 +173,7 @@
                                             <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="8">Clear</button>
                                         </div>
                                         <div class="col-xs-3">
-                                            <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="7">Submit</button>
+                                            <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="7">Submit</button>
                                         </div>
                                         <!-- /.col -->
                                     </div><br>

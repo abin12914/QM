@@ -1,5 +1,6 @@
 $(function () {
-    var today = new Date();
+    var datepickerenddate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);//
+    datepickerenddate = datepickerenddate.getDate()+'-'+(datepickerenddate.getMonth()+1)+'-'+datepickerenddate.getFullYear();
     //new vehicle registration link for select2
     vehicleRegistrationLink = "No results found. <a href='/vehicle/register'>Register new truck</a>";
     //new account registration link for select2
@@ -8,13 +9,14 @@ $(function () {
     //Date picker
     $('.datepicker').datepicker({
         todayHighlight: true,
-        startDate: today,
+        //startDate: today,
+        endDate: datepickerenddate,
         format: 'dd-mm-yyyy',
         autoclose: true,
     });
 
     //setting current date as selected
-    $('.datepicker').datepicker('setDate', today);
+    $('.datepicker').datepicker('setDate', new Date());
 
     //Timepicker
     $(".timepicker").timepicker({
@@ -239,6 +241,7 @@ $(function () {
     //execute form action
     $('body').on("click", "#btn_cash_sale_modal_submit", function (e) {
         e.preventDefault();
+        $('#btn_cash_sale_modal_submit').prop('disabled', true);
         $("#cash_sale_form").submit();
     });
 
@@ -262,6 +265,7 @@ $(function () {
 
     $('body').on("keyup", ".discount", function () {
         var elementId   = $(this).attr('id');
+
         if(elementId == 'discount_credit') {
             updateCreditBillDetail();
         } else {
@@ -295,8 +299,11 @@ function updateCreditBillDetail() {
     if(!($('#discount_credit').val())) {
         $('#discount_credit').val(0);
     } else {
-        //for removing the preceding zero
-        discount = discount * 1;
+        if(discount == 0 || (discount.charAt(discount.length - 1) != '.')) {
+            //for removing the preceding zero
+            discount = discount * 1;
+        }
+
         $('#discount_credit').val(discount);
     }
     $('#bill_amount_credit').val(billAmount);
@@ -327,8 +334,10 @@ function updateCashBillDetail() {
     if(!($('#discount_cash').val())) {
         $('#discount_cash').val(0);
     } else {
-        //for removing the preceding zero
-        discount = discount * 1;
+        if(discount == 0 || (discount.charAt(discount.length - 1) != '.')) {
+            //for removing the preceding zero
+            discount = discount * 1;
+        }
         $('#discount_cash').val(discount);
     }
 

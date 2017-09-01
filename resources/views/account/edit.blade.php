@@ -156,10 +156,10 @@
                                 <div class="row">
                                     <div class="col-xs-3"></div>
                                     <div class="col-xs-3">
-                                        <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="12">Clear</button>
+                                        <a href="{{ route('account-list') }}"><button type="button" class="btn btn-default btn-block btn-flat" tabindex="12">Cancel & Exit</button></a>
                                     </div>
                                     <div class="col-xs-3">
-                                        <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="11">Update</button>
+                                        <button type="button" class="btn btn-primary btn-block btn-flat update-button" tabindex="11">Update</button>
                                     </div>
                                     <!-- /.col -->
                                 </div><br>
@@ -179,6 +179,38 @@
             </div>
         </div>
         <!-- /.row (main row) -->
+        <!-- /.row (main row) -->
+        <div class="modal" id="update_confirmation_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Confirm Action</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal_warning">
+                            <div class="row">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-10">
+                                    <p style="color: red;">
+                                        <b> Are you sure to update the record?</b>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="update_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel & Edit</button>
+                        <button type="button" id="update_confirmation_modal_confirm" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
     </section>
     <!-- /.content -->
 </div>

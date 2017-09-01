@@ -95,7 +95,7 @@
                                                 <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
                                             </div>
                                             <div class="col-md-2">
-                                                <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                                <button type="submit" class="btn btn-primary btn-block btn-flat  submit-button" tabindex="4"><i class="fa fa-search"></i> Search</button>
                                             </div>
                                         </div>
                                     </form>
@@ -208,7 +208,7 @@
                                                 <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
                                             </div>
                                             <div class="col-md-2">
-                                                <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                                <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4"><i class="fa fa-search"></i> Search</button>
                                             </div>
                                         </div>
                                     </form>
@@ -270,7 +270,7 @@
                                             <div class="col-md-10">
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('jackhammer_id')) ? 'has-error' : '' }}">
-                                                        <label for="jackhammer_id" class="control-label">Excavator : </label>
+                                                        <label for="jackhammer_id" class="control-label">Jackhammer : </label>
                                                         <select class="form-control" name="jackhammer_id" id="jackhammer_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($jackhammers) && (count($jackhammers) > 0))
                                                                 <option value="">Select jackhammer</option>
@@ -323,7 +323,7 @@
                                                 <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
                                             </div>
                                             <div class="col-md-2">
-                                                <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                                <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4"><i class="fa fa-search"></i> Search</button>
                                             </div>
                                         </div>
                                     </form>

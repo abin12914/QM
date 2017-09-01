@@ -11,7 +11,8 @@ use App\Models\Voucher;
 use App\Models\Transaction;
 use App\Http\Requests\CashVoucherRegistrationRequest;
 use App\Http\Requests\CreditVoucherRegistrationRequest;
-
+use App\Models\Jackhammer;
+use App\Models\Excavator;
 class VoucherController extends Controller
 {
     /**
@@ -23,6 +24,8 @@ class VoucherController extends Controller
         
         $cashVouchers   = Voucher::where('voucher_type','Cash')->with(['transaction.creditAccount'])->orderBy('date_time', 'desc')->take(5)->get();
         $creditVouchers = Voucher::where('voucher_type','Credit')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('date_time', 'desc')->take(5)->get();
+        $excavators     = Excavator::where('status', 1)->get();
+        $jackhammers    = Jackhammer::where('status', 1)->get();
         $accounts       = Account::where('type','personal')->get();
 
         return view('voucher.register',[
@@ -30,6 +33,8 @@ class VoucherController extends Controller
                 'accounts'          => $accounts,
                 'cashVouchers'      => $cashVouchers,
                 'creditVouchers'    => $creditVouchers,
+                'excavators'        => $excavators,
+                'jackhammers'       => $jackhammers
             ]);
     }
 

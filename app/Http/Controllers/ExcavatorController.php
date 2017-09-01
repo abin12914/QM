@@ -98,9 +98,10 @@ class ExcavatorController extends Controller
      */
     public function getAccountByExcavatorId($excavatorId)
     {
-        $excavator = Excavator::where('id', $excavatorId)->first();
+        $excavator = Excavator::where('id', $excavatorId)->with('account')->first();
         if(!empty($excavatorId) && !empty($excavator->id)) {
             $accountName = $excavator->account->account_name;
+            $accountId   = $excavator->account->id;
             $excavatorRent = ExcavatorRent::where('excavator_id', $excavatorId)->orderBy('to_date','desc')->first();
             if(!empty($excavatorRent) && !empty($excavatorRent->id)) {
                 $excavatorLastRentDate = $excavatorRent->to_date;
@@ -112,6 +113,7 @@ class ExcavatorController extends Controller
             return ([
                     'flag'          => true,
                     'accountName'   => $accountName,
+                    'accountId'     => $accountId,
                     'rent'          => ($excavator->rent_type == 'monthly') ? $excavator->rent_monthly : 0,
                     'excavatorLastRentDate' => !empty($excavatorLastRentDate) ? $excavatorLastRentDate : ''
                 ]);

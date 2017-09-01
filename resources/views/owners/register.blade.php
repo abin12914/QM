@@ -88,11 +88,11 @@
                                             </div>
                                             <div class="col-sm-5 {{ !empty($errors->first('image_file')) ? 'has-error' : '' }}">
                                                 <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <input type="checkbox" name="royalty_owner" id="royalty_owner" value="1" {{ old('royalty_owner') == '1' ? 'checked' : ''}}>
-                                                        </span>
-                                                        <label for="royalty_owner" class="form-control" tabindex="20">Make Royalty Owner</label>
-                                                    </div>
+                                                    <span class="input-group-addon">
+                                                        <input type="checkbox" name="royalty_owner" id="royalty_owner" value="1" {{ old('royalty_owner') == '1' ? 'checked' : ''}}>
+                                                    </span>
+                                                    <label for="royalty_owner" class="form-control" tabindex="20">Make Royalty Owner</label>
+                                                </div>
                                                 @if(!empty($errors->first('royalty_owner')))
                                                     <p style="color: red;" >{{$errors->first('royalty_owner')}}</p>
                                                 @endif
@@ -174,11 +174,9 @@
                                     <div class="col-xs-3">
                                         <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="14">Clear</button>
                                     </div>
-                                    {{-- <div class="col-sm-1"></div> --}}
                                     <div class="col-xs-3">
-                                        <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="13">Submit</button>
+                                        <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="13">Submit</button>
                                     </div>
-                                    <!-- /.col -->
                                 </div><br>
                             </div>
                         </form>

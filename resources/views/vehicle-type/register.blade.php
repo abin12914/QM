@@ -95,7 +95,7 @@
                                 </div>
                                 {{-- <div class="col-sm-1"></div> --}}
                                 <div class="col-xs-3">
-                                    <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="5">Submit</button>
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="5">Submit</button>
                                 </div>
                                 <!-- /.col -->
                             </div><br>

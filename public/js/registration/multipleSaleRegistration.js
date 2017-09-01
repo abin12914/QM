@@ -1,5 +1,6 @@
 $(function () {
-    var today = new Date();
+    var datepickerenddate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);//
+    datepickerenddate = datepickerenddate.getDate()+'-'+(datepickerenddate.getMonth()+1)+'-'+datepickerenddate.getFullYear();
     //new vehicle registration link for select2
     vehicleRegistrationLink = "No results found. <a href='/vehicle/register'>Register new truck</a>";
     //new account registration link for select2
@@ -8,7 +9,8 @@ $(function () {
     //Date picker
     $('.datepicker').datepicker({
         todayHighlight: true,
-        startDate: today,
+        //startDate: today,
+        endDate: datepickerenddate,
         format: 'dd-mm-yyyy',
         autoclose: true,
     });
@@ -21,7 +23,7 @@ $(function () {
     });
 
     //setting current date as selected
-    $('.datepicker').datepicker('setDate', today);
+    $('.datepicker').datepicker('setDate', new Date());
 
     //Initialize Select2 Element for vehicler number select box
     $("#vehicle_number_credit").select2({

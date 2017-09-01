@@ -76,6 +76,23 @@ $(function () {
         $(this).data("title", "");
         return true;
     });
+
+    // for disabling submit button to prevent multiple submition
+    $('body').on("click", ".submit-button", function () {
+        $('.submit-button').prop('disabled', true);
+        $(this).parents('form:first').submit();
+    });
+
+    // for disabling submit button to prevent multiple submition on updation confirmation modal
+    $('body').on("click", "#update_confirmation_modal_confirm", function () {
+        $('#update_confirmation_modal_confirm').prop('disabled', true);
+        $(".update-button").parents('form:first').submit();
+    });
+
+    //invoke confirmation on update
+    $('body').on("click", ".update-button", function () {
+        $('#update_confirmation_modal').modal('show');
+    });
 });
 function dismissAlert() {
     if($("#alert-message").hasClass('alert-success')) {

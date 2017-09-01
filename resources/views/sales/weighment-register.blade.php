@@ -127,7 +127,7 @@
                                             <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="5">Cancel</button>
                                         </div>
                                         <div class="col-xs-3">
-                                            <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4">Submit</button>
+                                            <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4">Submit</button>
                                         </div>
                                         <!-- /.col -->
                                     </div><br>

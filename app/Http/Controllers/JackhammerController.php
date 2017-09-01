@@ -84,12 +84,14 @@ class JackhammerController extends Controller
      */
     public function getAccountByJackhammerId($jackhammerId)
     {
-        $jackhammer = Jackhammer::where('id', $jackhammerId)->first();
+        $jackhammer = Jackhammer::where('id', $jackhammerId)->with('account')->first();
         if(!empty($jackhammer)) {
             $accountName = $jackhammer->account->account_name;
+            $accountId   = $jackhammer->account->id;
             return ([
                     'flag'          => true,
-                    'accountName'   => $accountName
+                    'accountName'   => $accountName,
+                    'accountId'     => $accountId
                 ]);
         } else {
             return ([

@@ -167,6 +167,179 @@ $(function () {
             $('#credit_voucher_credit_account_name').val('');
         }
     });
+
+    //select name for the selected account
+    $('body').on("change", "#machine_voucher_machine_class", function () {
+        var type = $('#machine_voucher_machine_class').val();
+
+        if(type == 1) {
+            $('#machine_voucher_excavator_id').prop('disabled', false);
+            $('#machine_voucher_jackhammer_id').prop('disabled', true);
+            $('#class_excavator').show();
+            $('#class_jackhammer').hide();
+        } else if(type == 2) {
+            $('#machine_voucher_excavator_id').prop('disabled', true);
+            $('#machine_voucher_jackhammer_id').prop('disabled', false);
+            $('#class_jackhammer').show();
+            $('#class_excavator').hide();
+        }
+    });
+
+    //select related account for the selected jackhammer
+    $('body').on("change", "#machine_voucher_excavator_id", function () {
+        var excavatorId = $('#machine_voucher_excavator_id').val();
+        if(excavatorId) {
+            $.ajax({
+                url: "/get/account/by/excavator/" + excavatorId,
+                method: "get",
+                success: function(result) {
+                    if(result && result.flag) {
+                        var accountId  = result.accountId;
+                        
+                        $('#machine_voucher_credit_account_id').val(accountId);
+                        $('#machine_voucher_credit_account_id').trigger('change');
+                    } else {
+                        $('#machine_voucher_credit_account_id').val();
+                        $('#machine_voucher_credit_account_id').trigger('change');
+                    }
+                },
+                error: function () {
+                    $('#machine_voucher_credit_account_id').val();
+                    $('#machine_voucher_credit_account_id').trigger('change');
+                }
+            });
+        } else {
+            $('#machine_voucher_credit_account_id').val();
+            $('#machine_voucher_credit_account_id').trigger('change');
+        }
+    });
+
+    //select related account for the selected jackhammer
+    $('body').on("change", "#machine_voucher_jackhammer_id", function () {
+        var jackhammerId = $('#machine_voucher_jackhammer_id').val();
+        if(jackhammerId) {
+            $.ajax({
+                url: "/get/account/by/jackhammer/" + jackhammerId,
+                method: "get",
+                success: function(result) {
+                    if(result && result.flag) {
+                        var accountId  = result.accountId;
+                        
+                        $('#machine_voucher_credit_account_id').val(accountId);
+                        $('#machine_voucher_credit_account_id').trigger('change');
+                    } else {
+                        $('#machine_voucher_credit_account_id').val();
+                        $('#machine_voucher_credit_account_id').trigger('change');
+                    }                    
+                },
+                error: function () {
+                    $('#machine_voucher_credit_account_id').val();
+                    $('#machine_voucher_credit_account_id').trigger('change');
+                }
+            });
+        } else {
+            $('#machine_voucher_credit_account_id').val();
+            $('#machine_voucher_credit_account_id').trigger('change');
+        }
+    });
+
+    //select name for the selected account
+    $('body').on("change", "#machine_voucher_credit_account_id", function () {
+        var creditAccountId = $('#machine_voucher_credit_account_id').val();
+        var debitAccountId = $('#machine_voucher_debit_account_id').val();
+
+        if(creditAccountId && (debitAccountId == creditAccountId)) {
+            alert("Debit account and credit account should not be same.");
+            $('#machine_voucher_credit_account_id').val("");
+            $('#machine_voucher_credit_account_id').trigger("change");
+            return false;
+        }
+
+        if(creditAccountId) {
+            $('#machine_voucher_credit_account_id, #machine_voucher_debit_account_id').not($('#machine_voucher_credit_account_id'))
+            .children('option[value=' + creditAccountId + ']')
+            .attr('disabled', true)
+            .siblings().removeAttr('disabled');
+        } else {
+            $('#machine_voucher_credit_account_id, #machine_voucher_debit_account_id').not($('#machine_voucher_credit_account_id'))
+            .children('option[value=""]')
+            .siblings().removeAttr('disabled');
+        }
+
+        //reinitializing select2 elements for resetting disabled options
+        initializeSelect2();
+
+        $('#machine_voucher_credit_account_name').val('');
+        if(creditAccountId) {
+            $.ajax({
+                url: "/get/details/by/account/" + creditAccountId,
+                method: "get",
+                success: function(result) {
+                    if(result && result.flag) {
+                        var name  = result.name;
+                        
+                        $('#machine_voucher_credit_account_name').val(name);
+                    } else {
+                        $('#machine_voucher_credit_account_name').val('');
+                    }
+                },
+                error: function () {
+                    $('#machine_voucher_credit_account_name').val('');
+                }
+            });
+        } else {
+            $('#machine_voucher_credit_account_name').val('');
+        }
+    });
+
+    //select name for the selected account
+    $('body').on("change", "#machine_voucher_debit_account_id", function () {
+        var debitAccountId = $('#machine_voucher_debit_account_id').val();
+        var creditAccountId = $('#machine_voucher_credit_account_id').val();
+
+        if(debitAccountId && (debitAccountId == creditAccountId)) {
+            alert("Debit account and credit account should not be same.");
+            $('#machine_voucher_debit_account_id').val("");
+            $('#machine_voucher_debit_account_id').trigger("change");
+            return false;
+        }
+
+        if(debitAccountId) {
+            $('#machine_voucher_debit_account_id, #machine_voucher_credit_account_id').not($('#machine_voucher_debit_account_id'))
+            .children('option[value=' + debitAccountId + ']')
+            .attr('disabled', true)
+            .siblings().removeAttr('disabled');
+        } else {
+            $('#machine_voucher_debit_account_id, #machine_voucher_credit_account_id').not($('#machine_voucher_debit_account_id'))
+            .children('option[value=""]')
+            .siblings().removeAttr('disabled');
+        }
+
+        //reinitializing select2 elements for resetting disabled options
+        initializeSelect2();
+
+        $('#machine_voucher_debit_account_name').val('');
+        if(debitAccountId) {
+            $.ajax({
+                url: "/get/details/by/account/" + debitAccountId,
+                method: "get",
+                success: function(result) {
+                    if(result && result.flag) {
+                        var name  = result.name;
+                        
+                        $('#machine_voucher_debit_account_name').val(name);
+                    } else {
+                        $('#machine_voucher_debit_account_name').val('');
+                    }
+                },
+                error: function () {
+                    $('#machine_voucher_debit_account_name').val('');
+                }
+            });
+        } else {
+            $('#machine_voucher_debit_account_name').val('');
+        }
+    });
 });
 // timepicker value updation
 function updateTimepicker() {

@@ -111,7 +111,7 @@
                                                     </div>
                                                     {{-- <div class="col-sm-1"></div> --}}
                                                     <div class="col-xs-4">
-                                                        <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4">Add</button>
+                                                        <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4">Add</button>
                                                     </div>
                                                     <!-- /.col -->
                                                 </div><br>
@@ -190,7 +190,7 @@
                                                         <button type="reset" class="btn btn-default btn-block btn-flat" tabindex="5">Clear</button>
                                                     </div>
                                                     <div class="col-xs-4">
-                                                        <button type="submit" class="btn btn-primary btn-block btn-flat" tabindex="4">Add</button>
+                                                        <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4">Add</button>
                                                     </div>
                                                     <!-- /.col -->
                                                 </div><br>
