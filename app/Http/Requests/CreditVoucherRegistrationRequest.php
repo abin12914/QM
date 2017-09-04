@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Account;
+use App\Models\Excavator;
+use App\Models\Jackhammer;
 
 class CreditVoucherRegistrationRequest extends FormRequest
 {
@@ -45,6 +47,10 @@ class CreditVoucherRegistrationRequest extends FormRequest
             'credit_voucher_amount.min'                     => "Minimum value expected.",
             'credit_voucher_description.required'           => "The description field is required.",
             'credit_voucher_description.max'                => "The description may not be greater than 150 characters.",
+            'machine_voucher_excavator_id.required_if'      => "The excavator field is required.",
+            'machine_voucher_excavator_id.in'               => "Invalid data.",
+            'machine_voucher_jackhammer_id.required_if'     => "The jackhammer field is required.",
+            'machine_voucher_jackhammer_id.in'              => "Invalid data.",
         ];
     }
 
@@ -62,12 +68,26 @@ class CreditVoucherRegistrationRequest extends FormRequest
                                                     ],
             'credit_voucher_time'               => [
                                                         'required',
-                                                        'max:5'
+                                                        'max:5',
                                                     ],
             'credit_voucher_debit_account_id'   => [
                                                         'required',
                                                         'integer',
                                                         Rule::in(Account::pluck('id')->toArray()),
+                                                    ],
+            'credit_voucher_machine_class'      => [
+                                                        'nullable',
+                                                        Rule::in([1, 2]),
+                                                    ],
+            'machine_voucher_excavator_id'      => [
+                                                        'nullable',
+                                                        'required_if:credit_voucher_machine_class,1',
+                                                        Rule::in(Excavator::pluck('id')->toArray()),
+                                                    ],
+            'machine_voucher_jackhammer_id'     => [
+                                                        'nullable',
+                                                        'required_if:credit_voucher_machine_class,2',
+                                                        Rule::in(Jackhammer::pluck('id')->toArray()),
                                                     ],
             'credit_voucher_credit_account_id'  => [
                                                         'required',
@@ -79,11 +99,11 @@ class CreditVoucherRegistrationRequest extends FormRequest
                                                         'required',
                                                         'numeric',
                                                         'max:9999999',
-                                                        'min:0'
+                                                        'min:0',
                                                     ],
             'credit_voucher_description'        => [
                                                         'required',
-                                                        'max:150'
+                                                        'max:150',
                                                     ],
         ];
     }

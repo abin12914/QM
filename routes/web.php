@@ -144,6 +144,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/get/details/by/account/{id}', 'VoucherController@getAccountDetailsByaccountId')->name('get-details-by-account-id');
 		Route::get('/voucher/list/cash', 'VoucherController@cashVoucherList')->name('cash-voucher-list');
 		Route::get('/voucher/list/credit', 'VoucherController@creditVoucherList')->name('credit-voucher-list');
+		Route::get('/voucher/list/machine/through', 'VoucherController@machineThroughVoucherList')->name('machine-through-voucher-list');
 
 		//final statement
 		Route::get('/statement/account-statement', 'AccountController@accountSatementSearch')->name('account-statement-list-search');

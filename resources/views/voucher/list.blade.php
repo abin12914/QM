@@ -29,6 +29,7 @@
                         <ul class="nav nav-tabs  no-print">
                             <li class="{{ Request::is('voucher/list/cash')? 'active' : '' }}"><a href="{{ Request::is('voucher/list/cash')? '#' : route('cash-voucher-list') }}">Cash Voucher</a></li>
                             <li class="{{ Request::is('voucher/list/credit')? 'active' : '' }}"><a href="{{ Request::is('voucher/list/credit')? '#' : route('credit-voucher-list') }}">Credit Vouchers</a></li>
+                            <li class="{{ Request::is('voucher/list/machine/through')? 'active' : '' }}"><a href="{{ Request::is('voucher/list/machine/through')? '#' : route('machine-through-voucher-list') }}">Through Vouchers</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="{{ Request::is('voucher/list/cash')? 'active' : '' }} tab-pane" id="cash_tab">
@@ -222,6 +223,160 @@
                                                         <tr>
                                                             <td>{{ $index + $creditVouchers->firstItem() }}</td>
                                                             <td>{{ $creditVoucher->date_time }}</td>
+                                                            @if($creditVoucher->transaction->debitAccount->id == $accountId)
+                                                                <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
+                                                                <td class="bg-gray">{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
+                                                            @elseif($creditVoucher->transaction->creditAccount->id == $accountId)
+                                                                <td class="bg-gray">{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
+                                                                <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
+                                                            @else
+                                                                <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
+                                                                <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
+                                                            @endif
+                                                            <td>{{ $creditVoucher->amount }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row no-print">
+                                        <div class="col-md-12">
+                                            <div class="col-md-6"></div>
+                                            <div class="col-md-6">
+                                                <div class="pull-right">
+                                                    @if(!empty($creditVouchers))
+                                                        {{ $creditVouchers->appends(Request::all())->links() }}
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="{{ Request::is('voucher/list/machine/through')? 'active' : '' }} tab-pane" id="machine_through_tab">
+                                <!-- box-header -->
+                                <div class="box-header no-print">
+                                    <form action="{{ route('machine-through-voucher-list') }}" method="get" class="form-horizontal">
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-10">
+                                                <div class="form-group">
+                                                    <div class="col-sm-4 {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_account_id" class="control-label">Account : </label>
+                                                        <select class="form-control" name="account_id" id="machine_voucher_account_id" tabindex="3" style="width: 100%">
+                                                            @if(!empty($accounts) && (count($accounts) > 0))
+                                                                <option value="">Select account</option>
+                                                                @foreach($accounts as $account)
+                                                                    <option value="{{ $account->id }}" {{ ((old('account_id') == $account->id ) || $accountId == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                        @if(!empty($errors->first('account_id')))
+                                                            <p style="color: red;" >{{$errors->first('account_id')}}</p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-sm-4 {{ !empty($errors->first('from_date')) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_from_date" class="control-label">Start Date : </label>
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="machine_voucher_from_date" id="from_date" placeholder="Date" value="{{ !empty($fromDate) ? $fromDate : old('from_date') }}" tabindex="1">
+                                                        @if(!empty($errors->first('from_date')))
+                                                            <p style="color: red;" >{{$errors->first('from_date')}}</p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-sm-4 {{ !empty($errors->first('to_date')) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_to_date" class="control-label">End Date : </label>
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="to_date" id="machine_voucher_to_date" placeholder="Date" value="{{ !empty($toDate) ? $toDate : old('to_date') }}" tabindex="1">
+                                                        @if(!empty($errors->first('to_date')))
+                                                            <p style="color: red;" >{{$errors->first('to_date')}}</p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-4 {{ !empty($errors->first('machine_class')) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_machine_class" class="control-label">Account : </label>
+                                                        <select class="form-control" name="machine_class" id="machine_voucher_machine_class" tabindex="3" style="width: 100%">
+                                                            <option value="">Select machine class</option>
+                                                            <option value="1" {{ ((old('machine_class') == 1 ) || $accountId == 1) ? 'selected' : '' }}>Excavator</option>
+                                                            <option value="2" {{ ((old('machine_class') == 1 ) || $accountId == 1) ? 'selected' : '' }}>Jackhammer</option>
+                                                        </select>
+                                                        @if(!empty($errors->first('machine_class')))
+                                                            <p style="color: red;" >{{$errors->first('machine_class')}}</p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-sm-4 {{ !empty($errors->first('excavator_id')) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_excavator_id" class="control-label">Excavator : </label>
+                                                        <select class="form-control" name="excavator_id" id="machine_voucher_excavator_id" tabindex="3" style="width: 100%">
+                                                            @if(!empty($excavators) && (count($excavators) > 0))
+                                                                <option value="">Select excavators</option>
+                                                                @foreach($excavators as $excavator)
+                                                                    <option value="{{ $excavator->id }}" {{ ((old('excavator_id') == $excavator->id ) || $excavatorId == $excavator->id) ? 'selected' : '' }}>{{ $excavator->name }}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                        @if(!empty($errors->first('excavator_id')))
+                                                            <p style="color: red;" >{{$errors->first('excavator_id')}}</p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-sm-4 {{ !empty($errors->first('jackhammer_id')) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_jackhammer_id" class="control-label">Account : </label>
+                                                        <select class="form-control" name="jackhammer_id" id="machine_voucher_jackhammer_id" tabindex="3" style="width: 100%">
+                                                            @if(!empty($jackhammers) && (count($jackhammers) > 0))
+                                                                <option value="">Select jackhammer</option>
+                                                                @foreach($jackhammers as $jackhammer)
+                                                                    <option value="{{ $jackhammer->id }}" {{ ((old('jackhammer_id') == $jackhammer->id ) || $jackhammerId == $jackhammer->id) ? 'selected' : '' }}>{{ $jackhammer->name }}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                        @if(!empty($errors->first('jackhammer_id')))
+                                                            <p style="color: red;" >{{$errors->first('jackhammer_id')}}</p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div><br>
+                                        <div class="row">
+                                            <div class="col-md-4"></div>
+                                            <div class="col-md-2">
+                                                <button type="reset" class="btn btn-default btn-block btn-flat"  value="reset" tabindex="10">Clear</button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4"><i class="fa fa-search"></i> Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- /.form end -->
+                                </div><br>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Date & Time</th>
+                                                        <th>Machine</th>
+                                                        <th>Debit Account</th>
+                                                        <th>Credit Account</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if(!empty($creditVouchers) && count($creditVouchers) > 0)
+                                                    @foreach($creditVouchers as $index => $creditVoucher)
+                                                        <tr>
+                                                            <td>{{ $index + $creditVouchers->firstItem() }}</td>
+                                                            <td>{{ $creditVoucher->date_time }}</td>
+                                                            @if(!empty($creditVoucher->excavator_id))
+                                                                <td>{{ $creditVoucher->excavator->name }}</td>
+                                                            @elseif(!empty($creditVoucher->jackhammer_id))
+                                                                <td>{{ $creditVoucher->jackhammer->name }}</td>
+                                                            @else
+                                                                <td></td>
+                                                            @endif
                                                             @if($creditVoucher->transaction->debitAccount->id == $accountId)
                                                                 <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
                                                                 <td class="bg-gray">{{ $creditVoucher->transaction->debitAccount->account_name }}</td>

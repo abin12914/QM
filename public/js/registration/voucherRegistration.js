@@ -32,6 +32,14 @@ $(function () {
     //Initialize Select2 Element for account select box
     initializeSelect2();
 
+    $("#machine_voucher_machine_class").select2({
+        minimumResultsForSearch: 4
+    });
+
+    $(".machine_voucher_machine_id").select2({
+        minimumResultsForSearch: 5
+    });
+
     //handle link to tabs
     var url = document.location.toString();
     if (url.match('#')) {
@@ -188,6 +196,8 @@ $(function () {
     //select related account for the selected jackhammer
     $('body').on("change", "#machine_voucher_excavator_id", function () {
         var excavatorId = $('#machine_voucher_excavator_id').val();
+        var debitAccountId = $('#machine_voucher_debit_account_id').val();
+
         if(excavatorId) {
             $.ajax({
                 url: "/get/account/by/excavator/" + excavatorId,
@@ -195,9 +205,14 @@ $(function () {
                 success: function(result) {
                     if(result && result.flag) {
                         var accountId  = result.accountId;
-                        
-                        $('#machine_voucher_credit_account_id').val(accountId);
-                        $('#machine_voucher_credit_account_id').trigger('change');
+                        if(debitAccountId != accountId){
+                            $('#machine_voucher_credit_account_id').val(accountId);
+                            $('#machine_voucher_credit_account_id').trigger('change');
+                        } else {
+                            $("#machine_voucher_excavator_id").val("");
+                            $("#machine_voucher_excavator_id").trigger('change');
+                            alert('Selected debit account and selected machine contractor should be diffrent');
+                        }
                     } else {
                         $('#machine_voucher_credit_account_id').val();
                         $('#machine_voucher_credit_account_id').trigger('change');
@@ -217,6 +232,8 @@ $(function () {
     //select related account for the selected jackhammer
     $('body').on("change", "#machine_voucher_jackhammer_id", function () {
         var jackhammerId = $('#machine_voucher_jackhammer_id').val();
+        var debitAccountId = $('#machine_voucher_debit_account_id').val();
+
         if(jackhammerId) {
             $.ajax({
                 url: "/get/account/by/jackhammer/" + jackhammerId,
@@ -225,8 +242,14 @@ $(function () {
                     if(result && result.flag) {
                         var accountId  = result.accountId;
                         
-                        $('#machine_voucher_credit_account_id').val(accountId);
-                        $('#machine_voucher_credit_account_id').trigger('change');
+                        if(debitAccountId != accountId){
+                            $('#machine_voucher_credit_account_id').val(accountId);
+                            $('#machine_voucher_credit_account_id').trigger('change');
+                        } else {
+                            $("#machine_voucher_jackhammer_id").val("");
+                            $("#machine_voucher_jackhammer_id").trigger('change');
+                            alert('Selected debit account and selected machine contractor should be diffrent');
+                        }
                     } else {
                         $('#machine_voucher_credit_account_id').val();
                         $('#machine_voucher_credit_account_id').trigger('change');
@@ -252,10 +275,14 @@ $(function () {
             alert("Debit account and credit account should not be same.");
             $('#machine_voucher_credit_account_id').val("");
             $('#machine_voucher_credit_account_id').trigger("change");
+            $('#machine_voucher_excavator_id').val("");
+            $('#machine_voucher_excavator_id').trigger('change');
+            $('#machine_voucher_jackhammer_id').val("");
+            $('#machine_voucher_jackhammer_id').trigger('change');
             return false;
         }
 
-        if(creditAccountId) {
+        /*if(creditAccountId) {
             $('#machine_voucher_credit_account_id, #machine_voucher_debit_account_id').not($('#machine_voucher_credit_account_id'))
             .children('option[value=' + creditAccountId + ']')
             .attr('disabled', true)
@@ -264,7 +291,7 @@ $(function () {
             $('#machine_voucher_credit_account_id, #machine_voucher_debit_account_id').not($('#machine_voucher_credit_account_id'))
             .children('option[value=""]')
             .siblings().removeAttr('disabled');
-        }
+        }*/
 
         //reinitializing select2 elements for resetting disabled options
         initializeSelect2();
@@ -295,28 +322,47 @@ $(function () {
     //select name for the selected account
     $('body').on("change", "#machine_voucher_debit_account_id", function () {
         var debitAccountId = $('#machine_voucher_debit_account_id').val();
-        var creditAccountId = $('#machine_voucher_credit_account_id').val();
 
-        if(debitAccountId && (debitAccountId == creditAccountId)) {
-            alert("Debit account and credit account should not be same.");
-            $('#machine_voucher_debit_account_id').val("");
-            $('#machine_voucher_debit_account_id').trigger("change");
-            return false;
-        }
+        $('#machine_voucher_excavator_id').val('');
+        $('#machine_voucher_jackhammer_id').val('');
+        $('#machine_voucher_excavator_id').trigger('change');
+        $('#machine_voucher_jackhammer_id').trigger('change');
 
         if(debitAccountId) {
             $('#machine_voucher_debit_account_id, #machine_voucher_credit_account_id').not($('#machine_voucher_debit_account_id'))
             .children('option[value=' + debitAccountId + ']')
             .attr('disabled', true)
             .siblings().removeAttr('disabled');
+
+            $('#machine_voucher_debit_account_id, #machine_voucher_excavator_id').not($('#machine_voucher_debit_account_id'))
+            .children('option[data-excavator-contractor-account-id=' + debitAccountId + ']')
+            .attr('disabled', true)
+            .siblings().removeAttr('disabled');
+
+            $('#machine_voucher_debit_account_id, #machine_voucher_jackhammer_id').not($('#machine_voucher_debit_account_id'))
+            .children('option[data-jackhammer-contractor-account-id=' + debitAccountId + ']')
+            .attr('disabled', true)
+            .siblings().removeAttr('disabled');
         } else {
             $('#machine_voucher_debit_account_id, #machine_voucher_credit_account_id').not($('#machine_voucher_debit_account_id'))
             .children('option[value=""]')
+            .siblings().removeAttr('disabled');
+
+            $('#machine_voucher_debit_account_id, #machine_voucher_excavator_id').not($('#machine_voucher_debit_account_id'))
+            .children('option[data-excavator-contractor-account-id=""]')
+            .siblings().removeAttr('disabled');
+
+            $('#machine_voucher_debit_account_id, #machine_voucher_jackhammer_id').not($('#machine_voucher_debit_account_id'))
+            .children('option[data-jackhammer-contractor-account-id=""]')
             .siblings().removeAttr('disabled');
         }
 
         //reinitializing select2 elements for resetting disabled options
         initializeSelect2();
+
+        $(".machine_voucher_machine_id").select2({
+            minimumResultsForSearch: 5
+        });
 
         $('#machine_voucher_debit_account_name').val('');
         if(debitAccountId) {

@@ -53,14 +53,14 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('cash_voucher_date')) ? 'has-error' : '' }}">
-                                                        <label for="cash_voucher_date" class="control-label">Date : </label>
+                                                        <label for="cash_voucher_date" class="control-label"><b style="color: red;">*</b> Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="cash_voucher_date" id="cash_voucher_date" placeholder="Date" value="{{ old('cash_voucher_date') }}" tabindex="1">
                                                         @if(!empty($errors->first('cash_voucher_date')))
                                                             <p style="color: red;" >{{$errors->first('cash_voucher_date')}}</p>
                                                         @endif
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('cash_voucher_time')) ? 'has-error' : '' }}">
-                                                        <label for="cash_voucher_time" class="control-label">Time : </label>
+                                                        <label for="cash_voucher_time" class="control-label"><b style="color: red;">*</b> Time : </label>
                                                         <div class="bootstrap-timepicker">
                                                             <input type="text" class="form-control timepicker" name="cash_voucher_time" id="cash_voucher_time" placeholder="Time" value="{{ old('cash_voucher_time') }}" tabindex="2">
                                                         </div>
@@ -71,7 +71,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('cash_voucher_account_id')) ? 'has-error' : '' }}">
-                                                        <label for="cash_voucher_account_id" class="control-label">Account : </label>
+                                                        <label for="cash_voucher_account_id" class="control-label"><b style="color: red;">*</b> Account : </label>
                                                         <select class="form-control account_select" name="cash_voucher_account_id" id="cash_voucher_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
@@ -114,14 +114,14 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('cash_voucher_amount')) ? 'has-error' : '' }}">
-                                                        <label for="cash_voucher_amount" class="control-label">Amount : </label>
+                                                        <label for="cash_voucher_amount" class="control-label"><b style="color: red;">*</b> Amount : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="cash_voucher_amount" id="cash_voucher_amount" tabindex="4">
                                                         @if(!empty($errors->first('cash_voucher_amount')))
                                                             <p style="color: red;" >{{$errors->first('cash_voucher_amount')}}</p>
                                                         @endif
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('cash_voucher_description')) ? 'has-error' : '' }}">
-                                                        <label for="cash_voucher_description" class="control-label">Description : </label>
+                                                        <label for="cash_voucher_description" class="control-label"><b style="color: red;">*</b> Description : </label>
                                                         <input type="text" class="form-control" name="cash_voucher_description" id="cash_voucher_description" tabindex="5">
                                                         @if(!empty($errors->first('cash_voucher_description')))
                                                             <p style="color: red;" >{{$errors->first('cash_voucher_description')}}</p>
@@ -198,26 +198,26 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_date')) ? 'has-error' : '' }}">
-                                                        <label for="credit_voucher_date" class="control-label">Date : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_date')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
+                                                        <label for="credit_voucher_date" class="control-label"><b style="color: red;">*</b> Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="credit_voucher_date" id="credit_voucher_date" placeholder="Date" value="{{ old('credit_voucher_date') }}" tabindex="1">
-                                                        @if(!empty($errors->first('credit_voucher_date')))
+                                                        @if((!empty($errors->first('credit_voucher_date'))) && empty(old('machine_voucher_flag')))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_date')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_time')) ? 'has-error' : '' }}">
-                                                        <label for="credit_voucher_time" class="control-label">Time : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_time')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
+                                                        <label for="credit_voucher_time" class="control-label"><b style="color: red;">*</b> Time : </label>
                                                         <div class="bootstrap-timepicker">
                                                             <input type="text" class="form-control timepicker" name="credit_voucher_time" id="credit_voucher_time" placeholder="Time" value="{{ old('credit_voucher_time') }}" tabindex="2">
                                                         </div>
-                                                        @if(!empty($errors->first('credit_voucher_time')))
+                                                        @if((!empty($errors->first('credit_voucher_time'))) && empty(old('machine_voucher_flag')))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_time')}}</p>
                                                         @endif
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_debit_account_id')) ? 'has-error' : '' }}">
-                                                        <label for="credit_voucher_debit_account_id" class="control-label">Debit Account : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_debit_account_id')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
+                                                        <label for="credit_voucher_debit_account_id" class="control-label"><b style="color: red;">*</b> Debit Account : </label>
                                                         <select class="form-control account_select" name="credit_voucher_debit_account_id" id="credit_voucher_debit_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
@@ -226,18 +226,18 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if(!empty($errors->first('credit_voucher_debit_account_id')))
+                                                        @if((!empty($errors->first('credit_voucher_debit_account_id'))) && empty(old('machine_voucher_flag')))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_debit_account_id')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_debit_account_name')) ? 'has-error' : '' }}">
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_debit_account_name')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
                                                         <label for="credit_voucher_debit_account_name" class="control-label">Name : </label>
                                                         <input type="text" class="form-control" name="credit_voucher_debit_account_name" id="credit_voucher_debit_account_name" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_credit_account_id')) ? 'has-error' : '' }}">
-                                                        <label for="credit_voucher_credit_account_id" class="control-label">Credit Account : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_credit_account_id')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
+                                                        <label for="credit_voucher_credit_account_id" class="control-label"><b style="color: red;">*</b> Credit Account : </label>
                                                         <select class="form-control  account_select" name="credit_voucher_credit_account_id" id="credit_voucher_credit_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
@@ -246,27 +246,27 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if(!empty($errors->first('credit_voucher_credit_account_id')))
+                                                        @if((!empty($errors->first('credit_voucher_credit_account_id'))) && empty(old('machine_voucher_flag')))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_credit_account_id')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_credit_account_name')) ? 'has-error' : '' }}">
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_credit_account_name')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
                                                         <label for="credit_voucher_credit_account_name" class="control-label">Name : </label>
                                                         <input type="text" class="form-control" name="credit_voucher_credit_account_name" id="credit_voucher_credit_account_name" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_amount')) ? 'has-error' : '' }}">
-                                                        <label for="credit_voucher_amount" class="control-label">Amount : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_amount')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
+                                                        <label for="credit_voucher_amount" class="control-label"><b style="color: red;">*</b> Amount : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="credit_voucher_amount" id="credit_voucher_amount" tabindex="4">
-                                                        @if(!empty($errors->first('credit_voucher_amount')))
+                                                        @if((!empty($errors->first('credit_voucher_amount'))) && empty(old('machine_voucher_flag')))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_amount')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_description')) ? 'has-error' : '' }}">
-                                                        <label for="credit_voucher_description" class="control-label">Description : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_description')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
+                                                        <label for="credit_voucher_description" class="control-label"><b style="color: red;">*</b> Description : </label>
                                                         <input type="text" class="form-control" name="credit_voucher_description" id="credit_voucher_description" tabindex="5">
-                                                        @if(!empty($errors->first('credit_voucher_description')))
+                                                        @if((!empty($errors->first('credit_voucher_description'))) && empty(old('machine_voucher_flag')))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_description')}}</p>
                                                         @endif
                                                     </div>
@@ -330,26 +330,26 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_date')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_date" class="control-label">Date : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_date')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_date" class="control-label"><b style="color: red;">*</b> Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="credit_voucher_date" id="machine_voucher_date" placeholder="Date" value="{{ old('credit_voucher_date') }}" tabindex="1">
-                                                        @if(!empty($errors->first('credit_voucher_date')))
+                                                        @if((!empty($errors->first('credit_voucher_date'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_date')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_time')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_time" class="control-label">Time : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_time')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_time" class="control-label"><b style="color: red;">*</b> Time : </label>
                                                         <div class="bootstrap-timepicker">
                                                             <input type="text" class="form-control timepicker" name="credit_voucher_time" id="machine_voucher_time" placeholder="Time" value="{{ old('credit_voucher_time') }}" tabindex="2">
                                                         </div>
-                                                        @if(!empty($errors->first('credit_voucher_time')))
+                                                        @if((!empty($errors->first('credit_voucher_time'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_time')}}</p>
                                                         @endif
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_debit_account_id')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_debit_account_id" class="control-label">Debit Account : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_debit_account_id')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_debit_account_id" class="control-label"><b style="color: red;">*</b> Debit Account : </label>
                                                         <select class="form-control account_select" name="credit_voucher_debit_account_id" id="machine_voucher_debit_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
@@ -359,59 +359,59 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if(!empty($errors->first('credit_voucher_debit_account_id')))
+                                                        @if((!empty($errors->first('credit_voucher_debit_account_id'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_debit_account_id')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_debit_account_name')) ? 'has-error' : '' }}">
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_debit_account_name')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_debit_account_name" class="control-label">Name : </label>
                                                         <input type="text" class="form-control" name="credit_voucher_debit_account_name" id="machine_voucher_debit_account_name" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_machine_class')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_machine_class" class="control-label">Machine Type : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_machine_class')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_machine_class" class="control-label"><b style="color: red;">*</b> Machine Type : </label>
                                                         <select class="form-control" name="credit_voucher_machine_class" id="machine_voucher_machine_class" tabindex="3" style="width: 100%">
                                                             <option value="1" {{ (old('credit_voucher_machine_class') == 1) ? 'selected' : '' }}>Excavator</option>
                                                             <option value="2" {{ (old('credit_voucher_machine_class') == 2) ? 'selected' : '' }}>Jackhammer</option>
                                                         </select>
-                                                        @if(!empty($errors->first('credit_voucher_machine_class')))
+                                                        @if((!empty($errors->first('credit_voucher_machine_class'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_machine_class')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('machine_voucher_excavator_id')) ? 'has-error' : '' }}" id="class_excavator" {{ (!empty(old('machine_voucher_machine_class')) && old('machine_voucher_machine_class') == 2) ? 'hidden' : '' }}>
-                                                        <label for="machine_voucher_excavator_id" class="control-label">Excavator : </label>
-                                                        <select class="form-control" name="machine_voucher_excavator_id" id="machine_voucher_excavator_id" tabindex="3" style="width: 100%">
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('machine_voucher_excavator_id')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}" id="class_excavator" {{ (!empty(old('machine_voucher_machine_class')) && old('machine_voucher_machine_class') == 2) ? 'hidden' : '' }}>
+                                                        <label for="machine_voucher_excavator_id" class="control-label"><b style="color: red;">*</b> Excavator : </label>
+                                                        <select class="form-control machine_voucher_machine_id" name="machine_voucher_excavator_id" id="machine_voucher_excavator_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($excavators) && count($excavators) > 0)
                                                                 <option value="">Select excavator</option>
                                                                 @foreach($excavators as $excavator)
-                                                                    <option value="{{ $excavator->id }}" {{ (old('machine_voucher_excavator_id') == $excavator->id ) ? 'selected' : '' }}>{{ $excavator->name }}</option>
+                                                                    <option value="{{ $excavator->id }}" {{ (old('machine_voucher_excavator_id') == $excavator->id ) ? 'selected' : '' }} data-excavator-contractor-account-id="{{ $excavator->account->id }}">{{ $excavator->name }}</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if(!empty($errors->first('machine_voucher_excavator_id')))
+                                                        @if((!empty($errors->first('machine_voucher_excavator_id'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('machine_voucher_excavator_id')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('machine_voucher_jackhammer_id')) ? 'has-error' : '' }}" id="class_jackhammer" {{ (empty(old('machine_voucher_machine_class')) || old('machine_voucher_machine_class') == 1) ? 'hidden' : '' }}>
-                                                        <label for="machine_voucher_jackhammer_id" class="control-label">Jackhmmer : </label>
-                                                        <select class="form-control" name="machine_voucher_jackhammer_id" id="machine_voucher_jackhammer_id" tabindex="3" style="width: 100%">
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('machine_voucher_jackhammer_id')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}" id="class_jackhammer" {{ (empty(old('machine_voucher_machine_class')) || old('machine_voucher_machine_class') == 1) ? 'hidden' : '' }}>
+                                                        <label for="machine_voucher_jackhammer_id" class="control-label"><b style="color: red;">*</b> Jackhmmer : </label>
+                                                        <select class="form-control machine_voucher_machine_id" name="machine_voucher_jackhammer_id" id="machine_voucher_jackhammer_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($jackhammers) && count($jackhammers) > 0)
                                                                 <option value="">Select jackhammer</option>
                                                                 @foreach($jackhammers as $jackhammer)
-                                                                    <option value="{{ $jackhammer->id }}" {{ (old('machine_voucher_jackhammer_id') == $jackhammer->id ) ? 'selected' : '' }}>{{ $jackhammer->name }}</option>
+                                                                    <option value="{{ $jackhammer->id }}" {{ (old('machine_voucher_jackhammer_id') == $jackhammer->id ) ? 'selected' : '' }} data-jackhammer-contractor-account-id="{{ $jackhammer->account->id }}">{{ $jackhammer->name }}</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if(!empty($errors->first('machine_voucher_jackhammer_id')))
+                                                        @if((!empty($errors->first('machine_voucher_jackhammer_id'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('machine_voucher_jackhammer_id')}}</p>
                                                         @endif
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_credit_account_id')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_credit_account_id" class="control-label">Credit Account : </label>
-                                                        <select class="form-control  account_select" name="credit_voucher_credit_account_id" id="machine_voucher_credit_account_id" tabindex="3" style="width: 100%" disabled>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_credit_account_id')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_credit_account_id" class="control-label"><b style="color: red;">*</b> Credit Account : </label>
+                                                        <select class="form-control  account_select" name="credit_voucher_credit_account_id" id="machine_voucher_credit_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
                                                                 @foreach($accounts as $account)
@@ -419,27 +419,27 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if(!empty($errors->first('credit_voucher_credit_account_id')))
+                                                        @if((!empty($errors->first('credit_voucher_credit_account_id'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_credit_account_id')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_credit_account_name')) ? 'has-error' : '' }}">
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_credit_account_name')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_credit_account_name" class="control-label">Name : </label>
                                                         <input type="text" class="form-control" name="credit_voucher_credit_account_name" id="machine_voucher_credit_account_name" readonly>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_amount')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_amount" class="control-label">Amount : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_amount')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_amount" class="control-label"><b style="color: red;">*</b> Amount : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="credit_voucher_amount" id="machine_voucher_amount" tabindex="4">
-                                                        @if(!empty($errors->first('credit_voucher_amount')))
+                                                        @if((!empty($errors->first('credit_voucher_amount'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_amount')}}</p>
                                                         @endif
                                                     </div>
-                                                    <div class="col-sm-6 {{ !empty($errors->first('credit_voucher_description')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_description" class="control-label">Description : </label>
+                                                    <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_description')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
+                                                        <label for="machine_voucher_description" class="control-label"><b style="color: red;">*</b> Description : </label>
                                                         <input type="text" class="form-control" name="credit_voucher_description" id="machine_voucher_description" tabindex="5">
-                                                        @if(!empty($errors->first('credit_voucher_description')))
+                                                        @if((!empty($errors->first('credit_voucher_description'))) && old('machine_voucher_flag') == 1)
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_description')}}</p>
                                                         @endif
                                                     </div>

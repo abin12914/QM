@@ -24,8 +24,8 @@ class VoucherController extends Controller
         
         $cashVouchers   = Voucher::where('voucher_type','Cash')->with(['transaction.creditAccount'])->orderBy('date_time', 'desc')->take(5)->get();
         $creditVouchers = Voucher::where('voucher_type','Credit')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('date_time', 'desc')->take(5)->get();
-        $excavators     = Excavator::where('status', 1)->get();
-        $jackhammers    = Jackhammer::where('status', 1)->get();
+        $excavators     = Excavator::where('status', 1)->with(['account'])->get();
+        $jackhammers    = Jackhammer::where('status', 1)->with(['account'])->get();
         $accounts       = Account::where('type','personal')->get();
 
         return view('voucher.register',[
@@ -119,6 +119,8 @@ class VoucherController extends Controller
         $creditAccountId    = $request->get('credit_voucher_credit_account_id');
         $voucherAmount      = $request->get('credit_voucher_amount');
         $description        = $request->get('credit_voucher_description');
+        $excavatorId        = $request->get('machine_voucher_excavator_id');
+        $jackhammerId       = $request->get('machine_voucher_jackhammer_id');
 
         $debitAccount = Account::where('id', $debitAccountId)->first();
         if($debitAccount) {
@@ -149,11 +151,17 @@ class VoucherController extends Controller
         if($transaction->save()) {
             $voucher = new Voucher;
             $voucher->date_time        = $dateTime;
-            $voucher->voucher_type     = 'Credit';
+            if(!empty($excavatorId) || !empty($jackhammerId)) {
+                $voucher->voucher_type     = 'Credit_through';
+            } else {
+                $voucher->voucher_type     = 'Credit';
+            }
             $voucher->transaction_type = '3';
             $voucher->amount           = $voucherAmount;
             $voucher->description      = $description."[".$debitAccountName."->".$creditAccountName."]";
             $voucher->transaction_id   = $transaction->id;
+            $voucher->excavator_id     = $excavatorId;
+            $voucher->jackhammer_id    = $jackhammerId;
             $voucher->status           = 1;
             
             if($voucher->save()) {
@@ -262,6 +270,74 @@ class VoucherController extends Controller
                 'accounts'        => $accounts,
                 'creditVouchers'  => $creditVouchers,
                 'accountId'       => $accountId,
+                'fromDate'        => $fromDate,
+                'toDate'          => $toDate,
+                'cashVouchers'    => []
+            ]);
+    }
+
+    /**
+     * Return view for list voucher / credit through
+     */
+    public function machineThroughVoucherList(Request $request)
+    {
+        $accountId          = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
+        $excavatorId        = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
+        $jackhammerId       = !empty($request->get('jackhammer_id')) ? $request->get('jackhammer_id') : 0;
+        $fromDate           = !empty($request->get('from_date')) ? $request->get('from_date') : '';
+        $toDate             = !empty($request->get('to_date')) ? $request->get('to_date') : '';
+        $machineClass       = !empty($request->get('machine_class')) ? $request->get('machine_class') : 0;
+
+        $accounts       = Account::where('type', 'personal')->where('status', '1')->get();
+        $excavators     = Excavator::where('status', '1')->get();
+        $jackhammers    = Jackhammer::where('status', '1')->get();
+
+        $query = Voucher::where('status', 1)->where('voucher_type', 'Credit_through');
+
+        if(!empty($accountId) && $accountId != 0) {
+            $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
+            });
+        }
+
+        if(!empty($fromDate)) {
+            $searchFromDate = new DateTime($fromDate);
+            $searchFromDate = $searchFromDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '>=', $searchFromDate);
+        }
+
+        if(!empty($toDate)) {
+            $searchToDate = new DateTime($toDate);
+            $searchToDate = $searchToDate->format('Y-m-d H:i');
+            $query = $query->where('date_time', '<=', $searchToDate);
+        }
+
+        if(!empty($machineClass)) {
+            if($machineClass == 1) {                
+                $query = $query->whereNotNull('excavator_id');
+            } elseif($machineClass == 2) {
+                $query = $query->whereNotNull('jackhammer_id');
+            }
+        }
+
+        if(!empty($excavatorId)) {
+            $query = $query->where('excavator_id', $excavatorId);
+        }
+
+        if(!empty($jackhammerId)) {
+            $query = $query->where('jackhammer_id', $jackhammerId);
+        }
+
+        $creditVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('date_time','desc')->paginate(10);
+        
+        return view('voucher.list',[
+                'accounts'        => $accounts,
+                'excavators'      => $excavators,
+                'jackhammers'     => $jackhammers,
+                'creditVouchers'  => $creditVouchers,
+                'accountId'       => $accountId,
+                'excavatorId'     => $excavatorId,
+                'jackhammerId'    => $jackhammerId,
                 'fromDate'        => $fromDate,
                 'toDate'          => $toDate,
                 'cashVouchers'    => []
