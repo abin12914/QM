@@ -340,6 +340,33 @@
                         </li>
                     </ul>
                 </li>
+                <li class="treeview {{ Request::is('vehicle-type/*')? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i> <span>Truck Type & Royalty</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        @if($currentUser->role == 'admin')
+                            <li class="{{ Request::is('vehicle-type/register')? 'active' : '' }}">
+                                <a href="{{ route('vehicle-type-register-view') }}">
+                                    <i class="fa fa-circle-o"></i> Registration
+                                </a>
+                            </li>
+                        @endif
+                        <li class="{{ Request::is('vehicle-type/chart')? 'active' : '' }}">
+                            <a href="{{route('vehicle-type-chart') }}">
+                                <i class="fa fa-circle-o"></i> Royalty Chart
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('vehicle-type/list')? 'active' : '' }}">
+                            <a href="{{route('vehicle-type-list') }}">
+                                <i class="fa fa-circle-o"></i> Royalty List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             @endif
             @if($currentUser->role == 'admin')
                 <li class="treeview {{ Request::is('product/*')? 'active' : '' }}">
@@ -354,31 +381,6 @@
                         <li class="{{ Request::is('product/list')? 'active' : '' }}">
                             <a href="{{route('product-list') }}">
                                 <i class="fa fa-circle-o"></i> List
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="treeview {{ Request::is('vehicle-type/*')? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-pie-chart"></i> <span>Truck Type & Royalty</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="{{ Request::is('vehicle-type/register')? 'active' : '' }}">
-                            <a href="{{ route('vehicle-type-register-view') }}">
-                                <i class="fa fa-circle-o"></i> Registration
-                            </a>
-                        </li>
-                        <li class="{{ Request::is('vehicle-type/list')? 'active' : '' }}">
-                            <a href="{{route('vehicle-type-list') }}">
-                                <i class="fa fa-circle-o"></i> Royalty List
-                            </a>
-                        </li>
-                        <li class="{{ Request::is('vehicle-type/chart')? 'active' : '' }}">
-                            <a href="{{route('vehicle-type-chart') }}">
-                                <i class="fa fa-circle-o"></i> Royalty Chart
                             </a>
                         </li>
                     </ul>

@@ -24,6 +24,7 @@ class VoucherController extends Controller
         
         $cashVouchers   = Voucher::where('voucher_type','Cash')->with(['transaction.creditAccount'])->orderBy('date_time', 'desc')->take(5)->get();
         $creditVouchers = Voucher::where('voucher_type','Credit')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('date_time', 'desc')->take(5)->get();
+        $machineVouchers = Voucher::where('voucher_type','Credit_through')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('date_time', 'desc')->take(5)->get();
         $excavators     = Excavator::where('status', 1)->with(['account'])->get();
         $jackhammers    = Jackhammer::where('status', 1)->with(['account'])->get();
         $accounts       = Account::where('type','personal')->get();
@@ -33,6 +34,7 @@ class VoucherController extends Controller
                 'accounts'          => $accounts,
                 'cashVouchers'      => $cashVouchers,
                 'creditVouchers'    => $creditVouchers,
+                'machineVouchers'   => $machineVouchers,
                 'excavators'        => $excavators,
                 'jackhammers'       => $jackhammers
             ]);
@@ -182,6 +184,7 @@ class VoucherController extends Controller
      */
     public function cashVoucherList(Request $request)
     {
+        $totalAmount        = 0;
         $accountId          = !empty($request->get('cash_voucher_account_id')) ? $request->get('cash_voucher_account_id') : 0;
         $transactionType    = !empty($request->get('transaction_type')) ? $request->get('transaction_type') : 0;
         $fromDate           = !empty($request->get('cash_voucher_from_date')) ? $request->get('cash_voucher_from_date') : '';
@@ -220,6 +223,9 @@ class VoucherController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('amount');
+
         $cashVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('date_time','desc')->paginate(10);
         
         return view('voucher.list',[
@@ -229,7 +235,9 @@ class VoucherController extends Controller
                 'transactionType' => $transactionType,
                 'fromDate'        => $fromDate,
                 'toDate'          => $toDate,
-                'creditVouchers'  => []
+                'creditVouchers'  => [],
+                'machineVouchers' => [],
+                'totalAmount'     => $totalAmount
             ]);
     }
 
@@ -238,6 +246,7 @@ class VoucherController extends Controller
      */
     public function creditVoucherList(Request $request)
     {
+        $totalAmount        = 0;
         $accountId          = !empty($request->get('credit_voucher_account_id')) ? $request->get('credit_voucher_account_id') : 0;
         $fromDate           = !empty($request->get('credit_voucher_from_date')) ? $request->get('credit_voucher_from_date') : '';
         $toDate             = !empty($request->get('credit_voucher_to_date')) ? $request->get('credit_voucher_to_date') : '';
@@ -264,6 +273,9 @@ class VoucherController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('amount');
+
         $creditVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('date_time','desc')->paginate(10);
         
         return view('voucher.list',[
@@ -272,7 +284,9 @@ class VoucherController extends Controller
                 'accountId'       => $accountId,
                 'fromDate'        => $fromDate,
                 'toDate'          => $toDate,
-                'cashVouchers'    => []
+                'cashVouchers'    => [],
+                'machineVouchers' => [],
+                'totalAmount'     => $totalAmount
             ]);
     }
 
@@ -281,6 +295,7 @@ class VoucherController extends Controller
      */
     public function machineThroughVoucherList(Request $request)
     {
+        $totalAmount        = 0;
         $accountId          = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $excavatorId        = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
         $jackhammerId       = !empty($request->get('jackhammer_id')) ? $request->get('jackhammer_id') : 0;
@@ -328,19 +343,24 @@ class VoucherController extends Controller
             $query = $query->where('jackhammer_id', $jackhammerId);
         }
 
-        $creditVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('date_time','desc')->paginate(10);
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('amount');
+
+        $machineVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('date_time','desc')->paginate(10);
         
         return view('voucher.list',[
                 'accounts'        => $accounts,
                 'excavators'      => $excavators,
                 'jackhammers'     => $jackhammers,
-                'creditVouchers'  => $creditVouchers,
+                'machineVouchers' => $machineVouchers,
                 'accountId'       => $accountId,
                 'excavatorId'     => $excavatorId,
                 'jackhammerId'    => $jackhammerId,
                 'fromDate'        => $fromDate,
                 'toDate'          => $toDate,
-                'cashVouchers'    => []
+                'cashVouchers'    => [],
+                'creditVouchers'  => [],
+                'totalAmount'     => $totalAmount
             ]);
     }
 

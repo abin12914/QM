@@ -52,8 +52,6 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//vehicle type
 		Route::get('/vehicle-type/register', 'VehicleTypeController@register')->name('vehicle-type-register-view');
 		Route::post('/vehicle-type/register/action', 'VehicleTypeController@registerAction')->name('vehicle-type-register-action');
-		Route::get('/vehicle-type/list', 'VehicleTypeController@list')->name('vehicle-type-list');
-		Route::get('/vehicle-type/chart', 'VehicleTypeController@chart')->name('vehicle-type-chart');
 
 		//edit
 		//account
@@ -95,6 +93,10 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/vehicle/register', 'VehicleController@register')->name('vehicle-register-view');
 		Route::post('/vehicle/register/action', 'VehicleController@registerAction')->name('vehicle-register-action');
 		Route::get('/vehicle/list', 'VehicleController@list')->name('vehicle-list');
+
+		//vehicle type
+		Route::get('/vehicle-type/list', 'VehicleTypeController@list')->name('vehicle-type-list');
+		Route::get('/vehicle-type/chart', 'VehicleTypeController@chart')->name('vehicle-type-chart');
 
 		//sales
 		Route::get('/sales/register', 'SalesController@register')->name('sales-register-view');

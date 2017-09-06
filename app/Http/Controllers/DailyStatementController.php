@@ -192,6 +192,7 @@ class DailyStatementController extends Controller
                 $excavatorReading->breaker_hour     = $breakerHour;
                 $excavatorReading->operator_name    = $operatorName;
                 $excavatorReading->bata             = $operatorBata;
+                $excavatorReading->bill_amount      = $bill;
                 $excavatorReading->status           = 1;
             } else {
                 return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> #04/10</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
@@ -277,6 +278,7 @@ class DailyStatementController extends Controller
             $jackhammerReading->jackhammer_id    = $jackhammerId;
             $jackhammerReading->transaction_id   = $transaction->id;
             $jackhammerReading->total_pit_depth  = $totalPitDepth;
+            $jackhammerReading->bill_amount      = $bill;
             $jackhammerReading->status           = 1;
 
             if($jackhammerReading->save()) {
@@ -290,13 +292,6 @@ class DailyStatementController extends Controller
         } else {
             return redirect()->back()->withInput()->with("message","Failed to save the jackhammer reading details.Try again after reloading the page!<small class='pull-right'> #04/17</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'jackhammer');
         }
-        /*} else {
-            $jackhammerReading = new JackhammerReading;
-            $jackhammerReading->date             = $date;
-            $jackhammerReading->jackhammer_id    = $jackhammerId;
-            $jackhammerReading->total_pit_depth  = $totalPitDepth;
-            $jackhammerReading->status           = 1;
-        }*/
     }
 
     /**
@@ -336,6 +331,9 @@ class DailyStatementController extends Controller
             $query = $query->where('date', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('wage');
+
         $employeeAttendance = $query->with(['employee.account.accountDetail'])->orderBy('date','desc')->paginate(10);
         
         return view('daily-statement.list',[
@@ -348,6 +346,7 @@ class DailyStatementController extends Controller
                 'toDate'                => $toDate,
                 'excavatorReadings'     => [],
                 'jackhammerReadings'    => [],
+                'totalAmount'           => $totalAmount
             ]);
     }
 
@@ -356,6 +355,7 @@ class DailyStatementController extends Controller
      */
     public function excavatorReadingList(Request $request)
     {
+        $totalAmount    = 0;
         $accountId      = !empty($request->get('excavator_account_id')) ? $request->get('excavator_account_id') : 0;
         $excavatorId    = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
         $fromDate       = !empty($request->get('excavator_from_date')) ? $request->get('excavator_from_date') : '';
@@ -388,6 +388,9 @@ class DailyStatementController extends Controller
             $query = $query->where('date', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('bill_amount');
+
         $excavatorReadings = $query->with(['excavator.account.accountDetail'])->orderBy('date','desc')->paginate(10);
         
         return view('daily-statement.list',[
@@ -400,6 +403,7 @@ class DailyStatementController extends Controller
                 'toDate'                => $toDate,
                 'employeeAttendance'    => [],
                 'jackhammerReadings'    => [],
+                'totalAmount'           => $totalAmount
             ]);
     }
 
@@ -408,17 +412,7 @@ class DailyStatementController extends Controller
      */
     public function jackhammerReadingList(Request $request)
     {
-        /*$jackhammerReadings = JackhammerReading::paginate(10);
-
-        if(empty($jackhammerReadings)) {
-            $jackhammerReadings = [];
-        }
-        return view('daily-statement.list',[
-                'employeeAttendance'    => [],
-                'excavatorReadings'     => [],
-                'jackhammerReadings'    => $jackhammerReadings
-            ]);*/
-
+        $totalAmount    = 0;
         $accountId      = !empty($request->get('jackhammer_account_id')) ? $request->get('jackhammer_account_id') : 0;
         $jackhammerId   = !empty($request->get('jackhammer_id')) ? $request->get('jackhammer_id') : 0;
         $fromDate       = !empty($request->get('jackhammer_from_date')) ? $request->get('jackhammer_from_date') : '';
@@ -451,6 +445,9 @@ class DailyStatementController extends Controller
             $query = $query->where('date', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('bill_amount');
+
         $jackhammerReadings = $query->with(['jackhammer.account.accountDetail'])->orderBy('date','desc')->paginate(10);
         
         return view('daily-statement.list',[
@@ -463,6 +460,7 @@ class DailyStatementController extends Controller
                 'toDate'                => $toDate,
                 'employeeAttendance'    => [],
                 'excavatorReadings'     => [],
+                'totalAmount'           => $totalAmount
             ]);
     }
 

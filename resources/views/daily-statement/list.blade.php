@@ -127,6 +127,20 @@
                                                         @endforeach
                                                     @endif
                                                 </tbody>
+                                                @if(!empty($employeeAttendance) && (Request::get('page') == $employeeAttendance->lastPage() || $employeeAttendance->lastPage() == 1))
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td><td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td></td>
+                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -227,6 +241,7 @@
                                                         <th>Bucket [Working Hour]</th>
                                                         <th>Breaker [Working Hour]</th>
                                                         <th>Operator Bata</th>
+                                                        <th>Bill Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -239,9 +254,27 @@
                                                             <td>{{ $excavatorReading->bucket_hour }}</td>
                                                             <td>{{ $excavatorReading->breaker_hour }}</td>
                                                             <td>{{ $excavatorReading->bata }}</td>
+                                                            <td>{{ $excavatorReading->bill_amount }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
+                                                @if(!empty($excavatorReadings) && (Request::get('page') == $excavatorReadings->lastPage() || $excavatorReadings->lastPage() == 1))
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -341,6 +374,7 @@
                                                         <th>Contractor Account</th>
                                                         <th>No of Pit [5 feet depth]</th>
                                                         <th>Total Pit Depth</th>
+                                                        <th>Bill Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -352,9 +386,26 @@
                                                             <td>{{ $jackhammerReading->jackhammer->account->account_name }}</td>
                                                             <td>{{ ($jackhammerReading->total_pit_depth / 5) }}</td>
                                                             <td>{{ $jackhammerReading->total_pit_depth }}</td>
+                                                            <td>{{ $jackhammerReading->bill_amount }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
+                                                @if(!empty($jackhammerReadings) && (Request::get('page') == $jackhammerReadings->lastPage() || $jackhammerReadings->lastPage() == 1))
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                @endif
                                             </table>
                                         </div>
                                     </div>

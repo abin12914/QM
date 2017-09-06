@@ -21,7 +21,7 @@ $(function () {
     });
 
     //Initialize Select2 Element for cash voucher account select box
-    $("#cash_voucher_account_id").select2({
+    $(".account_id").select2({
         minimumResultsForSearch: 5,
         language: {
              noResults: function() {
@@ -33,17 +33,9 @@ $(function () {
         }
     });
 
-    //Initialize Select2 Element for credit voucher account select box
-    $("#credit_voucher_account_id").select2({
-        minimumResultsForSearch: 5,
-        language: {
-             noResults: function() {
-                return accountRegistrationLink;
-            }
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        }
+    //Initialize Select2 Element for cash voucher account select box
+    $(".machine").select2({
+        minimumResultsForSearch: 5
     });
 
     //update dates based on from date selection
@@ -65,6 +57,24 @@ $(function () {
             $('#cash_voucher_to_date').datepicker('setStartDate', startDate);
         } else {
            $('#cash_voucher_to_date').datepicker('setStartDate', '');
+        }
+    });
+
+    $('body').on("change", "#machine_voucher_excavator_id", function () {
+        excavator_id = $('#machine_voucher_excavator_id').val();
+        
+        if(excavator_id) {
+            $('#machine_voucher_jackhammer_id').val('');
+            $('#machine_voucher_jackhammer_id').trigger('change');
+        }
+    });
+
+    $('body').on("change", "#machine_voucher_jackhammer_id", function () {
+        excavator_id = $('#machine_voucher_jackhammer_id').val();
+        
+        if(excavator_id) {
+            $('#machine_voucher_excavator_id').val('');
+            $('#machine_voucher_excavator_id').trigger('change');
         }
     });
 });

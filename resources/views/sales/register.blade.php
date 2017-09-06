@@ -205,20 +205,6 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            {{-- <div class="form-group">
-                                                <label for="purchaser_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Purchaser : </label>
-                                                <div class="col-sm-10 {{ !empty($errors->first('purchaser_account_id_cash')) ? 'has-error' : '' }}">
-                                                    <select name="purchaser_account_id_cash" class="form-control purchaser" id="purchaser_cash" tabindex="2" style="width: 100%">
-                                                        <option value="" {{ empty(old('purchaser_account_id_cash')) ? 'selected' : '' }}>Select purchaser</option>
-                                                        @foreach($accounts as $account)
-                                                            <option value="{{ $account->id }}" {{ (old('purchaser_account_id_cash') == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @if(!empty($errors->first('purchaser_account_id_cash')))
-                                                        <p style="color: red;" >{{$errors->first('purchaser_account_id_cash')}}</p>
-                                                    @endif
-                                                </div>
-                                            </div> --}}
                                             <div class="form-group">
                                                 <label for="date_cash" class="col-sm-2 control-label"><b style="color: red;">* </b> Date and Time : </label>
                                                 <div class="col-sm-5 {{ !empty($errors->first('date_cash')) ? 'has-error' : '' }}">
@@ -378,16 +364,21 @@
                                             <td>{{ $sales_record->product->name }}</td>
                                             @if($sales_record->measure_type == 3)
                                                 <td>{{ $sales_record->quantity }} -Load</td>
+                                                <td title="Multiple sales" tooltip><i class="fa fa-thumbs-o-down"></i></td>
                                             @elseif($sales_record->measure_type == 1)
                                                 <td>{{ $sales_record->quantity }} -Cubic feet</td>
+                                                <td>
+                                                    <a href="{{ route('sales-bill-print', ['id' => $sales_record->id]) }}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print Bill</a>
+                                                </td>
                                             @elseif($sales_record->measure_type == 2 && $sales_record->quantity != 0)
                                                 <td>{{ $sales_record->quantity }} -Ton</td>
+                                                <td>
+                                                    <a href="{{ route('sales-bill-print', ['id' => $sales_record->id]) }}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print Bill</a>
+                                                </td>
                                             @else
                                                 <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
                                             @endif
-                                            <td>
-                                                <a href="{{ route('sales-bill-print', ['id' => $sales_record->id]) }}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print Bill</a>
-                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

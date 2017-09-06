@@ -144,6 +144,9 @@ class PurchasesController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('bill_amount');
+
         $purchases = $query->with(['transaction.creditAccount', 'purchasebleProduct'])->orderBy('date_time','desc')->paginate(10);
         
         return view('purchases.list',[
@@ -154,6 +157,7 @@ class PurchasesController extends Controller
                 'productId'             => $productId,
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
+                'totalAmount'           => $totalAmount
             ]);
     }
 }

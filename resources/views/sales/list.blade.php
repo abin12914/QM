@@ -138,12 +138,12 @@
                                             <th>#</th>
                                             <th>Date & Time</th>
                                             <th>Truck Number</th>
-                                            <th>Truck Type</th>
                                             <th>Product</th>
                                             <th>Purchaser</th>
                                             <th>Quantity</th>
                                             <th>No Of Load</th>
                                             <th>Bill Amount</th>
+                                            <th class="no-print">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -152,36 +152,58 @@
                                                 <tr>
                                                     <td>{{ $index + $sales->firstItem() }}</td>
                                                     <td>{{ $sale->date_time }}</td>
-                                                    <td>{{ $sale->vehicle->reg_number }}</td>
-                                                    <td>{{ $sale->vehicle->vehicleType->name }}</td>
+                                                    <td>{{ $sale->vehicle->reg_number }} - {{ $sale->vehicle->vehicleType->name }}</td>
                                                     <td>{{ $sale->product->name }}</td>
                                                     <td>{{ $sale->transaction->debitAccount->account_name }}</td>
                                                     @if($sale->measure_type == 1)
                                                         <td>{{ $sale->quantity }} - Cubic feet</td>
                                                         <td>1</td>
                                                         <td title="{{ $sale->quantity }} * {{ $sale->rate }}">{{ $sale->total_amount }}</td>
+                                                        <td class="no-print">
+                                                            <a href="{{ route('sales-bill-print', ['id' => $sale->id]) }}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print Bill</a>
+                                                        </td>
                                                     @elseif($sale->measure_type == 2)
                                                         @if($sale->quantity <= 0)
                                                             <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
                                                             <td>1</td>
                                                             <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                            <td class="no-print" title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
                                                         @else
                                                             <td>{{ $sale->quantity }} - Ton</td>
                                                             <td>1</td>
                                                             <td title="{{ $sale->quantity }} * {{ $sale->rate }}">{{ $sale->total_amount }}</td>
+                                                            <td class="no-print">
+                                                                <a href="{{ route('sales-bill-print', ['id' => $sale->id]) }}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print Bill</a>
+                                                            </td>
                                                         @endif
                                                     @else
                                                         <td>{{ ($sale->quantity * $sale->vehicle->volume) }} - Cubic feet</td>
                                                         <td>{{ $sale->quantity }}</td>
                                                         <td title="{{ $sale->quantity }} * {{ $sale->rate }} - {{ $sale->discount }}">{{ $sale->total_amount }}</td>
+                                                        <td class="no-print" title="Multiple sales" tooltip><i class="fa fa-thumbs-o-down"></i></td>
                                                     @endif
-                                                    <td>
-                                                        <a href="{{ route('sales-bill-print', ['id' => $sale->id]) }}" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print Bill</a>
-                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
                                     </tbody>
+                                    @if(!empty($sales) && (Request::get('page') == $sales->lastPage() || $sales->lastPage() == 1))
+                                        <tfoot>
+                                            <tr>
+                                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><b>Total Amount</b></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><b>{{ $totalAmount }}</b></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    @endif
                                 </table>
                             </div>
                         </div>

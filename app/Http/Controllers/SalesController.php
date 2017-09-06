@@ -356,6 +356,7 @@ class SalesController extends Controller
      */
     public function list(Request $request)
     {
+        $totalAmount    = 0;
         $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $fromDate       = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate         = !empty($request->get('to_date')) ? $request->get('to_date') : '';
@@ -404,6 +405,9 @@ class SalesController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('total_amount');
+
         $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType', 'product'])->orderBy('date_time','desc')->paginate(10);
         
         return view('sales.list',[
@@ -418,6 +422,7 @@ class SalesController extends Controller
                 'vehicleTypeId'         => $vehicleTypeId,
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
+                'totalAmount'           => $totalAmount
             ]);
     }
 
@@ -639,10 +644,16 @@ class SalesController extends Controller
     {
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
+        $productId  = !empty($request->get('product_id')) ? $request->get('product_id') : 0;
 
-        $vehicleTypes = VehicleType::where('status', 1)->get();
+        $vehicleTypes   = VehicleType::where('status', 1)->get();
+        $products       = Product::where('status', '1')->get();
 
         $query = Sale::where('status', 1);
+
+        if(!empty($productId) && $productId != 0) {
+            $query = $query->where('product_id', $productId);
+        }
 
         if(empty($fromDate) && empty($toDate)) {
             $query = $query->whereDate('date_time', Carbon::today()->toDateString());
@@ -688,10 +699,12 @@ class SalesController extends Controller
 
         return view('sales.statement',[
                 'vehicleTypes'      => $vehicleTypes,
+                'products'          => $products,
                 'salesCount'        => $salesCount,
                 'totalSaleCount'    => $totalSaleCount,
                 'fromDate'          => $fromDate,
-                'toDate'            => $toDate
+                'toDate'            => $toDate,
+                'productId'         => $productId
             ]);
     }
 

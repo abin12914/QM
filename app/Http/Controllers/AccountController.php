@@ -158,10 +158,16 @@ class AccountController extends Controller
      */
     public function accountSatementSearch(Request $request)
     {
-        /*$obDebitAmount  = 0;
-        $obCreditAmount = 0;*/
+        $obDebitAmount  = 0;
+        $obCreditAmount = 0;
+        $subtotalDebit  = 0;
+        $subtotalCredit = 0;
         $totalDebit     = 0;
         $totalCredit    = 0;
+        $totalOverviewDebit = 0;
+        $totalOverviewCredit = 0;
+        $totalDebitAmount   = 0;
+        $totalCreditAmount  = 0;
         $accountId  = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
@@ -181,10 +187,17 @@ class AccountController extends Controller
             }
         } else {
             $selectedAccountName = '';
+            $totalDebitAmount       = Transaction::whereHas('debitAccount', function ($qry) {
+                    $qry->where('type', 'personal');
+                })->sum('amount');
+
+            $totalCreditAmount       = Transaction::whereHas('creditAccount', function ($qry) {
+                    $qry->where('type', 'personal');
+                })->sum('amount');
         }
 
-        $totalDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
-        $totalCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
+        $totalOverviewDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
+        $totalOverviewCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
 
         $query = Transaction::where(function ($qry) use($accountId) {
             $qry->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
@@ -194,6 +207,9 @@ class AccountController extends Controller
             $searchFromDate = new DateTime($fromDate);
             $searchFromDate = $searchFromDate->format('Y-m-d');
             $query = $query->where('date_time', '>=', $searchFromDate);
+
+            $obDebitAmount  = Transaction::where('debit_account_id', $accountId)->where('date_time', '<', $searchFromDate)->sum('amount');
+            $obCreditAmount = Transaction::where('credit_account_id', $accountId)->where('date_time', '<', $searchFromDate)->sum('amount');
         }
 
         if(!empty($toDate)) {
@@ -201,6 +217,15 @@ class AccountController extends Controller
             $searchToDate = $searchToDate->format('Y-m-d H:i');
             $query = $query->where('date_time', '<=', $searchToDate);
         }
+
+        $subtotalDebitQuery = clone $query;
+        $subtotalDebit = $subtotalDebitQuery->where('debit_account_id', $accountId)->sum('amount');
+
+        $subtotalCreditQuery = clone $query;
+        $subtotalCredit = $subtotalCreditQuery->where('credit_account_id', $accountId)->sum('amount');
+
+        $totalDebit     = $obDebitAmount + $subtotalDebit;
+        $totalCredit    = $obCreditAmount + $subtotalCredit;
 
         $transactions = $query->orderBy('date_time','desc')->paginate(10);
 
@@ -211,8 +236,16 @@ class AccountController extends Controller
                 'selectedAccountName'   => $selectedAccountName,
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
+                'totalOverviewDebit'    => $totalOverviewDebit,
+                'totalOverviewCredit'   => $totalOverviewCredit,
                 'totalDebit'            => $totalDebit,
                 'totalCredit'           => $totalCredit,
+                'subtotalDebit'         => $subtotalDebit,
+                'subtotalCredit'        => $subtotalCredit,
+                'obDebitAmount'         => $obDebitAmount,
+                'obCreditAmount'        => $obCreditAmount,
+                'totalDebitAmount'      => $totalDebitAmount,
+                'totalCreditAmount'     => $totalCreditAmount
             ]);
     }
 

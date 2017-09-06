@@ -477,14 +477,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if(!empty($creditVouchers) && count($creditVouchers) > 0)
-                                            @foreach($creditVouchers as $index => $creditVoucher)
+                                            @if(!empty($machineVouchers) && count($machineVouchers) > 0)
+                                            @foreach($machineVouchers as $index => $machineVoucher)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td>{{ $creditVoucher->date_time }}</td>
-                                                    <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
-                                                    <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
-                                                    <td>{{ $creditVoucher->amount }}</td>
+                                                    <td>{{ $machineVoucher->date_time }}</td>
+                                                    <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
+                                                    <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
+                                                    <td>{{ $machineVoucher->amount }}</td>
                                                 </tr>
                                             @endforeach
                                             @endif

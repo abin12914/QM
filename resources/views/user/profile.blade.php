@@ -68,7 +68,7 @@
                                         </ul><br>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-3  no-print">
-                                            <a href="{{ route('under-construction-view') }}" class="btn btn-primary btn-block"><b>View Activity Log</b></a>
+                                            <a href="{{ route('logout') }}" class="btn btn-primary btn-block"><b>LogOut</b></a>
                                         </div>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-3  no-print">

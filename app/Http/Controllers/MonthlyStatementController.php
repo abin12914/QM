@@ -189,10 +189,11 @@ class MonthlyStatementController extends Controller
      */
     public function employeeSalaryList(Request $request)
     {
-        $accountId  = !empty($request->get('salary_account_id')) ? $request->get('salary_account_id') : 0;
-        $employeeId = !empty($request->get('salary_employee_id')) ? $request->get('salary_employee_id') : 0;
-        $fromDate   = !empty($request->get('salary_from_date')) ? $request->get('salary_from_date') : '';
-        $toDate     = !empty($request->get('salary_to_date')) ? $request->get('salary_to_date') : '';
+        $totalAmount    = 0;
+        $accountId      = !empty($request->get('salary_account_id')) ? $request->get('salary_account_id') : 0;
+        $employeeId     = !empty($request->get('salary_employee_id')) ? $request->get('salary_employee_id') : 0;
+        $fromDate       = !empty($request->get('salary_from_date')) ? $request->get('salary_from_date') : '';
+        $toDate         = !empty($request->get('salary_to_date')) ? $request->get('salary_to_date') : '';
 
         $accounts   = Account::where('relation', 'employee')->where('status', '1')->get();
         $employees  = Employee::with(['account.accountDetail'])->where('status', '1')->get();
@@ -221,6 +222,9 @@ class MonthlyStatementController extends Controller
             $query = $query->where('from_date', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('salary');
+
         $employeeSalary = $query->with(['employee.account.accountDetail'])->orderBy('from_date','desc')->paginate(10);
         
         return view('monthly-statement.list',[
@@ -231,7 +235,8 @@ class MonthlyStatementController extends Controller
                 'employeeId'        => $employeeId,
                 'fromDate'          => $fromDate,
                 'toDate'            => $toDate,
-                'excavatorRent'     => []
+                'excavatorRent'     => [],
+                'totalAmount'       => $totalAmount
             ]);
     }
 
@@ -240,6 +245,7 @@ class MonthlyStatementController extends Controller
      */
     public function excavatorRentList(Request $request)
     {
+        $totalAmount    = 0;
         $accountId      = !empty($request->get('excavator_account_id')) ? $request->get('excavator_account_id') : 0;
         $excavatorId    = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
         $fromDate       = !empty($request->get('excavator_from_date')) ? $request->get('excavator_from_date') : '';
@@ -272,6 +278,9 @@ class MonthlyStatementController extends Controller
             $query = $query->where('from_date', '<=', $searchToDate);
         }
 
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('rent');
+
         $excavatorRent = $query->with(['excavator.account.accountDetail'])->orderBy('from_date','desc')->paginate(10);
         
         return view('monthly-statement.list',[
@@ -283,6 +292,7 @@ class MonthlyStatementController extends Controller
                 'fromDate'          => $fromDate,
                 'toDate'            => $toDate,
                 'employeeSalary'    => [],
+                'totalAmount'       => $totalAmount
             ]);
     }
 }

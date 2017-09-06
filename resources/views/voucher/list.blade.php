@@ -53,7 +53,7 @@
                                                     </div>
                                                     <div class="col-sm-6     {{ !empty($errors->first('cash_voucher_account_id')) ? 'has-error' : '' }}">
                                                         <label for="cash_voucher_account_id" class="control-label">Account : </label>
-                                                        <select class="form-control" name="cash_voucher_account_id" id="cash_voucher_account_id" tabindex="3" style="width: 100%">
+                                                        <select class="form-control  account_id" name="cash_voucher_account_id" id="cash_voucher_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && (count($accounts) > 0))
                                                                 <option value="">Select employee account</option>
                                                                 @foreach($accounts as $account)
@@ -133,6 +133,21 @@
                                                         @endforeach
                                                     @endif
                                                 </tbody>
+                                                @if(!empty($cashVouchers) && (Request::get('page') == $cashVouchers->lastPage() || $cashVouchers->lastPage() == 1))
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -162,7 +177,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-4 {{ !empty($errors->first('credit_voucher_account_id')) ? 'has-error' : '' }}">
                                                         <label for="credit_voucher_account_id" class="control-label">Account : </label>
-                                                        <select class="form-control" name="credit_voucher_account_id" id="credit_voucher_account_id" tabindex="3" style="width: 100%">
+                                                        <select class="form-control  account_id" name="credit_voucher_account_id" id="credit_voucher_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && (count($accounts) > 0))
                                                                 <option value="">Select account</option>
                                                                 @foreach($accounts as $account)
@@ -238,6 +253,20 @@
                                                     @endforeach
                                                     @endif
                                                 </tbody>
+                                                @if(!empty($creditVouchers) && (Request::get('page') == $creditVouchers->lastPage() || $creditVouchers->lastPage() == 1))
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td><td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -267,7 +296,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-4 {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_account_id" class="control-label">Account : </label>
-                                                        <select class="form-control" name="account_id" id="machine_voucher_account_id" tabindex="3" style="width: 100%">
+                                                        <select class="form-control account_id" name="account_id" id="machine_voucher_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && (count($accounts) > 0))
                                                                 <option value="">Select account</option>
                                                                 @foreach($accounts as $account)
@@ -296,8 +325,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-4 {{ !empty($errors->first('machine_class')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_machine_class" class="control-label">Account : </label>
-                                                        <select class="form-control" name="machine_class" id="machine_voucher_machine_class" tabindex="3" style="width: 100%">
+                                                        <label for="machine_voucher_machine_class" class="control-label">Machine Class : </label>
+                                                        <select class="form-control machine" name="machine_class" id="machine_voucher_machine_class" tabindex="3" style="width: 100%">
                                                             <option value="">Select machine class</option>
                                                             <option value="1" {{ ((old('machine_class') == 1 ) || $accountId == 1) ? 'selected' : '' }}>Excavator</option>
                                                             <option value="2" {{ ((old('machine_class') == 1 ) || $accountId == 1) ? 'selected' : '' }}>Jackhammer</option>
@@ -308,7 +337,7 @@
                                                     </div>
                                                     <div class="col-sm-4 {{ !empty($errors->first('excavator_id')) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_excavator_id" class="control-label">Excavator : </label>
-                                                        <select class="form-control" name="excavator_id" id="machine_voucher_excavator_id" tabindex="3" style="width: 100%">
+                                                        <select class="form-control machine" name="excavator_id" id="machine_voucher_excavator_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($excavators) && (count($excavators) > 0))
                                                                 <option value="">Select excavators</option>
                                                                 @foreach($excavators as $excavator)
@@ -321,8 +350,8 @@
                                                         @endif
                                                     </div>
                                                     <div class="col-sm-4 {{ !empty($errors->first('jackhammer_id')) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_jackhammer_id" class="control-label">Account : </label>
-                                                        <select class="form-control" name="jackhammer_id" id="machine_voucher_jackhammer_id" tabindex="3" style="width: 100%">
+                                                        <label for="machine_voucher_jackhammer_id" class="control-label">Jackhammer : </label>
+                                                        <select class="form-control machine" name="jackhammer_id" id="machine_voucher_jackhammer_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($jackhammers) && (count($jackhammers) > 0))
                                                                 <option value="">Select jackhammer</option>
                                                                 @foreach($jackhammers as $jackhammer)
@@ -365,33 +394,48 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(!empty($creditVouchers) && count($creditVouchers) > 0)
-                                                    @foreach($creditVouchers as $index => $creditVoucher)
+                                                    @if(!empty($machineVouchers) && count($machineVouchers) > 0)
+                                                    @foreach($machineVouchers as $index => $machineVoucher)
                                                         <tr>
-                                                            <td>{{ $index + $creditVouchers->firstItem() }}</td>
-                                                            <td>{{ $creditVoucher->date_time }}</td>
-                                                            @if(!empty($creditVoucher->excavator_id))
-                                                                <td>{{ $creditVoucher->excavator->name }}</td>
-                                                            @elseif(!empty($creditVoucher->jackhammer_id))
-                                                                <td>{{ $creditVoucher->jackhammer->name }}</td>
+                                                            <td>{{ $index + $machineVouchers->firstItem() }}</td>
+                                                            <td>{{ $machineVoucher->date_time }}</td>
+                                                            @if(!empty($machineVoucher->excavator_id))
+                                                                <td>{{ $machineVoucher->excavator->name }}</td>
+                                                            @elseif(!empty($machineVoucher->jackhammer_id))
+                                                                <td>{{ $machineVoucher->jackhammer->name }}</td>
                                                             @else
                                                                 <td></td>
                                                             @endif
-                                                            @if($creditVoucher->transaction->debitAccount->id == $accountId)
-                                                                <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td class="bg-gray">{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
-                                                            @elseif($creditVoucher->transaction->creditAccount->id == $accountId)
-                                                                <td class="bg-gray">{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
+                                                            @if($machineVoucher->transaction->debitAccount->id == $accountId)
+                                                                <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
+                                                                <td class="bg-gray">{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
+                                                            @elseif($machineVoucher->transaction->creditAccount->id == $accountId)
+                                                                <td class="bg-gray">{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
+                                                                <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
                                                             @else
-                                                                <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
+                                                                <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
+                                                                <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
                                                             @endif
-                                                            <td>{{ $creditVoucher->amount }}</td>
+                                                            <td>{{ $machineVoucher->amount }}</td>
                                                         </tr>
                                                     @endforeach
                                                     @endif
                                                 </tbody>
+                                                @if(!empty($machineVouchers) && (Request::get('page') == $machineVouchers->lastPage() || $machineVouchers->lastPage() == 1))
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -400,8 +444,8 @@
                                             <div class="col-md-6"></div>
                                             <div class="col-md-6">
                                                 <div class="pull-right">
-                                                    @if(!empty($creditVouchers))
-                                                        {{ $creditVouchers->appends(Request::all())->links() }}
+                                                    @if(!empty($machineVouchers))
+                                                        {{ $machineVouchers->appends(Request::all())->links() }}
                                                     @endif
                                                 </div>
                                             </div>

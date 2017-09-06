@@ -42,7 +42,7 @@
                                             <label for="account_id" class="control-label"><b style="color: red">*</b> Account : </label>
                                             <select class="form-control" name="account_id" id="account_id" tabindex="3" style="width: 100%">
                                                 @if(!empty($accounts) && (count($accounts) > 0))
-                                                    <option value="">Select employee account</option>
+                                                    <option value="">Select account</option>
                                                     @foreach($accounts as $account)
                                                         <option value="{{ $account->id }}" {{ ((old('account_id') == $account->id ) || $accountId == $account->id) ? 'selected' : '' }}>{{ $account->account_name }}</option>
                                                     @endforeach
@@ -112,7 +112,7 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-yellow" style="width:100%; font-size: 15px;">{{ $totalDebit }}</span>
+                                                                <span class="badge bg-yellow" style="width:100%; font-size: 15px;">{{ $totalOverviewDebit }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -121,17 +121,17 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-orange" style="width:100%; font-size: 15px;">{{ $totalCredit }}</span>
+                                                                <span class="badge bg-orange" style="width:100%; font-size: 15px;">{{ $totalOverviewCredit }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            @if($totalDebit >= $totalCredit)
+                                                            @if($totalOverviewDebit >= $totalOverviewCredit)
                                                                 <th>
                                                                     <span class="badge bg-black"><i class="fa fa-dollar"></i></span>&nbsp&nbsp Balance To Get
                                                                     <b class="pull-right">:</b>
                                                                 </th>
                                                                 <td>
-                                                                    <span class="badge bg-green" style="width:100%; font-size: 15px;">{{ $totalDebit - $totalCredit }}</span>
+                                                                    <span class="badge bg-green" style="width:100%; font-size: 15px;">{{ $totalOverviewDebit - $totalOverviewCredit }}</span>
                                                                 </td>
                                                             @else
                                                                 <th>
@@ -139,7 +139,56 @@
                                                                     <b class="pull-right">:</b>
                                                                 </th>
                                                                 <td>
-                                                                    <span class="badge bg-red" style="width:100%; font-size: 15px;">{{ $totalCredit - $totalDebit }}</span>
+                                                                    <span class="badge bg-red" style="width:100%; font-size: 15px;">{{ $totalOverviewCredit - $totalOverviewDebit }}</span>
+                                                                </td>
+                                                            @endif
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="box-header">
+                                        <div class="pad margin no-print">
+                                            <div class="callout callout-default">
+                                                <h4 style="color: green;">Debit - CCredit Overview</h4>
+                                                <div class="table-responsive">
+                                                    <table class="table" style="color: orangered;">
+                                                        <tr>
+                                                            <th>
+                                                                <span class="badge bg-black"><i class="fa fa-arrow-down"></i></span>&nbsp&nbsp Total Debit
+                                                                <b class="pull-right">:</b>
+                                                            </th>
+                                                            <td>
+                                                                <span class="badge bg-yellow" style="width:100%; font-size: 15px;">{{ $totalDebitAmount }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <span class="badge bg-black"><i class="fa fa-arrow-up"></i></span>&nbsp&nbsp Total Credit
+                                                                <b class="pull-right">:</b>
+                                                            </th>
+                                                            <td>
+                                                                <span class="badge bg-orange" style="width:100%; font-size: 15px;">{{ $totalCreditAmount }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            @if($totalDebitAmount >= $totalCreditAmount)
+                                                                <th>
+                                                                    <span class="badge bg-black"><i class="fa fa-dollar"></i></span>&nbsp&nbsp Balance To Get
+                                                                    <b class="pull-right">:</b>
+                                                                </th>
+                                                                <td>
+                                                                    <span class="badge bg-green" style="width:100%; font-size: 15px;">{{ $totalDebitAmount - $totalCreditAmount }}</span>
+                                                                </td>
+                                                            @else
+                                                                <th>
+                                                                    <span class="badge bg-black"><i class="fa fa-dollar"></i></span>&nbsp&nbsp Balance To Pay
+                                                                    <b class="pull-right">:</b>
+                                                                </th>
+                                                                <td>
+                                                                    <span class="badge bg-red" style="width:100%; font-size: 15px;">{{ $totalCreditAmount - $totalDebitAmount }}</span>
                                                                 </td>
                                                             @endif
                                                         </tr>
@@ -199,6 +248,46 @@
                                             @endforeach
                                         @endif
                                     </tbody>
+                                    @if(!empty($transactions) && (Request::get('page') == $transactions->lastPage() || $transactions->lastPage() == 1))
+                                        <tfoot>
+                                            <tr>
+                                                <th></th><th></th><th></th><th></th><th></th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th>Sub Total</th>
+                                                <th>{{ $subtotalDebit }}</th>
+                                                <th>{{ $subtotalCredit }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th>Old Balance</th>
+                                                <th>{{ $obDebitAmount }}</th>
+                                                <th>{{ $obCreditAmount }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th>Total Amount</th>
+                                                <th>{{ $totalDebit }}</th>
+                                                <th>{{ $totalCredit }}</th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th>{{ 'Balance' }}</th>
+                                                @if($totalDebit <= $totalCredit)
+                                                    <th>{{ $totalCredit - $totalDebit }}</th>
+                                                    <th></th>
+                                                @else
+                                                    <th></th>
+                                                    <th>{{ $totalDebit - $totalCredit }}</th>
+                                                @endif
+                                            </tr>
+                                        </tfoot>
+                                    @endif
                                 </table>
                             </div>
                         </div>

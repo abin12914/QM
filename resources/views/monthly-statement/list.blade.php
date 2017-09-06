@@ -127,6 +127,21 @@
                                                         @endforeach
                                                     @endif
                                                 </tbody>
+                                                @if(!empty($employeeSalary) && (Request::get('page') == $employeeSalary->lastPage() || $employeeSalary->lastPage() == 1))
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -242,6 +257,21 @@
                                                         @endforeach
                                                     @endif
                                                 </tbody>
+                                                @if(!empty($excavatorRent) && (Request::get('page') == $excavatorRent->lastPage() || $excavatorRent->lastPage() == 1))
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                @endif
                                             </table>
                                         </div>
                                     </div>

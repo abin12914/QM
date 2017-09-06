@@ -27,7 +27,7 @@
             <div class="col-md-8">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Filter Search</h3>
+                        <h3 class="box-title">Filter List</h3>
                     </div>
                     <div class="box-header">
                         <form action="{{ route('sale-statement-list-search') }}" method="get" class="form-horizontal">
@@ -50,6 +50,22 @@
                                             @endif
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 {{ !empty($errors->first('product_id')) ? 'has-error' : '' }}">
+                                            <label for="from_date" class="control-label">Product : </label>
+                                            <select class="form-control" name="product_id" id="product_id" tabindex="3" style="width: 100%">
+                                                @if(!empty($products) && (count($products) > 0))
+                                                    <option value="">All products</option>
+                                                    @foreach($products as $product)
+                                                        <option value="{{ $product->id }}" {{ ((old('product_id') == $product->id ) || $productId == $product->id) ? 'selected' : '' }}>{{ $product->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                            @if(!empty($errors->first('product_id')))
+                                                <p style="color: red;" >{{$errors->first('product_id')}}</p>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="clearfix"></div><br>
@@ -69,6 +85,9 @@
             <div class="col-md-2"></div>
             <div class="col-md-8">
                 <div class="box">
+                    <div class="box-header visible-print-block">
+                        <h3>Transaction Statement</h3>
+                    </div>
                     <div class="box-header">
                         @if(empty($fromDate) && !empty($toDate))
                             <h4>Date : {{ $toDate }}</h4>
