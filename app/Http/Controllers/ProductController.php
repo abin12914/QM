@@ -71,7 +71,7 @@ class ProductController extends Controller
      */
     public function list()
     {
-        $products = Product::paginate(10);
+        $products = Product::paginate(15);
         if(empty($products) || count($products) == 0) {
             session()->flash('message', 'No product records available to show!');
         }

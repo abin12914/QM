@@ -159,6 +159,8 @@
                                         <th>Purchaser</th>
                                         <th>Product</th>
                                         <th>Quantity</th>
+                                        <th>No Of Load</th>
+                                        <th>Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -168,7 +170,26 @@
                                             <td>{{ $sales_record->vehicle->reg_number }}</td>
                                             <td>{{ $sales_record->transaction->debitAccount->account_name }}</td>
                                             <td>{{ $sales_record->product->name }}</td>
-                                            <td>{{ $sales_record->quantity }} -{{ ($sales_record->measure_type == 3)? 'Load' : 'Cubic feet' }}</td>
+                                            {{-- <td>{{ $sales_record->quantity }} -{{ ($sales_record->measure_type == 3)? 'Load' : 'Cubic feet' }}</td> --}}
+                                            @if($sales_record->measure_type == 1)
+                                                <td>{{ $sales_record->quantity }} - Cubic feet</td>
+                                                <td>1</td>
+                                                <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }}">{{ $sales_record->total_amount }}</td>
+                                            @elseif($sales_record->measure_type == 2)
+                                                @if($sales_record->quantity <= 0)
+                                                    <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                    <td>1</td>
+                                                    <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                @else
+                                                    <td>{{ $sales_record->quantity }} - Ton</td>
+                                                    <td>1</td>
+                                                    <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }}">{{ $sales_record->total_amount }}</td>
+                                                @endif
+                                            @else
+                                                <td>{{ ($sales_record->quantity * $sales_record->vehicle->volume) }} - Cubic feet</td>
+                                                <td>{{ $sales_record->quantity }}</td>
+                                                <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }} - {{ $sales_record->discount }}">{{ $sales_record->total_amount }}</td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

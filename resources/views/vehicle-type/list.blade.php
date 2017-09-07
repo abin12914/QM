@@ -22,7 +22,7 @@
             </div>
         @endif
         <!-- Main row -->
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
@@ -94,6 +94,20 @@
                                             @endforeach
                                         @endif
                                     </tbody>
+                                    @if(!empty($royaltyRecords) && (Request::get('page') == $royaltyRecords->lastPage() || $royaltyRecords->lastPage() == 1))
+                                        <tfoot>
+                                            <tr>
+                                                <td></td><td></td><td></td><td></td><td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td><b>Total Amount</b></td>
+                                                <td></td>
+                                                <td><b>{{ $totalAmount }}</b></td>
+                                            </tr>
+                                        </tfoot>
+                                    @endif
                                 </table>
                             </div>
                         </div>

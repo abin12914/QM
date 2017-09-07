@@ -225,7 +225,7 @@ class MonthlyStatementController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('salary');
 
-        $employeeSalary = $query->with(['employee.account.accountDetail'])->orderBy('from_date','desc')->paginate(10);
+        $employeeSalary = $query->with(['employee.account.accountDetail'])->orderBy('from_date','desc')->paginate(15);
         
         return view('monthly-statement.list',[
                 'accounts'          => $accounts,
@@ -281,7 +281,7 @@ class MonthlyStatementController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('rent');
 
-        $excavatorRent = $query->with(['excavator.account.accountDetail'])->orderBy('from_date','desc')->paginate(10);
+        $excavatorRent = $query->with(['excavator.account.accountDetail'])->orderBy('from_date','desc')->paginate(15);
         
         return view('monthly-statement.list',[
                 'accounts'          => $accounts,

@@ -198,7 +198,7 @@
                                                 <td><b>Total Amount</b></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td></td>
+                                                <td><b>{{ $totalLoad }}</b></td>
                                                 <td><b>{{ $totalAmount }}</b></td>
                                                 <td></td>
                                             </tr>

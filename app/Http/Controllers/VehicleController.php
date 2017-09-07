@@ -75,7 +75,7 @@ class VehicleController extends Controller
             $query = $query->where('id', $vehicleId);
         }
 
-        $vehicles = $query->with('vehicleType')->orderBy('created_at','desc')->paginate(10);
+        $vehicles = $query->with('vehicleType')->orderBy('created_at','desc')->paginate(15);
         
         return view('vehicle.list',[
                 'vehicleTypes'      => $vehicleTypes,

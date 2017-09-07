@@ -181,6 +181,7 @@
                                         <th>Date & Time</th>
                                         <th>Product</th>
                                         <th>Supplier</th>
+                                        <th>Description</th>
                                         <th>Bill Amount</th>
                                     </tr>
                                 </thead>
@@ -190,6 +191,7 @@
                                             <td>{{ $purchase_record->date_time }}</td>
                                             <td>{{ $purchase_record->purchasebleProduct->name }}</td>
                                             <td>{{ $purchase_record->transaction->creditAccount->account_name }}</td>
+                                            <td>{{ $purchase_record->transaction->particulars }}</td>
                                             <td>{{ $purchase_record->bill_amount }}</td>
                                         </tr>
                                     @endforeach

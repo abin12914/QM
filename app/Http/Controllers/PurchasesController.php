@@ -20,7 +20,7 @@ class PurchasesController extends Controller
     {
         $accounts               = Account::where('type','personal')->get();
         $purchasebleProducts    = PurchasebleProduct::get();
-        $purchases              = Purchase::with(['purchasebleProduct', 'transaction.creditAccount'])->orderBy('date_time', 'desc')->take(5)->get();
+        $purchases              = Purchase::with(['purchasebleProduct', 'transaction.creditAccount'])->orderBy('created_at', 'desc')->take(5)->get();
 
         return view('purchases.register',[
                 'accounts'              => $accounts,
@@ -147,7 +147,7 @@ class PurchasesController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('bill_amount');
 
-        $purchases = $query->with(['transaction.creditAccount', 'purchasebleProduct'])->orderBy('date_time','desc')->paginate(10);
+        $purchases = $query->with(['transaction.creditAccount', 'purchasebleProduct'])->orderBy('date_time','desc')->paginate(15);
         
         return view('purchases.list',[
                 'accounts'              => $accounts,

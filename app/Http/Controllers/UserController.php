@@ -247,7 +247,7 @@ class UserController extends Controller
      */
     public function userList()
     {
-        $users = User::paginate(10);
+        $users = User::paginate(15);
 
         if(empty($users)) {
             session()->flash('message', 'No users available to show!');
@@ -262,7 +262,7 @@ class UserController extends Controller
      */
     public function ownerList()
     {
-        $owners = Owner::with(['account.accountDetail', 'user'])->paginate(10);
+        $owners = Owner::with(['account.accountDetail', 'user'])->paginate(15);
 
         if(empty($owners)) {
             session()->flash('message', 'No owner record available to show!');

@@ -30,7 +30,7 @@ class SalesController extends Controller
         $vehicles = Vehicle::with('vehicleType')->get();
         $accounts = Account::where('type','personal')->get();
         $products = Product::get();
-        $sales    = Sale::with(['vehicle', 'transaction.debitAccount', 'product'])->orderBy('date_time', 'desc')->take(5)->get();
+        $sales    = Sale::with(['vehicle', 'transaction.debitAccount', 'product'])->orderBy('created_at', 'desc')->take(5)->get();
 
         return view('sales.register',[
                 'vehicles'      => $vehicles,
@@ -50,7 +50,7 @@ class SalesController extends Controller
         $cashAccount    = Account::find(1);
         $accounts->push($cashAccount); //attaching cash account to the accounts
         $products       = Product::get();
-        $sales      = Sale::with(['vehicle', 'transaction.debitAccount', 'product'])->orderBy('date_time', 'desc')->take(5)->get();
+        $sales      = Sale::with(['vehicle', 'transaction.debitAccount', 'product'])->orderBy('created_at', 'desc')->take(5)->get();
 
         return view('sales.multiple-register',[
                 'vehicles'      => $vehicles,
@@ -357,6 +357,9 @@ class SalesController extends Controller
     public function list(Request $request)
     {
         $totalAmount    = 0;
+        $totalLoad      = 0;
+        $totalSingleLoad    = 0;
+        $totalMultipleLoad  = 0;
         $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $fromDate       = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate         = !empty($request->get('to_date')) ? $request->get('to_date') : '';
@@ -364,9 +367,7 @@ class SalesController extends Controller
         $productId      = !empty($request->get('product_id')) ? $request->get('product_id') : 0;
         $vehicleTypeId  = !empty($request->get('vehicle_type_id')) ? $request->get('vehicle_type_id') : 0;
 
-        $accounts       = Account::where('type', 'personal')->where('status', '1')->get();
-        $cashAccount    = Account::find(1);
-        $accounts->push($cashAccount); //attaching cash account to the accounts
+        $accounts       = Account::where('type', 'personal')->orWhere('id', 1)->where('status', '1')->get();
         $vehicles       = Vehicle::where('status', '1')->get();
         $vehicleTypes   = VehicleType::where('status', '1')->get();
         $products       = Product::where('status', '1')->get();
@@ -408,7 +409,15 @@ class SalesController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('total_amount');
 
-        $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType', 'product'])->orderBy('date_time','desc')->paginate(10);
+        $totalMultipleLoadQuery = clone $query;
+        $totalMultipleLoad      = $totalMultipleLoadQuery->where('measure_type', 3)->sum('quantity');
+
+        $totalSingleLoadQuery = clone $query;
+        $totalSingleLoad      = $totalSingleLoadQuery->whereIn('measure_type', [1,2])->count();
+
+        $totalLoad = $totalMultipleLoad +$totalSingleLoad;
+
+        $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType', 'product'])->orderBy('date_time','desc')->paginate(15);
         
         return view('sales.list',[
                 'accounts'              => $accounts,
@@ -422,7 +431,8 @@ class SalesController extends Controller
                 'vehicleTypeId'         => $vehicleTypeId,
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
-                'totalAmount'           => $totalAmount
+                'totalAmount'           => $totalAmount,
+                'totalLoad'             => $totalLoad
             ]);
     }
 
@@ -463,7 +473,7 @@ class SalesController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $sales = $query->with(['vehicle','transaction.debitAccount','product'])->orderBy('date_time','desc')->paginate(10);
+        $sales = $query->with(['vehicle','transaction.debitAccount','product'])->orderBy('date_time','desc')->paginate(15);
         
         return view('sales.weighment-pending-list',[
                 'accounts'              => $accounts,

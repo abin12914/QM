@@ -268,9 +268,14 @@
                                                             <td></td>
                                                             <td><b>Total Amount</b></td>
                                                             <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            @if(!empty($breakerRate) && !empty($bucketRate))
+                                                                <td><b>{{ $totalBucketReading }} x {{ $bucketRate }} = {{ ($totalBucketReading * $bucketRate) }}</b></td>
+                                                                <td><b>{{ $totalBreakerReading }} x {{ $breakerRate }} = {{ ($totalBreakerReading * $breakerRate) }}</b></td>
+                                                            @else
+                                                                <td><b>{{ $totalBucketReading }}</b></td>
+                                                                <td><b>{{ $totalBreakerReading }}</b></td>
+                                                            @endif
+                                                            <td><b>{{ $totalBata }}</b></td>
                                                             <td><b>{{ $totalAmount }}</b></td>
                                                         </tr>
                                                     </tfoot>
@@ -401,7 +406,11 @@
                                                             <td><b>Total Amount</b></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td></td>
+                                                            @if(!empty($jackhammerRate))
+                                                                <td><b>{{ $totalDepth }} x {{ $jackhammerRate }}</b></td>
+                                                            @else
+                                                                <td><b>{{ $totalDepth }}</b></td>
+                                                            @endif
                                                             <td><b>{{ $totalAmount }}</b></td>
                                                         </tr>
                                                     </tfoot>

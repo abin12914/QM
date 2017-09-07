@@ -82,7 +82,7 @@ class ExcavatorController extends Controller
             }
         }
 
-        $excavators = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(10);
+        $excavators = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(15);
 
         return view('excavator.list',[
                 'accounts'              => $accounts,

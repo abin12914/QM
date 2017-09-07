@@ -22,9 +22,9 @@ class VoucherController extends Controller
     {
         $today = Carbon::now('Asia/Kolkata');
         
-        $cashVouchers   = Voucher::where('voucher_type','Cash')->with(['transaction.creditAccount'])->orderBy('date_time', 'desc')->take(5)->get();
-        $creditVouchers = Voucher::where('voucher_type','Credit')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('date_time', 'desc')->take(5)->get();
-        $machineVouchers = Voucher::where('voucher_type','Credit_through')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('date_time', 'desc')->take(5)->get();
+        $cashVouchers   = Voucher::where('voucher_type','Cash')->with(['transaction.creditAccount'])->orderBy('created_at', 'desc')->take(5)->get();
+        $creditVouchers = Voucher::where('voucher_type','Credit')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('created_at', 'desc')->take(5)->get();
+        $machineVouchers = Voucher::where('voucher_type','Credit_through')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('created_at', 'desc')->take(5)->get();
         $excavators     = Excavator::where('status', 1)->with(['account'])->get();
         $jackhammers    = Jackhammer::where('status', 1)->with(['account'])->get();
         $accounts       = Account::where('type','personal')->get();
@@ -226,7 +226,7 @@ class VoucherController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('amount');
 
-        $cashVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('date_time','desc')->paginate(10);
+        $cashVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('date_time','desc')->paginate(15);
         
         return view('voucher.list',[
                 'accounts'        => $accounts,
@@ -276,7 +276,7 @@ class VoucherController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('amount');
 
-        $creditVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('date_time','desc')->paginate(10);
+        $creditVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('date_time','desc')->paginate(15);
         
         return view('voucher.list',[
                 'accounts'        => $accounts,
@@ -346,7 +346,7 @@ class VoucherController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('amount');
 
-        $machineVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('date_time','desc')->paginate(10);
+        $machineVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('date_time','desc')->paginate(15);
         
         return view('voucher.list',[
                 'accounts'        => $accounts,

@@ -102,6 +102,7 @@ class VehicleTypeController extends Controller
      */
     public function list(Request $request)
     {
+        $totalAmount = 0;
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
 
@@ -126,12 +127,16 @@ class VehicleTypeController extends Controller
             $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
         }
 
-        $royaltyRecords = $query->with(['transaction', 'vehicle.vehicleType'])->orderBy('date_time','desc')->paginate(10);
+        $totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('amount');
+
+        $royaltyRecords = $query->with(['transaction', 'vehicle.vehicleType'])->orderBy('date_time','desc')->paginate(15);
 
         return view('vehicle-type.list',[
                 'royaltyRecords'   => $royaltyRecords,
-                'fromDate'  => $fromDate,
-                'toDate'    => $toDate,
+                'fromDate'      => $fromDate,
+                'toDate'        => $toDate,
+                'totalAmount'   => $totalAmount
             ]);
     }
 }

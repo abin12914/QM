@@ -68,7 +68,7 @@ class JackhammerController extends Controller
             $query = $query->where('id', $jackhammerId);
         }
 
-        $jackhammers = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(10);
+        $jackhammers = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(15);
 
         return view('jackhammer.list',[
                 'accounts'              => $accounts,

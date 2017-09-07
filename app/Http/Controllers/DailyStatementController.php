@@ -334,7 +334,7 @@ class DailyStatementController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('wage');
 
-        $employeeAttendance = $query->with(['employee.account.accountDetail'])->orderBy('date','desc')->paginate(10);
+        $employeeAttendance = $query->with(['employee.account.accountDetail'])->orderBy('date','desc')->paginate(15);
         
         return view('daily-statement.list',[
                 'accounts'              => $accounts,
@@ -356,6 +356,11 @@ class DailyStatementController extends Controller
     public function excavatorReadingList(Request $request)
     {
         $totalAmount    = 0;
+        $totalBucketReading     = 0;
+        $totalBreakerReading    = 0;
+        $totalBata              = 0;
+        $bucketRate             = 0;
+        $breakerRate            = 0;
         $accountId      = !empty($request->get('excavator_account_id')) ? $request->get('excavator_account_id') : 0;
         $excavatorId    = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
         $fromDate       = !empty($request->get('excavator_from_date')) ? $request->get('excavator_from_date') : '';
@@ -374,6 +379,9 @@ class DailyStatementController extends Controller
 
         if(!empty($excavatorId) && $excavatorId != 0) {
             $query = $query->where('excavator_id', $excavatorId);
+            $excavator = Excavator::find($excavatorId);
+            $bucketRate     = $excavator->rent_hourly_bucket;
+            $breakerRate    = $excavator->rent_hourly_breaker;
         }
 
         if(!empty($fromDate)) {
@@ -391,7 +399,16 @@ class DailyStatementController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('bill_amount');
 
-        $excavatorReadings = $query->with(['excavator.account.accountDetail'])->orderBy('date','desc')->paginate(10);
+        $totalBucketReadingQuery    = clone $query;
+        $totalBucketReading         = $totalBucketReadingQuery->sum('bucket_hour');
+
+        $totalBreakerReadingQuery   = clone $query;
+        $totalBreakerReading        = $totalBreakerReadingQuery->sum('breaker_hour');
+
+        $totalBataQuery   = clone $query;
+        $totalBata        = $totalBataQuery->sum('bata');        
+
+        $excavatorReadings = $query->with(['excavator.account.accountDetail'])->orderBy('date','desc')->paginate(15);
         
         return view('daily-statement.list',[
                 'accounts'              => $accounts,
@@ -403,7 +420,12 @@ class DailyStatementController extends Controller
                 'toDate'                => $toDate,
                 'employeeAttendance'    => [],
                 'jackhammerReadings'    => [],
-                'totalAmount'           => $totalAmount
+                'totalAmount'           => $totalAmount,
+                'totalBreakerReading'   => $totalBreakerReading,
+                'totalBucketReading'    => $totalBucketReading,
+                'totalBata'             => $totalBata,
+                'breakerRate'           => $breakerRate,
+                'bucketRate'            => $bucketRate
             ]);
     }
 
@@ -413,6 +435,8 @@ class DailyStatementController extends Controller
     public function jackhammerReadingList(Request $request)
     {
         $totalAmount    = 0;
+        $totalDepth     = 0;
+        $jackhammerRate = 0;
         $accountId      = !empty($request->get('jackhammer_account_id')) ? $request->get('jackhammer_account_id') : 0;
         $jackhammerId   = !empty($request->get('jackhammer_id')) ? $request->get('jackhammer_id') : 0;
         $fromDate       = !empty($request->get('jackhammer_from_date')) ? $request->get('jackhammer_from_date') : '';
@@ -431,6 +455,9 @@ class DailyStatementController extends Controller
 
         if(!empty($jackhammerId) && $jackhammerId != 0) {
             $query = $query->where('jackhammer_id', $jackhammerId);
+
+            $jackhammer = Jackhammer::find($jackhammerId);
+            $jackhammerRate     = $jackhammer->rent_feet;
         }
 
         if(!empty($fromDate)) {
@@ -448,7 +475,10 @@ class DailyStatementController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('bill_amount');
 
-        $jackhammerReadings = $query->with(['jackhammer.account.accountDetail'])->orderBy('date','desc')->paginate(10);
+        $totalDepthQuery   = clone $query;
+        $totalDepth        = $totalDepthQuery->sum('total_pit_depth'); 
+
+        $jackhammerReadings = $query->with(['jackhammer.account.accountDetail'])->orderBy('date','desc')->paginate(15);
         
         return view('daily-statement.list',[
                 'accounts'              => $accounts,
@@ -460,7 +490,9 @@ class DailyStatementController extends Controller
                 'toDate'                => $toDate,
                 'employeeAttendance'    => [],
                 'excavatorReadings'     => [],
-                'totalAmount'           => $totalAmount
+                'totalAmount'           => $totalAmount,
+                'totalDepth'            => $totalDepth,
+                'jackhammerRate'        => $jackhammerRate
             ]);
     }
 

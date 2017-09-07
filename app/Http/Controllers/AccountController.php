@@ -142,7 +142,7 @@ class AccountController extends Controller
             $query = $query->where('type', $type);
         }
 
-        $accounts = $query->with('accountDetail')->orderBy('created_at','desc')->paginate(10);
+        $accounts = $query->with('accountDetail')->orderBy('created_at','desc')->paginate(15);
         
         return view('account.list',[
                 'accounts'          => $accounts,
@@ -227,7 +227,7 @@ class AccountController extends Controller
         $totalDebit     = $obDebitAmount + $subtotalDebit;
         $totalCredit    = $obCreditAmount + $subtotalCredit;
 
-        $transactions = $query->orderBy('date_time','desc')->paginate(10);
+        $transactions = $query->orderBy('date_time','desc')->paginate(15);
 
         return view('account-statement.statement',[
                 'accounts'              => $accounts,

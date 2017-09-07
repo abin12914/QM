@@ -176,7 +176,7 @@ class EmployeeController extends Controller
             $query = $query->where('employee_type', $type);
         }
 
-        $employees = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(10);
+        $employees = $query->with('account.accountDetail')->orderBy('created_at','desc')->paginate(15);
 
         return view('employee.list',[
                 'accounts'          => $accounts,
