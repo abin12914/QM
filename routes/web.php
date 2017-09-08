@@ -60,6 +60,9 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//employee
 		Route::get('/hr/employee/edit', 'EmployeeController@edit')->name('employee-edit-view');
 		Route::post('/hr/employee/updation/action', 'EmployeeController@updationAction')->name('employee-updation-action');
+		//excavator
+		Route::get('/machine/excavator/edit', 'ExcavatorController@edit')->name('excavator-edit-view');
+		Route::post('/machine/excavator/updation/action', 'ExcavatorController@updationAction')->name('excavator-updation-action');
 	});
 
 	//user routes

@@ -110,6 +110,9 @@
                                             <th>Account Name</th>
                                             <th>Salary</th>
                                             <th>Wage</th>
+                                            @if($currentUser->role == 'admin')
+                                                <th class=" no-print">Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -130,6 +133,14 @@
                                                     @else
                                                         <td>-</td>
                                                         <td>-</td>
+                                                    @endif
+                                                    @if($currentUser->role == 'admin')
+                                                        <td class=" no-print">
+                                                            <form action="{{route('employee-edit-view')}}" id="employee_edit_{{ $index }}" method="get">
+                                                                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+                                                                <button type="submit" class="bg-aqua submit-button" type="button">Edit</button>
+                                                            </form>
+                                                        </td>
                                                     @endif
                                                 </tr>
                                             @endforeach

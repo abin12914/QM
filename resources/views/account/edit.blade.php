@@ -21,15 +21,6 @@
                 </h4>
             </div>
         @endif
-        @if (count($errors) > 0)
-            <div class="alert alert-danger" id="alert-message">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <!-- Main row -->
         <div class="row no-print">
             <div class="col-md-12">

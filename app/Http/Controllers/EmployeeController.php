@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRegistrationRequest;
+use App\Http\Requests\EmployeeUpdationRequest;
 use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Employee;
@@ -186,6 +187,78 @@ class EmployeeController extends Controller
                 'employeeId'        => $employeeId,
                 'type'              => $type
             ]);
+    }
+
+    /**
+     * Return view for account editing
+     */
+    public function edit(Request $request)
+    {
+        $employeeId = !empty($request->get('employee_id')) ? $request->get('employee_id') : 0;
+
+        if(!empty($employeeId) && $employeeId != 0) {
+            $employee = Employee::where('id', $employeeId)->with('account.accountDetail')->first();
+
+            if(empty($employee) || empty($employee->id)) {
+                return redirect(route('employee-list'))->with("message","Something went wrong! Selected record not found. Try again after reloading the page!<small class='pull-right'> #08/03</small>")->with("alert-class","alert-danger");
+            }
+        } else {
+            return redirect(route('employee-list'))->with("message","Something went wrong! Selected record not found. Try again after reloading the page!<small class='pull-right'> #08/04</small>")->with("alert-class","alert-danger");
+        }
+
+        return view('employee.edit',[
+                'employee' => $employee
+            ]);
+    }
+
+    /**
+     * Handle account updation
+     */
+    public function updationAction(EmployeeUpdationRequest $request)
+    {
+        $destination        = '/images/employee/'; // image file upload path
+        $flag = 0;
+        $employeeId         = !empty($request->get('employee_id')) ? $request->get('employee_id') : 0;
+        $name               = $request->get('name');
+        $phone              = $request->get('phone');
+        $address            = $request->get('address');
+        $employeeType       = $request->get('employee_type');
+        $salary             = $request->get('salary');
+        $wage               = $request->get('wage');
+
+        if ($request->hasFile('image_file')) {
+            $file               = $request->file('image_file');
+            $extension          = $file->getClientOriginalExtension(); // getting image extension
+            $fileName           = $name.'_'.time().'.'.$extension; // renameing image
+            $file->move(public_path().$destination, $fileName); // uploading file to given path
+        }
+
+        if(!empty($fileName)) {
+            $image   = $destination.$fileName;
+        } else {
+            $image   = $destination."default_employee.jpg";
+        }
+
+        $employee   = Employee::find($employeeId);
+        $accountId  = $employee->account_id;
+
+        $employee->employee_type    = $employeeType;
+        $employee->salary           = $salary;
+        $employee->wage             = $wage;
+        if($employee->save()) {
+            $accountDetail = AccountDetail::where('account_id', $accountId)->first();
+            $accountDetail->name        = $name;
+            $accountDetail->phone       = $phone;
+            $accountDetail->address     = $address;
+            $accountDetail->image       = $image;
+            if($accountDetail->save()) {
+                return redirect(route('employee-list'))->with("message","Successfully updated.")->with("alert-class","alert-success");
+            } else{
+                return redirect(route('employee-list'))->with("message","Failed to update the account details. Try again after reloading the page!<small class='pull-right'> #08/05</small>")->with("alert-class","alert-danger");
+            }
+        } else{
+            return redirect(route('employee-list'))->with("message","Failed to update the account details. Try again after reloading the page!<small class='pull-right'> #08/06</small>")->with("alert-class","alert-danger");
+        }
     }
 
     /**

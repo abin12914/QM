@@ -103,7 +103,7 @@ $(function () {
                             $('#product_credit').val(productId);
                             $('#purchaser_credit').val(purchaserAccountId);
 
-                            if(measureType == 1) {
+                            if(measureType == 1 || measureType == 3) {
                                 $('#measure_type_volume_credit').prop('checked',true);
                             } else {
                                 $('#measure_type_weighment_credit').prop('checked',true);
