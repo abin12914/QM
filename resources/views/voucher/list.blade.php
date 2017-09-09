@@ -310,7 +310,7 @@
                                                     </div>
                                                     <div class="col-sm-4 {{ !empty($errors->first('from_date')) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_from_date" class="control-label">Start Date : </label>
-                                                        <input type="text" class="form-control decimal_number_only datepicker" name="machine_voucher_from_date" id="from_date" placeholder="Date" value="{{ !empty($fromDate) ? $fromDate : old('from_date') }}" tabindex="1">
+                                                        <input type="text" class="form-control decimal_number_only datepicker" name="from_date" id="machine_voucher_from_date" placeholder="Date" value="{{ !empty($fromDate) ? $fromDate : old('from_date') }}" tabindex="1">
                                                         @if(!empty($errors->first('from_date')))
                                                             <p style="color: red;" >{{$errors->first('from_date')}}</p>
                                                         @endif
@@ -390,6 +390,7 @@
                                                         <th>Machine</th>
                                                         <th>Debit Account</th>
                                                         <th>Credit Account</th>
+                                                        <th>Description</th>
                                                         <th>Amount</th>
                                                     </tr>
                                                 </thead>
@@ -416,6 +417,7 @@
                                                                 <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
                                                                 <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
                                                             @endif
+                                                            <td>{{ $machineVoucher->transaction->particulars }}</td>
                                                             <td>{{ $machineVoucher->amount }}</td>
                                                         </tr>
                                                     @endforeach
@@ -424,12 +426,13 @@
                                                 @if(!empty($machineVouchers) && (Request::get('page') == $machineVouchers->lastPage() || $machineVouchers->lastPage() == 1))
                                                     <tfoot>
                                                         <tr>
-                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                                         </tr>
                                                         <tr>
                                                             <td></td>
                                                             <td></td>
                                                             <td><b>Total Amount</b></td>
+                                                            <td></td>
                                                             <td></td>
                                                             <td></td>
                                                             <td><b>{{ $totalAmount }}</b></td>

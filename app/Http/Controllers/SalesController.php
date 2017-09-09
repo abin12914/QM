@@ -765,7 +765,13 @@ class SalesController extends Controller
             $productId          = $sale->product_id;
             $purchaserAccountId = $sale->transaction->debit_account_id;
             $measureType        = $sale->measure_type;
-            $rate               = $sale->rate;
+            if($sale->measure_type == 1) {
+                $rate   = $sale->total_amount;
+            } elseif($sale->measure_type == 2) {
+                $rate = '';
+            } else {
+                $rate   = $sale->rate;
+            }
 
             return([
                     'flag'                  => true,

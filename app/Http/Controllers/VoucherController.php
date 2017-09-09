@@ -322,7 +322,7 @@ class VoucherController extends Controller
         }
 
         if(!empty($toDate)) {
-            $searchToDate = new DateTime($toDate);
+            $searchToDate = new DateTime($toDate." 23:59");
             $searchToDate = $searchToDate->format('Y-m-d H:i');
             $query = $query->where('date_time', '<=', $searchToDate);
         }
@@ -346,7 +346,7 @@ class VoucherController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('amount');
 
-        $machineVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('date_time','desc')->paginate(15);
+        $machineVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('id','desc')->paginate(15);
         
         return view('voucher.list',[
                 'accounts'        => $accounts,

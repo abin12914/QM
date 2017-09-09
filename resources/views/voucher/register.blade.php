@@ -473,6 +473,7 @@
                                                 <th>Date & Time</th>
                                                 <th>Debit Account</th>
                                                 <th>Credit Account</th>
+                                                <th>Description</th>
                                                 <th>Amount</th>
                                             </tr>
                                         </thead>
@@ -484,6 +485,7 @@
                                                     <td>{{ $machineVoucher->date_time }}</td>
                                                     <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
                                                     <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
+                                                    <td>{{ $machineVoucher->transaction->particulars }}</td>
                                                     <td>{{ $machineVoucher->amount }}</td>
                                                 </tr>
                                             @endforeach
