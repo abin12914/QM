@@ -29,7 +29,7 @@
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title" style="float: left;">Account Updation</h3>
-                            <p>&nbsp&nbsp&nbsp(Fields marked with <b style="color: red;">* </b>are mandatory.)</p>
+                            <p>&nbsp&nbsp&nbsp(Fields marked with <b style="color: red;">* </b>are mandatory. Fields marked with <b style="color: blue;"># </b>can't be edited.)</p>
                     </div>
                     <!-- /.box-header -->
                     @if(!empty($account))
@@ -41,7 +41,7 @@
                                 <div class="row">
                                     <div class="col-md-11">
                                         <div class="form-group">
-                                            <label for="account_name" class="col-sm-2 control-label">Account Name : </label>
+                                            <label for="account_name" class="col-sm-2 control-label"><b style="color: blue;"># </b>Account Name : </label>
                                             <div class="col-sm-10">
                                                 <input type="text" name="account_name" class="form-control" id="account_name" placeholder="Account Name" value="{{ $account->account_name }}"  tabindex="1" maxlength="200" disabled>
                                             </div>
@@ -60,7 +60,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="account_type" class="col-sm-2 control-label">Account Type : </label>
+                                            <label for="account_type" class="col-sm-2 control-label"><b style="color: blue;"># </b>Account Type : </label>
                                             <div class="col-sm-10">
                                                 <select class="form-control" name="account_type" id="account_type" disabled>
                                                     <option value="personal" selected>Personal account</option>
@@ -125,7 +125,7 @@
                                                 <p>&nbsp&nbsp&nbsp</p>
                                         </div>
                                         <div class="form-group">
-                                            <label for="financial_status" class="col-sm-2 control-label">Financial Status : </label>
+                                            <label for="financial_status" class="col-sm-2 control-label"><b style="color: blue;"># </b>Financial Status : </label>
                                             <div class="col-sm-10">
                                                 <select class="form-control" name="financial_status" id="financial_status"  tabindex="9" disabled>
                                                     <option value="" {{ (empty($account->financial_status)) ? 'selected' : '' }}>Select financial status</option>
@@ -136,7 +136,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="opening_balance" class="col-sm-2 control-label">Opening Balance : </label>
+                                            <label for="opening_balance" class="col-sm-2 control-label"><b style="color: blue;"># </b>Opening Balance : </label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control decimal_number_only" name="opening_balance" id="opening_balance" placeholder="Opening balance" value="{{ $account->opening_balance }}" ="" tabindex="10" maxlength="8" disabled>
                                             </div>
@@ -170,7 +170,6 @@
             </div>
         </div>
         <!-- /.row (main row) -->
-        <!-- /.row (main row) -->
         <div class="modal" id="update_confirmation_modal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -186,7 +185,7 @@
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-10">
                                     <p style="color: red;">
-                                        <b> Are you sure to update the record?</b>
+                                        <b> Are you sure to update this record?</b>
                                     </p>
                                 </div>
                             </div>

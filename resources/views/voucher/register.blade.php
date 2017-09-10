@@ -323,7 +323,7 @@
                             <div class="{{ (old('tab_flag') == 'machine_voucher' || (!empty(Session::get('controller_tab_flag')) && Session::get('controller_tab_flag') == 'machine_voucher')) ? 'active' : '' }} tab-pane" id="machine_voucher_tab">
                                 <div class="box-body">
                                     <!-- form start -->
-                                    <form action="{{ route('credit-voucher-register-action') }}" method="post" class="form-horizontal">
+                                    <form action="{{ route('credit-voucher-register-action') }}" method="post" id="machine_voucher_form" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <input type="hidden" name="tab_flag" value="machine_voucher">
                                         <input type="hidden" name="machine_voucher_flag" value="1">
@@ -411,7 +411,7 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_credit_account_id')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_credit_account_id" class="control-label"><b style="color: red;">*</b> Credit Account : </label>
-                                                        <select class="form-control  account_select" name="credit_voucher_credit_account_id" id="machine_voucher_credit_account_id" tabindex="3" style="width: 100%">
+                                                        <select class="form-control  account_select" name="credit_voucher_credit_account_id" id="machine_voucher_credit_account_id" tabindex="3" style="width: 100%" disabled>
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
                                                                 @foreach($accounts as $account)

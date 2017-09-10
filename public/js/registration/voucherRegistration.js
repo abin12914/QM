@@ -32,6 +32,8 @@ $(function () {
     //Initialize Select2 Element for account select box
     initializeSelect2();
 
+    $('#machine_voucher_credit_account_id').prop('disabled', true);
+
     $("#machine_voucher_machine_class").select2({
         minimumResultsForSearch: 4
     });
@@ -191,6 +193,9 @@ $(function () {
             $('#class_jackhammer').show();
             $('#class_excavator').hide();
         }
+
+        $('#machine_voucher_credit_account_id').val("");
+        $('#machine_voucher_credit_account_id').trigger('change');
     });
 
     //select related account for the selected jackhammer
@@ -214,17 +219,17 @@ $(function () {
                             alert('Selected debit account and selected machine contractor should be diffrent');
                         }
                     } else {
-                        $('#machine_voucher_credit_account_id').val();
+                        $('#machine_voucher_credit_account_id').val("");
                         $('#machine_voucher_credit_account_id').trigger('change');
                     }
                 },
                 error: function () {
-                    $('#machine_voucher_credit_account_id').val();
+                    $('#machine_voucher_credit_account_id').val("");
                     $('#machine_voucher_credit_account_id').trigger('change');
                 }
             });
         } else {
-            $('#machine_voucher_credit_account_id').val();
+            $('#machine_voucher_credit_account_id').val("");
             $('#machine_voucher_credit_account_id').trigger('change');
         }
     });
@@ -251,17 +256,17 @@ $(function () {
                             alert('Selected debit account and selected machine contractor should be diffrent');
                         }
                     } else {
-                        $('#machine_voucher_credit_account_id').val();
+                        $('#machine_voucher_credit_account_id').val("");
                         $('#machine_voucher_credit_account_id').trigger('change');
                     }                    
                 },
                 error: function () {
-                    $('#machine_voucher_credit_account_id').val();
+                    $('#machine_voucher_credit_account_id').val("");
                     $('#machine_voucher_credit_account_id').trigger('change');
                 }
             });
         } else {
-            $('#machine_voucher_credit_account_id').val();
+            $('#machine_voucher_credit_account_id').val("");
             $('#machine_voucher_credit_account_id').trigger('change');
         }
     });
@@ -385,6 +390,10 @@ $(function () {
         } else {
             $('#machine_voucher_debit_account_name').val('');
         }
+    });
+
+    $('body').on("submit", "#machine_voucher_form", function () {
+        $('#machine_voucher_credit_account_id').prop('disabled', false);
     });
 });
 // timepicker value updation
