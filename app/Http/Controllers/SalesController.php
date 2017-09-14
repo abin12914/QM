@@ -356,10 +356,11 @@ class SalesController extends Controller
      */
     public function list(Request $request)
     {
-        $totalAmount    = 0;
-        $totalLoad      = 0;
+        $totalAmount        = 0;
+        $totalLoad          = 0;
         $totalSingleLoad    = 0;
         $totalMultipleLoad  = 0;
+        $totalQuantity      = 0;
         $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $fromDate       = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate         = !empty($request->get('to_date')) ? $request->get('to_date') : '';
@@ -415,6 +416,17 @@ class SalesController extends Controller
         $totalSingleLoadQuery = clone $query;
         $totalSingleLoad      = $totalSingleLoadQuery->whereIn('measure_type', [1,2])->count();
 
+        $totalQuantityQuery = clone $query;
+        $totalQuantitySale  = $totalQuantityQuery->with('vehicle')->get();
+
+        foreach ($totalQuantitySale as $key => $sale) {
+            if($sale->measure_type == 3) {
+                $totalQuantity = $totalQuantity + ($sale->quantity * $sale->vehicle->volume);
+            } else {
+                $totalQuantity = $totalQuantity + $sale->vehicle->volume;
+            }
+        }
+
         $totalLoad = $totalMultipleLoad +$totalSingleLoad;
 
         $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType', 'product'])->orderBy('date_time','desc')->paginate(15);
@@ -432,7 +444,8 @@ class SalesController extends Controller
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
                 'totalAmount'           => $totalAmount,
-                'totalLoad'             => $totalLoad
+                'totalLoad'             => $totalLoad,
+                'totalQuantity'         => $totalQuantity
             ]);
     }
 
