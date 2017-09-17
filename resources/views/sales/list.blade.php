@@ -197,7 +197,7 @@
                                                 <td></td>
                                                 <td><b>Total Amount</b></td>
                                                 <td></td>
-                                                <td><b>{{ $totalQuantity }} Cft</b></td>
+                                                <td>aprox. <b>{{ $totalQuantity }} Cft</b></td>
                                                 <td><b>{{ $totalLoad }}</b></td>
                                                 <td><b>{{ $totalAmount }}</b></td>
                                                 <td></td>
