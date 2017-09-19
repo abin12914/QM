@@ -108,6 +108,7 @@
                                                         <th>Account Name</th>
                                                         <th>Name</th>
                                                         <th>Transaction Type</th>
+                                                        <th>Description</th>
                                                         <th>Amount</th>
                                                     </tr>
                                                 </thead>
@@ -116,18 +117,21 @@
                                                         @foreach($cashVouchers as $index => $cashVoucher)
                                                             <tr>
                                                                 <td>{{ $index + $cashVouchers->firstItem() }}</td>
-                                                                <td>{{ $cashVoucher->date_time }}</td>
+                                                                <td>{{ Carbon\Carbon::parse($cashVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
                                                                 @if($cashVoucher->transaction_type == 1)
                                                                     <td>{{ $cashVoucher->transaction->creditAccount->account_name }}</td>
                                                                     <td>{{ $cashVoucher->transaction->creditAccount->accountDetail->name }}</td>
+                                                                    <td>Debit</td>
                                                                 @elseif($cashVoucher->transaction_type == 2)
                                                                     <td>{{ $cashVoucher->transaction->debitAccount->account_name }}</td>
                                                                     <td>{{ $cashVoucher->transaction->debitAccount->accountDetail->name }}</td>
+                                                                    <td>Credit</td>
                                                                 @else
                                                                     <td></td>
                                                                     <td></td>
+                                                                    <td></td>
                                                                 @endif
-                                                                <td>{{ ($cashVoucher->transaction_type == 1) ? 'Debit' : 'Credit' }}</td>
+                                                                <td>{{ $cashVoucher->transaction->particulars }}</td>
                                                                 <td>{{ $cashVoucher->amount }}</td>
                                                             </tr>
                                                         @endforeach
@@ -136,12 +140,13 @@
                                                 @if(!empty($cashVouchers) && (Request::get('page') == $cashVouchers->lastPage() || $cashVouchers->lastPage() == 1))
                                                     <tfoot>
                                                         <tr>
-                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                                         </tr>
                                                         <tr>
                                                             <td></td>
                                                             <td></td>
                                                             <td><b>Total Amount</b></td>
+                                                            <td></td>
                                                             <td></td>
                                                             <td></td>
                                                             <td><b>{{ $totalAmount }}</b></td>
@@ -229,6 +234,7 @@
                                                         <th>Date & Time</th>
                                                         <th>Debit Account</th>
                                                         <th>Credit Account</th>
+                                                        <th>Description</th>
                                                         <th>Amount</th>
                                                     </tr>
                                                 </thead>
@@ -237,7 +243,7 @@
                                                     @foreach($creditVouchers as $index => $creditVoucher)
                                                         <tr>
                                                             <td>{{ $index + $creditVouchers->firstItem() }}</td>
-                                                            <td>{{ $creditVoucher->date_time }}</td>
+                                                            <td>{{ Carbon\Carbon::parse($creditVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
                                                             @if($creditVoucher->transaction->debitAccount->id == $accountId)
                                                                 <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
                                                                 <td class="bg-gray">{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
@@ -248,6 +254,7 @@
                                                                 <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
                                                                 <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
                                                             @endif
+                                                            <td>{{ $creditVoucher->transaction->particulars }}</td>
                                                             <td>{{ $creditVoucher->amount }}</td>
                                                         </tr>
                                                     @endforeach
@@ -256,11 +263,12 @@
                                                 @if(!empty($creditVouchers) && (Request::get('page') == $creditVouchers->lastPage() || $creditVouchers->lastPage() == 1))
                                                     <tfoot>
                                                         <tr>
-                                                            <td></td><td></td><td></td><td></td><td></td>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
                                                         </tr>
                                                         <tr>
                                                             <td></td>
                                                             <td><b>Total Amount</b></td>
+                                                            <td></td>
                                                             <td></td>
                                                             <td></td>
                                                             <td><b>{{ $totalAmount }}</b></td>
@@ -399,7 +407,7 @@
                                                     @foreach($machineVouchers as $index => $machineVoucher)
                                                         <tr>
                                                             <td>{{ $index + $machineVouchers->firstItem() }}</td>
-                                                            <td>{{ $machineVoucher->date_time }}</td>
+                                                            <td>{{ Carbon\Carbon::parse($machineVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
                                                             @if(!empty($machineVoucher->excavator_id))
                                                                 <td>{{ $machineVoucher->excavator->name }}</td>
                                                             @elseif(!empty($machineVoucher->jackhammer_id))

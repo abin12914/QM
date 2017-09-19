@@ -166,7 +166,7 @@
                                                 @foreach($cashVouchers as $index => $cashVoucher)
                                                     <tr>
                                                         <td>{{ $index+1 }}</td>
-                                                        <td>{{ $cashVoucher->date_time }}</td>
+                                                        <td>{{ Carbon\Carbon::parse($cashVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
                                                         {{-- <td>{{ $cashVoucher->transaction->creditAccount->account_name }}</td>
                                                         <td>{{ $cashVoucher->transaction->creditAccount->accountDetail->name }}</td> --}}
                                                          @if($cashVoucher->transaction_type == 1)
@@ -308,7 +308,7 @@
                                             @foreach($creditVouchers as $index => $creditVoucher)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td>{{ $creditVoucher->date_time }}</td>
+                                                    <td>{{ Carbon\Carbon::parse($creditVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
                                                     <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
                                                     <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
                                                     <td>{{ $creditVoucher->amount }}</td>
@@ -333,7 +333,7 @@
                                                     <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_date')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_date" class="control-label"><b style="color: red;">*</b> Date : </label>
                                                         <input type="text" class="form-control decimal_number_only datepicker" name="credit_voucher_date" id="machine_voucher_date" placeholder="Date" value="{{ old('credit_voucher_date') }}" tabindex="1">
-                                                        @if((!empty($errors->first('credit_voucher_date'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('credit_voucher_date'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_date')}}</p>
                                                         @endif
                                                     </div>
@@ -342,7 +342,7 @@
                                                         <div class="bootstrap-timepicker">
                                                             <input type="text" class="form-control timepicker" name="credit_voucher_time" id="machine_voucher_time" placeholder="Time" value="{{ old('credit_voucher_time') }}" tabindex="2">
                                                         </div>
-                                                        @if((!empty($errors->first('credit_voucher_time'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('credit_voucher_time'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_time')}}</p>
                                                         @endif
                                                     </div>
@@ -359,7 +359,7 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if((!empty($errors->first('credit_voucher_debit_account_id'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('credit_voucher_debit_account_id'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_debit_account_id')}}</p>
                                                         @endif
                                                     </div>
@@ -375,7 +375,7 @@
                                                             <option value="1" {{ (old('credit_voucher_machine_class') == 1) ? 'selected' : '' }}>Excavator</option>
                                                             <option value="2" {{ (old('credit_voucher_machine_class') == 2) ? 'selected' : '' }}>Jackhammer</option>
                                                         </select>
-                                                        @if((!empty($errors->first('credit_voucher_machine_class'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('credit_voucher_machine_class'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_machine_class')}}</p>
                                                         @endif
                                                     </div>
@@ -389,7 +389,7 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if((!empty($errors->first('machine_voucher_excavator_id'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('machine_voucher_excavator_id'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('machine_voucher_excavator_id')}}</p>
                                                         @endif
                                                     </div>
@@ -403,7 +403,7 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if((!empty($errors->first('machine_voucher_jackhammer_id'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('machine_voucher_jackhammer_id'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('machine_voucher_jackhammer_id')}}</p>
                                                         @endif
                                                     </div>
@@ -419,7 +419,7 @@
                                                                 @endforeach
                                                             @endif
                                                         </select>
-                                                        @if((!empty($errors->first('credit_voucher_credit_account_id'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('credit_voucher_credit_account_id'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_credit_account_id')}}</p>
                                                         @endif
                                                     </div>
@@ -432,14 +432,14 @@
                                                     <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_amount')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_amount" class="control-label"><b style="color: red;">*</b> Amount : </label>
                                                         <input type="text" class="form-control decimal_number_only" name="credit_voucher_amount" id="machine_voucher_amount" tabindex="4">
-                                                        @if((!empty($errors->first('credit_voucher_amount'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('credit_voucher_amount'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_amount')}}</p>
                                                         @endif
                                                     </div>
                                                     <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_description')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
                                                         <label for="machine_voucher_description" class="control-label"><b style="color: red;">*</b> Description : </label>
                                                         <input type="text" class="form-control" name="credit_voucher_description" id="machine_voucher_description" tabindex="5">
-                                                        @if((!empty($errors->first('credit_voucher_description'))) && old('machine_voucher_flag') == 1)
+                                                        @if((!empty($errors->first('credit_voucher_description'))) && (old('machine_voucher_flag') == 1))
                                                             <p style="color: red;" >{{$errors->first('credit_voucher_description')}}</p>
                                                         @endif
                                                     </div>
@@ -482,7 +482,7 @@
                                             @foreach($machineVouchers as $index => $machineVoucher)
                                                 <tr>
                                                     <td>{{ $index+1 }}</td>
-                                                    <td>{{ $machineVoucher->date_time }}</td>
+                                                    <td>{{ Carbon\Carbon::parse($machineVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
                                                     <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
                                                     <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
                                                     <td>{{ $machineVoucher->transaction->particulars }}</td>

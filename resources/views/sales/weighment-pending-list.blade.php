@@ -119,7 +119,7 @@
                                     @foreach($sales as $index => $saleRecord)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $saleRecord->date_time }}</td>
+                                            <td>{{ Carbon\Carbon::parse($saleRecord->date_time)->format('d-m-Y H:m:i') }}</td>
                                             <td>{{ $saleRecord->vehicle->reg_number }}</td>
                                             <td>{{ $saleRecord->transaction->debitAccount->account_name }}</td>
                                             <td>{{ $saleRecord->product->name }}</td>

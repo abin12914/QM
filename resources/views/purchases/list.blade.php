@@ -121,7 +121,7 @@
                                             @foreach($purchases as $index=>$purchase)
                                                 <tr>
                                                     <td>{{ $index + $purchases->firstItem() }}</td>
-                                                    <td>{{ $purchase->date_time }}</td>
+                                                    <td>{{ Carbon\Carbon::parse($purchase->date_time)->format('d-m-Y') }}</td>
                                                     <td>{{ $purchase->purchasebleProduct->name }}</td>
                                                     <td>{{ $purchase->transaction->creditAccount->account_name }}</td>
                                                     <td>{{ $purchase->transaction->particulars }}</td>

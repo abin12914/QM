@@ -86,7 +86,7 @@
                                             @foreach($royaltyRecords as $index => $royalty)
                                                 <tr>
                                                     <td>{{ $index + $royaltyRecords->firstItem() }}</td>
-                                                    <td>{{ $royalty->date_time }}</td>
+                                                    <td>{{ Carbon\Carbon::parse($royalty->date_time)->format('d-m-Y H:m:i') }}</td>
                                                     <td>{{ $royalty->vehicle->reg_number }}</td>
                                                     <td>{{ $royalty->vehicle->vehicleType->name }}</td>
                                                     <td>{{ $royalty->transaction->amount }}</td>

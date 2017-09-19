@@ -188,7 +188,7 @@
                                 <tbody>
                                     @foreach($purchaseRecords as $purchase_record)
                                         <tr>
-                                            <td>{{ $purchase_record->date_time }}</td>
+                                            <td>{{ Carbon\Carbon::parse($purchase_record->date_time)->format('d-m-Y H:m:i') }}</td>
                                             <td>{{ $purchase_record->purchasebleProduct->name }}</td>
                                             <td>{{ $purchase_record->transaction->creditAccount->account_name }}</td>
                                             <td>{{ $purchase_record->transaction->particulars }}</td>

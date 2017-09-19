@@ -220,6 +220,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Date & Time</th>
+                                            <th style="width: 3%;">Ref No.</th>
                                             <th>Particulars</th>
                                             <th>Debit</th>
                                             <th>Credit</th>
@@ -230,7 +231,8 @@
                                             @foreach($transactions as $index => $transaction)
                                                 <tr>
                                                     <td>{{ $index + $transactions->firstItem() }}</td>
-                                                    <td>{{ $transaction->date_time }}</td>
+                                                    <td>{{ Carbon\Carbon::parse($transaction->date_time)->format('d-m-Y') }}</td>
+                                                    <td>{{ $transaction->id }}</td>
                                                     <td>{{ $transaction->particulars }}</td>
                                                     @if($transaction->debit_account_id == $accountId)
                                                         <td>{{ $transaction->amount }}</td>
@@ -251,9 +253,10 @@
                                     @if(!empty($transactions) && (Request::get('page') == $transactions->lastPage() || $transactions->lastPage() == 1))
                                         <tfoot>
                                             <tr>
-                                                <th></th><th></th><th></th><th></th><th></th>
+                                                <th></th><th></th><th></th><th></th><th></th><th></th>
                                             </tr>
                                             <tr>
+                                                <th></th>
                                                 <th></th>
                                                 <th></th>
                                                 <th>Sub Total</th>
@@ -263,6 +266,7 @@
                                             <tr>
                                                 <th></th>
                                                 <th></th>
+                                                <th></th>
                                                 <th>Old Balance</th>
                                                 <th>{{ $obDebitAmount }}</th>
                                                 <th>{{ $obCreditAmount }}</th>
@@ -270,11 +274,13 @@
                                             <tr>
                                                 <th></th>
                                                 <th></th>
+                                                <th></th>
                                                 <th>Total Amount</th>
                                                 <th>{{ $totalDebit }}</th>
                                                 <th>{{ $totalCredit }}</th>
                                             </tr>
                                             <tr>
+                                                <th></th>
                                                 <th></th>
                                                 <th></th>
                                                 <th>{{ 'Balance' }}</th>

@@ -119,7 +119,7 @@
                                                         @foreach($employeeAttendance as $index => $attendance)
                                                             <tr>
                                                                 <td>{{ $index + $employeeAttendance->firstItem() }}</td>
-                                                                <td>{{ $attendance->date }}</td>
+                                                                <td>{{ Carbon\Carbon::parse($attendance->date)->format('d-m-Y') }}</td>
                                                                 <td>{{ $attendance->employee->account->accountDetail->name }}</td>
                                                                 <td>{{ $attendance->employee->account->account_name }}</td>
                                                                 <td>{{ $attendance->wage }}</td>
@@ -240,6 +240,7 @@
                                                         <th>Contractor Account</th>
                                                         <th>Bucket [Working Hour]</th>
                                                         <th>Breaker [Working Hour]</th>
+                                                        <th>Operator</th>
                                                         <th>Operator Bata</th>
                                                         <th>Bill Amount</th>
                                                     </tr>
@@ -248,11 +249,12 @@
                                                     @foreach($excavatorReadings as $index => $excavatorReading)
                                                         <tr>
                                                             <td>{{ $index + $excavatorReadings->firstItem() }}</td>
-                                                            <td>{{ $excavatorReading->date }}</td>
+                                                            <td>{{ Carbon\Carbon::parse($excavatorReading->date)->format('d-m-Y') }}</td>
                                                             <td>{{ $excavatorReading->excavator->name }}</td>
                                                             <td>{{ $excavatorReading->excavator->account->account_name }}</td>
                                                             <td>{{ $excavatorReading->bucket_hour }}</td>
                                                             <td>{{ $excavatorReading->breaker_hour }}</td>
+                                                            <td>{{ $excavatorReading->operator_name }}</td>
                                                             <td>{{ $excavatorReading->bata }}</td>
                                                             <td>{{ $excavatorReading->bill_amount }}</td>
                                                         </tr>
@@ -261,20 +263,24 @@
                                                 @if(!empty($excavatorReadings) && (Request::get('page') == $excavatorReadings->lastPage() || $excavatorReadings->lastPage() == 1))
                                                     <tfoot>
                                                         <tr>
-                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                                         </tr>
                                                         <tr>
                                                             <td></td>
                                                             <td></td>
                                                             <td><b>Total Amount</b></td>
                                                             <td></td>
-                                                            @if(!empty($breakerRate) && !empty($bucketRate))
+                                                            @if(!empty($bucketRate))
                                                                 <td><b>{{ $totalBucketReading }} x {{ $bucketRate }} = {{ ($totalBucketReading * $bucketRate) }}</b></td>
-                                                                <td><b>{{ $totalBreakerReading }} x {{ $breakerRate }} = {{ ($totalBreakerReading * $breakerRate) }}</b></td>
                                                             @else
                                                                 <td><b>{{ $totalBucketReading }}</b></td>
+                                                            @endif
+                                                            @if(!empty($breakerRate))
+                                                                <td><b>{{ $totalBreakerReading }} x {{ $breakerRate }} = {{ ($totalBreakerReading * $breakerRate) }}</b></td>
+                                                            @else
                                                                 <td><b>{{ $totalBreakerReading }}</b></td>
                                                             @endif
+                                                            <td></td>
                                                             <td><b>{{ $totalBata }}</b></td>
                                                             <td><b>{{ $totalAmount }}</b></td>
                                                         </tr>
@@ -386,7 +392,7 @@
                                                     @foreach($jackhammerReadings as $index => $jackhammerReading)
                                                         <tr>
                                                             <td>{{ $index + $jackhammerReadings->firstItem() }}</td>
-                                                            <td>{{ $jackhammerReading->date }}</td>
+                                                            <td>{{ Carbon\Carbon::parse($jackhammerReading->date)->format('d-m-Y') }}</td>
                                                             <td>{{ $jackhammerReading->jackhammer->name }}</td>
                                                             <td>{{ $jackhammerReading->jackhammer->account->account_name }}</td>
                                                             <td>{{ ($jackhammerReading->total_pit_depth / 5) }}</td>

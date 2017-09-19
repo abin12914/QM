@@ -65,7 +65,7 @@
                                             <div class="form-group">
                                                 <label for="date" class="col-md-2 control-label">Date and Time : </label>
                                                 <div class="col-sm-4">
-                                                    <input type="text" class="form-control prevent-edit" id="date" title="Do not edit this field" tabindex="22"  value="{{ $sale->date_time }}">
+                                                    <input type="text" class="form-control prevent-edit" id="date" title="Do not edit this field" tabindex="22"  value="{{ Carbon\Carbon::parse($sale->date_time)->format('d-m-Y H:m:i') }}">
                                                 </div>
                                                 <label for="purchaser" class="col-md-1 control-label">Purchaser : </label>
                                                 <div class="col-sm-4">
