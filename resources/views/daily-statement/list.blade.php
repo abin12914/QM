@@ -254,7 +254,11 @@
                                                             <td>{{ $excavatorReading->excavator->account->account_name }}</td>
                                                             <td>{{ $excavatorReading->bucket_hour }}</td>
                                                             <td>{{ $excavatorReading->breaker_hour }}</td>
-                                                            <td>{{ $excavatorReading->operator_name }}</td>
+                                                            @if(!empty($excavatorReading->operator_account_id))
+                                                                <td>{{ $excavatorReading->operator->account_name }}</td>
+                                                            @else
+                                                                <td>{{ $excavatorReading->operator_name }}</td>
+                                                            @endif
                                                             <td>{{ $excavatorReading->bata }}</td>
                                                             <td>{{ $excavatorReading->bill_amount }}</td>
                                                         </tr>

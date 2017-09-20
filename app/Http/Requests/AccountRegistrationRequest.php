@@ -66,7 +66,7 @@ class AccountRegistrationRequest extends FormRequest
             'relation_type'         => [
                                             'required',
                                             'max:10',
-                                            Rule::in(['supplier','customer','contractor','general'])
+                                            Rule::in(['supplier','customer','contractor','general','operator'])
                                         ],
         ];
     }

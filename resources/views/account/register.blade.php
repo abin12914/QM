@@ -119,6 +119,7 @@
                                                     <option value="supplier" {{ (old('relation_type') == 'supplier') ? 'selected' : '' }}>Supplier</option>
                                                     <option value="customer" {{ (old('relation_type') == 'customer') ? 'selected' : '' }}>Customer</option>
                                                     <option value="contractor" {{ (old('relation_type') == 'contractor') ? 'selected' : '' }}>Contractor</option>
+                                                    <option value="operator" {{ (old('relation_type') == 'operator') ? 'selected' : '' }}>Operator</option>
                                                     <option value="general" {{ (old('relation_type') == 'general') ? 'selected' : '' }}>General/Other</option>
                                                 </select>
                                                 @if(!empty($errors->first('relation_type')))

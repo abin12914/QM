@@ -47,6 +47,7 @@ class DailyStatementController extends Controller
         }*/
 
         $employeeAccounts   = Account::where('status', 1)->where('relation','employee')->whereNotIn('id', $presentEmployeeAccounts)->get();
+        $operatorAccounts   = Account::where('status', 1)->where('relation','operator')->get();
         $employees          = Employee::where('status', 1)->whereNotIn('id', $presentEmployees)->with(['account.accountDetail'])->get();
         $excavators         = Excavator::where('status', 1)->whereNotIn('id', $presentexcavatorReadings)->with(['account'])->get();
         $jackhammers        = Jackhammer::where('status', 1)->whereNotIn('id', $presentjackhammerReadings)->get();
@@ -54,6 +55,7 @@ class DailyStatementController extends Controller
         return view('daily-statement.register',[
                 'today' => $today,
                 'employeeAccounts'   => $employeeAccounts,
+                'operatorAccounts'   => $operatorAccounts,
                 'employeeAttendance' => $employeeAttendance,
                 'employees'          => $employees,
                 'excavators'         => $excavators,
@@ -130,13 +132,20 @@ class DailyStatementController extends Controller
 
     public function excavatorReadingsAction(ExcavatorReadingRegistrationRequest $request)
     {
-        $rentTypeFlag   = 0;
-        $date           = $request->get('excavator_date');
-        $excavatorId    = $request->get('excavator_id');
-        $bucketHour     = $request->get('excavator_bucket_hour');
-        $breakerHour    = $request->get('excavator_breaker_hour');
-        $operatorName   = $request->get('excavator_operator');
-        $operatorBata   = $request->get('excavator_operator_bata');
+        $rentTypeFlag       = 0;
+        $date               = $request->get('excavator_date');
+        $excavatorId        = $request->get('excavator_id');
+        $bucketHour         = $request->get('excavator_bucket_hour');
+        $breakerHour        = $request->get('excavator_breaker_hour');
+        $operatorAccountId  = $request->get('excavator_operator_account_id');
+        $operatorBata       = $request->get('excavator_operator_bata');
+
+        $labouAttendanceAccount = Account::where('account_name','Labour Attendance')->first();
+        if($labouAttendanceAccount) {
+            $labouAttendanceAccountId = $labouAttendanceAccount->id;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> #04/18</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'employee');
+        }
 
         //converting date and time to sql datetime format
         $dateTime = date('Y-m-d H:i:s', strtotime($date.' '.'00:00:00'));
@@ -151,7 +160,7 @@ class DailyStatementController extends Controller
             $bucketHour     = (!empty($bucketHour)) ? $bucketHour : 0;
             $breakerHour    = (!empty($breakerHour)) ? $breakerHour : 0;
             if($rentType == 'hourly'){
-                $bill = ($bucketHour * $bucketRate) + ($breakerHour * $breakerRate) + $operatorBata;
+                $bill = ($bucketHour * $bucketRate) + ($breakerHour * $breakerRate);
             } else {
                 $rentTypeFlag = 1;
             }
@@ -171,7 +180,7 @@ class DailyStatementController extends Controller
             return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> #04/09</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
         }
 
-        $temp = ("Excavator Rent : Bucket : ".$bucketHour." * ".$bucketRate." = ".($bucketHour*$bucketRate)." / Breaker : ".$breakerHour." * ".$breakerRate." = ".($breakerHour * $breakerRate)." / Bata : ".$operatorBata);
+        $temp = ("Excavator Rent : Bucket : ".$bucketHour." * ".$bucketRate." = ".($bucketHour*$bucketRate)." / Breaker : ".$breakerHour." * ".$breakerRate." = ".($breakerHour * $breakerRate));
 
         if($rentTypeFlag == 0) {
             $transaction = new Transaction;
@@ -190,7 +199,7 @@ class DailyStatementController extends Controller
                 $excavatorReading->transaction_id   = $transaction->id;
                 $excavatorReading->bucket_hour      = $bucketHour;
                 $excavatorReading->breaker_hour     = $breakerHour;
-                $excavatorReading->operator_name    = $operatorName;
+                $excavatorReading->operator_name    = $operatorAccountId;
                 $excavatorReading->bata             = $operatorBata;
                 $excavatorReading->bill_amount      = $bill;
                 $excavatorReading->status           = 1;
@@ -203,13 +212,31 @@ class DailyStatementController extends Controller
             $excavatorReading->excavator_id     = $excavatorId;
             $excavatorReading->bucket_hour      = $bucketHour;
             $excavatorReading->breaker_hour     = $breakerHour;
-            $excavatorReading->operator_name    = $operatorName;
+            $excavatorReading->operator_name    = $operatorAccountId;
             $excavatorReading->bata             = $operatorBata;
             $excavatorReading->status           = 1;
         }
             
         if($excavatorReading->save()) {
-            return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'excavator');
+            $bataTransaction = new Transaction;
+            $bataTransaction->debit_account_id  = $labouAttendanceAccountId; //labour attendance account id
+            $bataTransaction->credit_account_id = $operatorAccountId;
+            $bataTransaction->amount            = $operatorBata;
+            $bataTransaction->date_time         = $dateTime;
+            $bataTransaction->particulars       = $temp;
+            $bataTransaction->status            = 1;
+            $bataTransaction->created_user_id   = Auth::user()->id;
+
+            if($bataTransaction->save()) {
+                return redirect()->back()->with("message","Successfully saved.")->with("alert-class","alert-success")->with('controller_tab_flag', 'excavator');
+            } else {
+                //delete the transaction if associated bata reading record saving failed.
+                if($rentTypeFlag == 0) { //if the excavator rent type is hourly based.
+                    //delete the transaction if associated excavator reading record saving failed.
+                    $transaction->delete();
+                }
+                $excavatorReading->delete();
+            }
         } else {
             if($rentTypeFlag == 0) { //if the excavator rent type is hourly based.
                 //delete the transaction if associated excavator reading record saving failed.

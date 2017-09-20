@@ -176,7 +176,15 @@
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_operator')) ? 'has-error' : '' }}">
                                                         <label for="excavator_operator" class="control-label">Operator Name : </label>
-                                                        <input type="text" class="form-control" name="excavator_operator" id="excavator_operator" value="{{ old("excavator_operator") }}" tabindex="3">
+                                                        {{-- <input type="text" class="form-control" name="excavator_operator" id="excavator_operator" value="{{ old("excavator_operator") }}" tabindex="3"> --}}
+                                                        <select class="form-control" name="excavator_operator_account_id" id="excavator_operator_account_id" tabindex="5" style="width: 100%">
+                                                            @if(count($operatorAccounts) > 0)
+                                                                <option value="">Select operator account</option>
+                                                                @foreach($operatorAccounts as $operatorAccount)
+                                                                    <option value="{{ $operatorAccount->id }}" {{ (old('excavator_operator_account_id') == $operatorAccount->id ) ? 'selected' : '' }}>{{ $operatorAccount->account_name }}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_operator_bata')) ? 'has-error' : '' }}">
                                                         <label for="excavator_operator_bata" class="control-label">Operator Bata : </label>

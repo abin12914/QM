@@ -73,6 +73,11 @@ $(function () {
         }
     });
 
+    //Initialize Select2 Element for employee account select box
+    $("#excavator_operator_account_id").select2({
+        minimumResultsForSearch: 5
+    });
+
     //Initialize Select2 Element for jackhammer select box
     $("#jackhammer_id").select2({
         minimumResultsForSearch: 5,
