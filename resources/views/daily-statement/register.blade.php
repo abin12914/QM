@@ -188,7 +188,7 @@
                                                     </div>
                                                     <div class="col-sm-6 {{ !empty($errors->first('excavator_operator_bata')) ? 'has-error' : '' }}">
                                                         <label for="excavator_operator_bata" class="control-label">Operator Bata : </label>
-                                                        <input type="text" class="form-control decimal_number_only" name="excavator_operator_bata" id="excavator_operator_bata" value="{{ old("excavator_operator_bata") }}" tabindex="3">
+                                                        <input type="text" class="form-control decimal_number_only" name="excavator_operator_bata" id="excavator_operator_bata" value="{{ empty(old("excavator_operator_bata")) ? 1000 : old("excavator_operator_bata") }}" tabindex="3">
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div><br>

@@ -227,7 +227,7 @@ class AccountController extends Controller
         $totalDebit     = $obDebitAmount + $subtotalDebit;
         $totalCredit    = $obCreditAmount + $subtotalCredit;
 
-        $transactions = $query->orderBy('date_time','desc')->paginate(15);
+        $transactions = $query->orderBy('id','desc')->paginate(15);
 
         return view('account-statement.statement',[
                 'accounts'              => $accounts,

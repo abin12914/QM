@@ -37,6 +37,8 @@ $(function () {
         }
     });
 
+    $("#vehicle_number_credit").focus();
+
     //Initialize Select2 Element for purchaser select box
     $("#purchaser_credit").select2({
         language: {
@@ -88,9 +90,11 @@ $(function () {
                         if(measureType == 3) {
                             $('#rate_credit').val(rate);
                         }
+                        $('#quantity_credit').focus();
                     } else {
                         $('#product_credit').val('');
                         $('#purchaser_credit').val('');
+                        $('#purchaser_credit').focus();
                     }
 
                     $('#product_credit').trigger('change');
@@ -102,6 +106,8 @@ $(function () {
 
                     $('#purchaser_credit').trigger('change');
                     $('#product_credit').trigger('change');
+
+                    $('#purchaser_credit').focus();
                 }
             });
             updateCreditBillDetail();

@@ -133,6 +133,7 @@ class DailyStatementController extends Controller
     public function excavatorReadingsAction(ExcavatorReadingRegistrationRequest $request)
     {
         $rentTypeFlag       = 0;
+        $excavatorName      = '';
         $date               = $request->get('excavator_date');
         $excavatorId        = $request->get('excavator_id');
         $bucketHour         = $request->get('excavator_bucket_hour');
@@ -154,6 +155,7 @@ class DailyStatementController extends Controller
         $excavator = Excavator::where('id', $excavatorId)->first();
         if(!empty($excavator)) {
             $excavatorContractorAccountId = $excavator->contractor_account_id;
+            $excavatorName  = $excavator->name;
             $rentType       = $excavator->rent_type;
             $bucketRate     = $excavator->rent_hourly_bucket;
             $breakerRate    = $excavator->rent_hourly_breaker;
@@ -194,27 +196,27 @@ class DailyStatementController extends Controller
 
             if($transaction->save()) {
                 $excavatorReading = new ExcavatorReading;
-                $excavatorReading->date             = $date;
-                $excavatorReading->excavator_id     = $excavatorId;
-                $excavatorReading->transaction_id   = $transaction->id;
-                $excavatorReading->bucket_hour      = $bucketHour;
-                $excavatorReading->breaker_hour     = $breakerHour;
-                $excavatorReading->operator_name    = $operatorAccountId;
-                $excavatorReading->bata             = $operatorBata;
-                $excavatorReading->bill_amount      = $bill;
-                $excavatorReading->status           = 1;
+                $excavatorReading->date                 = $date;
+                $excavatorReading->excavator_id         = $excavatorId;
+                $excavatorReading->transaction_id       = $transaction->id;
+                $excavatorReading->bucket_hour          = $bucketHour;
+                $excavatorReading->breaker_hour         = $breakerHour;
+                $excavatorReading->operator_account_id  = $operatorAccountId;
+                $excavatorReading->bata                 = $operatorBata;
+                $excavatorReading->bill_amount          = $bill;
+                $excavatorReading->status               = 1;
             } else {
                 return redirect()->back()->withInput()->with("message","Failed to save the excavator reading details. Try again after reloading the page!<small class='pull-right'> #04/10</small>")->with("alert-class","alert-danger")->with('controller_tab_flag', 'excavator');
             }
         } else {
             $excavatorReading = new ExcavatorReading;
-            $excavatorReading->date             = $date;
-            $excavatorReading->excavator_id     = $excavatorId;
-            $excavatorReading->bucket_hour      = $bucketHour;
-            $excavatorReading->breaker_hour     = $breakerHour;
-            $excavatorReading->operator_name    = $operatorAccountId;
-            $excavatorReading->bata             = $operatorBata;
-            $excavatorReading->status           = 1;
+            $excavatorReading->date                 = $date;
+            $excavatorReading->excavator_id         = $excavatorId;
+            $excavatorReading->bucket_hour          = $bucketHour;
+            $excavatorReading->breaker_hour         = $breakerHour;
+            $excavatorReading->operator_account_id  = $operatorAccountId;
+            $excavatorReading->bata                 = $operatorBata;
+            $excavatorReading->status               = 1;
         }
             
         if($excavatorReading->save()) {
@@ -223,7 +225,7 @@ class DailyStatementController extends Controller
             $bataTransaction->credit_account_id = $operatorAccountId;
             $bataTransaction->amount            = $operatorBata;
             $bataTransaction->date_time         = $dateTime;
-            $bataTransaction->particulars       = $temp;
+            $bataTransaction->particulars       = "Bata credited for " . $excavatorName;
             $bataTransaction->status            = 1;
             $bataTransaction->created_user_id   = Auth::user()->id;
 

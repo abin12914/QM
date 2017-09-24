@@ -429,7 +429,7 @@ class SalesController extends Controller
 
         $totalLoad = $totalMultipleLoad +$totalSingleLoad;
 
-        $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType', 'product'])->orderBy('date_time','desc')->paginate(15);
+        $sales = $query->with(['transaction.debitAccount', 'vehicle.vehicleType', 'product'])->orderBy('id','desc')->paginate(15);
         
         return view('sales.list',[
                 'accounts'              => $accounts,
@@ -486,7 +486,7 @@ class SalesController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $sales = $query->with(['vehicle','transaction.debitAccount','product'])->orderBy('date_time','desc')->paginate(15);
+        $sales = $query->with(['vehicle','transaction.debitAccount','product'])->orderBy('id','desc')->paginate(15);
         
         return view('sales.weighment-pending-list',[
                 'accounts'              => $accounts,
@@ -622,7 +622,7 @@ class SalesController extends Controller
         $transaction->credit_account_id = $salesAccountId; //sale account id
         $transaction->amount            = !empty($billAmount) ? $billAmount : 0;
         $transaction->date_time         = $dateTime;
-        $transaction->particulars       = ("Credit sale - ". $quantity ." Load");
+        $transaction->particulars       = $purchaserAccountId != 1 ? ("Credit sale - ". $quantity ." Load") : ("Cash sale - ". $quantity ." Load");
         $transaction->status            = 1;
         $transaction->created_user_id   = Auth::user()->id;
         if($transaction->save()) {

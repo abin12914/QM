@@ -147,7 +147,7 @@ class PurchasesController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('bill_amount');
 
-        $purchases = $query->with(['transaction.creditAccount', 'purchasebleProduct'])->orderBy('date_time','desc')->paginate(15);
+        $purchases = $query->with(['transaction.creditAccount', 'purchasebleProduct'])->orderBy('id','desc')->paginate(15);
         
         return view('purchases.list',[
                 'accounts'              => $accounts,

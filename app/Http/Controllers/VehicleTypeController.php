@@ -130,7 +130,7 @@ class VehicleTypeController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('amount');
 
-        $royaltyRecords = $query->with(['transaction', 'vehicle.vehicleType'])->orderBy('date_time','desc')->paginate(15);
+        $royaltyRecords = $query->with(['transaction', 'vehicle.vehicleType'])->orderBy('id','desc')->paginate(15);
 
         return view('vehicle-type.list',[
                 'royaltyRecords'   => $royaltyRecords,
