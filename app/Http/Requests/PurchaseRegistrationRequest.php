@@ -95,7 +95,7 @@ class PurchaseRegistrationRequest extends FormRequest
             'bill_amount'               => [
                                                 'required',
                                                 'numeric',
-                                                'max:99999',
+                                                'max:999999',
                                                 'min:0'
                                             ],
         ];

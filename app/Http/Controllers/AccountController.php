@@ -199,7 +199,9 @@ class AccountController extends Controller
         $totalOverviewDebit     = Transaction::where('debit_account_id', $accountId)->sum('amount');
         $totalOverviewCredit    = Transaction::where('credit_account_id', $accountId)->sum('amount');
 
-        $query = Transaction::where(function ($qry) use($accountId) {
+        $query = Transaction::where('status', 1);
+
+        $query = $query->where(function ($qry) use($accountId) {
             $qry->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
         });
 
@@ -257,7 +259,7 @@ class AccountController extends Controller
         $accountId = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
 
         if(!empty($accountId) && $accountId != 0) {
-            $account = Account::where('id', $accountId)->where('type', 'personal')->whereIn('relation', ['supplier','customer','contractor','general'])->with('accountDetail')->first();
+            $account = Account::where('id', $accountId)->where('type', 'personal')->whereIn('relation', ['supplier','customer','contractor','general', 'operator'])->with('accountDetail')->first();
 
             if(empty($account) || empty($account->id)) {
                 return redirect(route('account-list'))->with("message","Something went wrong! Selected record not found. Try again after reloading the page!<small class='pull-right'> #07/03</small>")->with("alert-class","alert-danger");

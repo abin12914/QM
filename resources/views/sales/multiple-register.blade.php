@@ -102,7 +102,7 @@
                                         <div class="form-group">
                                             <label for="quantity_credit" class="col-sm-2 control-label"><b style="color: red;">* </b> Quantity x Rate :</label>
                                             <div class="col-sm-2 {{ !empty($errors->first('quantity')) ? 'has-error' : '' }}">
-                                                <input type="text" class="form-control decimal_number_only quantity" name="quantity" id="quantity_credit" placeholder="Number of Load" value="{{ old('quantity') }}" tabindex="4">
+                                                <input type="text" class="form-control number_only quantity" name="quantity" id="quantity_credit" placeholder="Number of Load" value="{{ old('quantity') }}" tabindex="4">
                                                 @if(!empty($errors->first('quantity')))
                                                     <p style="color: red;" >{{$errors->first('quantity')}}</p>
                                                 @endif

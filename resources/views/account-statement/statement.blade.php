@@ -152,7 +152,7 @@
                                     <div class="box-header">
                                         <div class="pad margin no-print">
                                             <div class="callout callout-default">
-                                                <h4 style="color: green;">Debit - CCredit Overview</h4>
+                                                <h4 style="color: green;">Debit - Credit Overview</h4>
                                                 <div class="table-responsive">
                                                     <table class="table" style="color: orangered;">
                                                         <tr>

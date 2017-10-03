@@ -346,7 +346,7 @@ class VoucherController extends Controller
         $totalQuery     = clone $query;
         $totalAmount    = $totalQuery->sum('amount');
 
-        $machineVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('id','desc')->paginate(15);
+        $machineVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail', 'excavator', 'jackhammer'])->orderBy('id','desc')->paginate(25);
         
         return view('voucher.list',[
                 'accounts'        => $accounts,

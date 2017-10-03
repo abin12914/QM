@@ -87,7 +87,7 @@ class ExcavatorReadingRegistrationRequest extends FormRequest
                                                     'required',
                                                     'numeric',
                                                     'max:10000',
-                                                    'min:10'
+                                                    'min:0'
                                                 ],
         ];
     }

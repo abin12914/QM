@@ -102,6 +102,16 @@ class AccountsTableSeeder extends Seeder
                 'opening_balance'   => '0',
                 'status'            => '1'  
             ]
+             //for this project [jijo] profit and loss account created manually and account id is not predefined
+            /*[
+                'account_name'      => 'Profit And Loss Share', //account id : 11
+                'description'       => 'Profit And Loss Share account',
+                'type'              => 'nominal',
+                'relation'          => 'nominal',
+                'financial_status'  => 'none',
+                'opening_balance'   => '0',
+                'status'            => '1'  
+            ]*/
         ]);
 
         DB::table('account_details')->insert([
@@ -175,6 +185,13 @@ class AccountsTableSeeder extends Seeder
                 'image'         => '/images/real.jpg',
                 'status'        => '1'  
             ]
+            /*[
+                'account_id'    => '11',
+                'name'          => 'Account Opening Balance Share account',
+                'address'       => '',
+                'image'         => '/images/real.jpg',
+                'status'        => '1'  
+            ]*/
         ]);
     }
 }
