@@ -669,7 +669,7 @@ class SalesController extends Controller
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
         $productId  = !empty($request->get('product_id')) ? $request->get('product_id') : 0;
 
-        $vehicleTypes   = VehicleType::where('status', 1)->get();
+        $vehicleTypes   = VehicleType::where('status', 1)->orderBy('generic_quantity', 'desc')->get();
         $products       = Product::where('status', '1')->get();
 
         $query = Sale::where('status', 1);
@@ -764,7 +764,7 @@ class SalesController extends Controller
     {
         $oldBalance = $totalDebit = $totalCredit = 0;
 
-        $sale = Sale::where('vehicle_id',$vehicleId)->orderBy('created_at', 'desc')->first();
+        $sale = Sale::where('vehicle_id',$vehicleId)->where('product_id', 1)->orderBy('created_at', 'desc')->first();
         $userIssuedCreditSales = UserIssuedCreditSale::where('vehicle_id',$vehicleId)->get();
 
         if(!empty($userIssuedCreditSales) && count($userIssuedCreditSales) > 0) {
