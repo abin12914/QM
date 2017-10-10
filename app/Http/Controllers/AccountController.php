@@ -252,6 +252,67 @@ class AccountController extends Controller
     }
 
     /**
+     * Return view for account statement list
+     */
+    public function creditList()
+    {
+        $creditAmount   = [];
+        $debitAmount    = [];
+
+        $accounts = Account::where('type', 'personal')->where('status', '1')->get();
+        $cashAccount    = Account::find(1);
+        $accounts->push($cashAccount); //attaching cash account to the accounts
+        if(empty($accounts)) {
+            session()->flash('fixed-message', 'No accounts available to show!');
+            return view('account-statement.creditList');
+        }
+
+        $totalDebitAmount       = Transaction::whereHas('debitAccount', function ($qry) {
+                    $qry->where('type', 'personal')->orWhere('id', 1);
+                })->sum('amount');
+
+        $totalCreditAmount       = Transaction::whereHas('creditAccount', function ($qry) {
+                    $qry->where('type', 'personal')->orWhere('id', 1);
+                })->sum('amount');
+
+        $query = Transaction::where('status', 1)->whereHas('creditAccount', function ($qry) {
+                    $qry->where('type', 'personal')->orWhere('id', 1);
+                })->orWhereHas('debitAccount', function ($qry) {
+                    $qry->where('type', 'personal')->orWhere('id', 1);
+                });
+
+        /*$query = $query->where(function ($qry) use($accountId) {
+            $qry->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
+        });*/
+
+        $transactions = $query->orderBy('id','desc')->get();
+
+        foreach ($transactions as $key => $transaction) {
+            if(empty($debitAmount[$transaction->debit_account_id])) {
+                $debitAmount[$transaction->debit_account_id] = 0;
+            }
+            if(empty($creditAmount[$transaction->credit_account_id])) {
+                $creditAmount[$transaction->credit_account_id] = 0;
+            }
+            if($transaction->debitAccount->type == 'personal' || $transaction->debit_account_id == 1) {
+                $debitAmount[$transaction->debit_account_id] = $debitAmount[$transaction->debit_account_id] + $transaction->amount;
+            }
+            if($transaction->creditAccount->type == 'personal' || $transaction->credit_account_id == 1) {
+                $creditAmount[$transaction->credit_account_id] = $creditAmount[$transaction->credit_account_id] + $transaction->amount;
+            }
+            
+        }
+//dd($creditAmount);
+        return view('account-statement.creditList',[
+                'accounts'          => $accounts,
+                'totalDebitAmount'  => $totalDebitAmount,
+                'totalCreditAmount' => $totalCreditAmount,
+                'creditAmount'      => $creditAmount,
+                'debitAmount'       => $debitAmount
+            ]);
+    }
+
+    /**
      * Return view for account editing
      */
     public function edit(Request $request)
