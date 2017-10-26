@@ -22,9 +22,9 @@ class VoucherController extends Controller
     {
         $today = Carbon::now('Asia/Kolkata');
         
-        $cashVouchers   = Voucher::where('voucher_type','Cash')->with(['transaction.creditAccount'])->orderBy('created_at', 'desc')->take(5)->get();
-        $creditVouchers = Voucher::where('voucher_type','Credit')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('created_at', 'desc')->take(5)->get();
-        $machineVouchers = Voucher::where('voucher_type','Credit_through')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('created_at', 'desc')->take(5)->get();
+        $cashVouchers   = Voucher::where('status',1)->where('voucher_type','Cash')->with(['transaction.creditAccount'])->orderBy('created_at', 'desc')->take(5)->get();
+        $creditVouchers = Voucher::where('status',1)->where('voucher_type','Credit')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('created_at', 'desc')->take(5)->get();
+        $machineVouchers = Voucher::where('status',1)->where('voucher_type','Credit_through')->with(['transaction.creditAccount', 'transaction.debitAccount'])->orderBy('created_at', 'desc')->take(5)->get();
         $excavators     = Excavator::where('status', 1)->with(['account'])->get();
         $jackhammers    = Jackhammer::where('status', 1)->with(['account'])->get();
         $accounts       = Account::where('type','personal')->get();
@@ -184,7 +184,8 @@ class VoucherController extends Controller
      */
     public function cashVoucherList(Request $request)
     {
-        $totalAmount        = 0;
+        $totalDebitAmount   = 0;
+        $totalCreditAmount  = 0;
         $accountId          = !empty($request->get('cash_voucher_account_id')) ? $request->get('cash_voucher_account_id') : 0;
         $transactionType    = !empty($request->get('transaction_type')) ? $request->get('transaction_type') : 0;
         $fromDate           = !empty($request->get('cash_voucher_from_date')) ? $request->get('cash_voucher_from_date') : '';
@@ -218,26 +219,30 @@ class VoucherController extends Controller
         }
 
         if(!empty($toDate)) {
-            $searchToDate = new DateTime($toDate);
+            $searchToDate = new DateTime($toDate." 23:59");
             $searchToDate = $searchToDate->format('Y-m-d H:i');
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $totalQuery     = clone $query;
-        $totalAmount    = $totalQuery->sum('amount');
+        $totalDebitQuery     = clone $query;
+        $totalDebitAmount    = $totalDebitQuery->where('transaction_type', 1)->sum('amount');
+
+        $totalCreditQuery     = clone $query;
+        $totalCreditAmount    = $totalCreditQuery->where('transaction_type', 2)->sum('amount');
 
         $cashVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('id','desc')->paginate(15);
         
         return view('voucher.list',[
-                'accounts'        => $accounts,
-                'cashVouchers'    => $cashVouchers,
-                'accountId'       => $accountId,
-                'transactionType' => $transactionType,
-                'fromDate'        => $fromDate,
-                'toDate'          => $toDate,
-                'creditVouchers'  => [],
-                'machineVouchers' => [],
-                'totalAmount'     => $totalAmount
+                'accounts'          => $accounts,
+                'cashVouchers'      => $cashVouchers,
+                'accountId'         => $accountId,
+                'transactionType'   => $transactionType,
+                'fromDate'          => $fromDate,
+                'toDate'            => $toDate,
+                'creditVouchers'    => [],
+                'machineVouchers'   => [],
+                'totalDebitAmount'  => $totalDebitAmount,
+                'totalCreditAmount' => $totalCreditAmount
             ]);
     }
 
@@ -268,7 +273,7 @@ class VoucherController extends Controller
         }
 
         if(!empty($toDate)) {
-            $searchToDate = new DateTime($toDate);
+            $searchToDate = new DateTime($toDate." 23:59");
             $searchToDate = $searchToDate->format('Y-m-d H:i');
             $query = $query->where('date_time', '<=', $searchToDate);
         }

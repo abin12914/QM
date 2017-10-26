@@ -107,9 +107,9 @@
                                                         <th>Date & Time</th>
                                                         <th>Account Name</th>
                                                         <th>Name</th>
-                                                        <th>Transaction Type</th>
                                                         <th>Description</th>
-                                                        <th>Amount</th>
+                                                        <th>Debit</th>
+                                                        <th>Credit</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -121,18 +121,22 @@
                                                                 @if($cashVoucher->transaction_type == 1)
                                                                     <td>{{ $cashVoucher->transaction->creditAccount->account_name }}</td>
                                                                     <td>{{ $cashVoucher->transaction->creditAccount->accountDetail->name }}</td>
-                                                                    <td>Debit</td>
+                                                                    <td>{{ $cashVoucher->transaction->particulars }}</td>
+                                                                    <td>{{ $cashVoucher->amount }}</td>
+                                                                    <td></td>
                                                                 @elseif($cashVoucher->transaction_type == 2)
                                                                     <td>{{ $cashVoucher->transaction->debitAccount->account_name }}</td>
                                                                     <td>{{ $cashVoucher->transaction->debitAccount->accountDetail->name }}</td>
-                                                                    <td>Credit</td>
+                                                                    <td>{{ $cashVoucher->transaction->particulars }}</td>
+                                                                    <td></td>
+                                                                    <td>{{ $cashVoucher->amount }}</td>
                                                                 @else
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
                                                                 @endif
-                                                                <td>{{ $cashVoucher->transaction->particulars }}</td>
-                                                                <td>{{ $cashVoucher->amount }}</td>
                                                             </tr>
                                                         @endforeach
                                                     @endif
@@ -148,8 +152,8 @@
                                                             <td><b>Total Amount</b></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td></td>
-                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                            <td><b>{{ $totalDebitAmount }}</b></td>
+                                                            <td><b>{{ $totalCreditAmount }}</b></td>
                                                         </tr>
                                                     </tfoot>
                                                 @endif

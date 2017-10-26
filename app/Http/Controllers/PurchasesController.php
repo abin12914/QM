@@ -67,9 +67,9 @@ class PurchasesController extends Controller
         }
 
         if($transactionType == 1) {
-            $tempDescription = ($tempDescription . " - [Credit purchase] ");
+            $tempDescription = ($tempDescription . " - [Credit purchase/expence] ");
         } else {
-            $tempDescription = ($tempDescription . " - [Cash purchase] ");
+            $tempDescription = ($tempDescription . " - [Cash purchase/expence] ");
         }
 
         //converting date and time to sql datetime format

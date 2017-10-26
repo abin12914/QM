@@ -100,6 +100,14 @@ class SalesController extends Controller
             return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/03</small>")->with("alert-class","alert-danger");
         }
 
+        $vehicle = Vehicle::where('id', $vehicleId)->first();
+        if($vehicle && !empty($vehicle->id)) {
+            $vehicleNumber  = $vehicle->reg_number;
+            $vehicleType    = $vehicle->vehicleType->name;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/03/01</small>")->with("alert-class","alert-danger");
+        }
+
         if($measureType == 1) {
             if(($quantity * $rate) != $billAmount) {
                 return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/04</small>")->with("alert-class","alert-danger");
@@ -117,7 +125,7 @@ class SalesController extends Controller
         $transaction->credit_account_id = $salesAccountId; //sale account id
         $transaction->amount            = !empty($deductedTotal) ? $deductedTotal : '0';
         $transaction->date_time         = $dateTime;
-        $transaction->particulars       = ("Credit sale [1 Load]".(($measureType == 2) ? ' (Weighment pending)' : ''));
+        $transaction->particulars       = ("Credit sale :".$vehicleNumber." - ".$vehicleType." - [1 Load]".(($measureType == 2) ? ' (Weighment pending)' : ''));
         $transaction->status            = 1;
         $transaction->created_user_id   = Auth::user()->id;
         if($transaction->save()) {
@@ -212,6 +220,14 @@ class SalesController extends Controller
             return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'>Sale royalty owner account not found!.  #02/12</small>")->with("alert-class","alert-danger");
         }
 
+        $vehicle = Vehicle::where('id', $vehicleId)->first();
+        if($vehicle && !empty($vehicle->id)) {
+            $vehicleNumber  = $vehicle->reg_number;
+            $vehicleType    = $vehicle->vehicleType->name;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/12/01</small>")->with("alert-class","alert-danger");
+        }
+
         if($measureType == 1) {
             if(($quantity * $rate) != $billAmount) {
                 return redirect()->back()->withInput()->with("message","Failed to save the sale details. Try again after reloading the page!<small class='pull-right'>Bill Amount calculation error!.  #02/13</small>")->with("alert-class","alert-danger");
@@ -236,7 +252,7 @@ class SalesController extends Controller
         $transaction->credit_account_id = $salesAccountId; //sale account id
         $transaction->amount            = $deductedTotal;
         $transaction->date_time         = $dateTime;
-        $transaction->particulars       = "Cash sale [1 Load]";
+        $transaction->particulars       = "Cash sale :".$vehicleNumber." - ".$vehicleType." [1 Load]";
         $transaction->status            = 1;
         $transaction->created_user_id   = $userId;
         if($transaction->save()) {
@@ -307,6 +323,8 @@ class SalesController extends Controller
 
         $vehicle = Vehicle::find($vehicleId);
         if(!empty($vehicle) && !empty($vehicle->id)) {
+            $vehicleNumber  = $vehicle->reg_number;
+            $vehicleType    = $vehicle->vehicleType->name;
             //$royaltyRecord = RoyaltyChart::where('vehicle_type_id', $vehicle->vehicle_type_id)->where('product_id', $productId)->first();
             $vehicleTypeRecord = VehicleType::where('id', $vehicle->vehicle_type_id)->with('products')->first();
             if(!empty($vehicleTypeRecord) && !empty($vehicleTypeRecord->id)) {
@@ -327,7 +345,7 @@ class SalesController extends Controller
         $royaltyTransaction->credit_account_id = $royaltyOwnerAccountId;
         $royaltyTransaction->amount            = !empty($royaltyAmount) ? $royaltyAmount : '0';
         $royaltyTransaction->date_time         = $dateTime;
-        $royaltyTransaction->particulars       = "Royalty credited for ". $quantity ." Load. [sale ". $saleId ."]";
+        $royaltyTransaction->particulars       = "Royalty credited for ". $quantity ." Load. :".$vehicleNumber." - ".$vehicleType."[sale ". $saleId ."]";
         $royaltyTransaction->status            = 1;
         $royaltyTransaction->created_user_id   = Auth::user()->id;
         if($royaltyTransaction->save()) {
@@ -543,9 +561,17 @@ class SalesController extends Controller
                     return redirect()->back()->withInput()->with("message","Failed to save the weighment details. Try again after reloading the page!<small class='pull-right'> #02/24</small>")->with("alert-class","alert-danger");
                 }
 
+                $vehicle = Vehicle::where('id', $sale->vehicle_id)->first();
+                if($vehicle && !empty($vehicle->id)) {
+                    $vehicleNumber  = $vehicle->reg_number;
+                    $vehicleType    = $vehicle->vehicleType->name;
+                } else {
+                    return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/24/01</small>")->with("alert-class","alert-danger");
+                }
+
                 $transaction = Transaction::find($sale->transaction->id);
                 $transaction->amount            = !empty($deductedTotal) ? $deductedTotal : '0';
-                $transaction->particulars       = "Credit sale";
+                $transaction->particulars       = "Credit sale : ".$vehicleNumber." - ".$vehicleType." [1 Load] Weighment updated.";
                 $transaction->created_user_id   = Auth::user()->id;
                 if($transaction->save()) {
                     $sale->quantity         = $quantity;
@@ -610,6 +636,14 @@ class SalesController extends Controller
             return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/31</small>")->with("alert-class","alert-danger");
         }
 
+        $vehicle = Vehicle::where('id', $vehicleId)->first();
+        if($vehicle && !empty($vehicle->id)) {
+            $vehicleNumber  = $vehicle->reg_number;
+            $vehicleType    = $vehicle->vehicleType->name;
+        } else {
+            return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/31/01</small>")->with("alert-class","alert-danger");
+        }
+
         if(($quantity * $rate) != $billAmount) {
             return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/32</small>")->with("alert-class","alert-danger");
         }
@@ -622,7 +656,7 @@ class SalesController extends Controller
         $transaction->credit_account_id = $salesAccountId; //sale account id
         $transaction->amount            = !empty($billAmount) ? $billAmount : 0;
         $transaction->date_time         = $dateTime;
-        $transaction->particulars       = $purchaserAccountId != 1 ? ("Credit sale - ". $quantity ." Load") : ("Cash sale - ". $quantity ." Load");
+        $transaction->particulars       = $purchaserAccountId != 1 ? ("Credit sale - ". $quantity ." Load - ".$vehicleNumber." - ".$vehicleType) : ("Cash sale - ". $quantity ." Load - ".$vehicleNumber." - ".$vehicleType);
         $transaction->status            = 1;
         $transaction->created_user_id   = Auth::user()->id;
         if($transaction->save()) {
