@@ -176,11 +176,11 @@
         </div>
         <!-- /.row (main row) -->
         <div class="row no-print">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <!-- BAR CHART -->
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Debit - Credit Chart</h3>
+                        <h3 class="box-title">Income - Expence Chart</h3>
 
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -189,7 +189,27 @@
                     </div>
                     <div class="box-body">
                         <div class="chart">
-                            <canvas id="barChart" style="height:500px"></canvas>
+                            <canvas id="bincomeExpenceChart" style="height:500px"></canvas>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <div class="col-md-6">
+                <!-- BAR CHART -->
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Expences Chart</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="chart">
+                            <canvas id="expencesChart" style="height:500px"></canvas>
                         </div>
                     </div>
                     <!-- /.box-body -->
@@ -206,17 +226,39 @@
     <script src="/js/plugins/chartjs/Chart.min.js"></script>
     <script src="/js/statements/DailyStatement.js?rndstr={{ rand(1000,9999) }}"></script>
     <script type="text/javascript">
-        var areaChartData = {
+        //data for income expnce chart
+        var incomeExpenceChartData = {
         labels: ["{{ $fromDate }} To : {{ $toDate }}"],
             datasets: [
-                @if(!empty($sales))
+                @if(!empty($totalCredit))
                     {
-                        label: "Sales",
+                        label: "Income",
                         fillColor: "rgb(0, 153, 0)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $sales }}]
+                        data: [{{ $totalCredit }}]
                     },
                 @endif
+                @if(!empty($totalDebit))
+                    {
+                        label: "Expence",
+                        fillColor: "rgb(255,32,32)",
+                        strokeColor: "rgb(255,255,255)",
+                        data: [{{ $totalDebit }}]
+                    },
+                @endif
+                {
+                    label: "",
+                    fillColor: "rgb(255,255,255)",
+                    strokeColor: "rgb(255,255,255)",
+                    data: []
+                },
+            ]
+        };
+
+        //data for expnce chart
+        var expenceChartData = {
+        labels: ["{{ $fromDate }} To : {{ $toDate }}"],
+            datasets: [
                 @if(!empty($royalty))
                     {
                         label: "royalty",
@@ -276,12 +318,7 @@
             ]
         };
 
-        //-------------
-        //- BAR CHART -
-        //-------------
-        var barChartCanvas = $("#barChart").get(0).getContext("2d");
-        var barChart = new Chart(barChartCanvas);
-        var barChartData = areaChartData;
+        //Bar chart options used
         var barChartOptions = {
             //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
             scaleBeginAtZero: true,
@@ -311,79 +348,21 @@
         };
 
         barChartOptions.datasetFill = false;
-        barChart.Bar(barChartData, barChartOptions);
+
+        //-------------
+        //- BAR CHART - 1 - Income expence chart
+        //-------------
+        var incomeExpenceChartCanvas = $("#bincomeExpenceChart").get(0).getContext("2d");
+        var incomeExpenceChart = new Chart(incomeExpenceChartCanvas);
+
+        incomeExpenceChart.Bar(incomeExpenceChartData, barChartOptions);
+
+        //-------------
+        //- BAR CHART - 2 - expences chart
+        //-------------
+        var expencesChartCanvas = $("#expencesChart").get(0).getContext("2d");
+        var expencesChart = new Chart(expencesChartCanvas);
+
+        expencesChart.Bar(expenceChartData, barChartOptions);
     </script>
 @endsection
-{{-- @if(!empty($royalty))
-    {
-        label: "royalty",
-        fillColor: "rgb(255,32,32)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $royalty }}]
-    },
-@endif
-@if(!empty($purchases))
-    {
-        label: "Purchases",
-        fillColor: "rgb(255,91,91)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $purchases }}]
-    },
-@endif
-@if(!empty($labourWage))
-    {
-        label: "labourWage",
-        fillColor: "rgb(91,91,255)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $labourWage }}]
-    },
-@endif
-@if(!empty($excavatorReadingRent))
-    {
-        label: "excavatorReadingRent",
-        fillColor: "rgb(255,255,0)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $excavatorReadingRent }}]
-    },
-@endif
-@if(!empty($jackhammerRent))
-    {
-        label: "jackhammerRent",
-        fillColor: "rgb(255,0,127)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $jackhammerRent }}]
-    },
-@endif
-@if(!empty($employeeSalary))
-    {
-        label: "employeeSalary",
-        fillColor: "rgb(204,0,0)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $employeeSalary }}]
-    },
-@endif
-@if(!empty($excavatorMonthlyRent))
-    {
-        label: "excavatorMonthlyRent",
-        fillColor: "rgb(153,255,255)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $excavatorMonthlyRent }}]
-    },
-@endif
-
-@if(!empty($totalCredit))
-    {
-        label: "Credit",
-        fillColor: "rgb(50, 255, 50)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $totalCredit }}]
-    },
-@endif
-@if(!empty($totalDebit))
-    {
-        label: "Debit",
-        fillColor: "rgb(255, 50, 50)",
-        strokeColor: "rgb(255,255,255)",
-        data: [{{ $totalDebit }}]
-    },
-@endif --}}
