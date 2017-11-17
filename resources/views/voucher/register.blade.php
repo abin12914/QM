@@ -217,7 +217,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_debit_account_id')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
-                                                        <label for="credit_voucher_debit_account_id" class="control-label"><b style="color: red;">*</b> Debit Account : </label>
+                                                        <label for="credit_voucher_debit_account_id" class="control-label"><b style="color: red;">*</b> Debit Account/ Supplier : </label>
                                                         <select class="form-control account_select" name="credit_voucher_debit_account_id" id="credit_voucher_debit_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
@@ -237,7 +237,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_credit_account_id')) && empty(old('machine_voucher_flag'))) ? 'has-error' : '' }}">
-                                                        <label for="credit_voucher_credit_account_id" class="control-label"><b style="color: red;">*</b> Credit Account : </label>
+                                                        <label for="credit_voucher_credit_account_id" class="control-label"><b style="color: red;">*</b> Credit Account/ Reciever : </label>
                                                         <select class="form-control  account_select" name="credit_voucher_credit_account_id" id="credit_voucher_credit_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
@@ -349,7 +349,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_debit_account_id')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_debit_account_id" class="control-label"><b style="color: red;">*</b> Debit Account : </label>
+                                                        <label for="machine_voucher_debit_account_id" class="control-label"><b style="color: red;">*</b> Debit Account/ Supplier : </label>
                                                         <select class="form-control account_select" name="credit_voucher_debit_account_id" id="machine_voucher_debit_account_id" tabindex="3" style="width: 100%">
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
@@ -410,7 +410,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-6 {{ (!empty($errors->first('credit_voucher_credit_account_id')) && old('machine_voucher_flag') == 1) ? 'has-error' : '' }}">
-                                                        <label for="machine_voucher_credit_account_id" class="control-label"><b style="color: red;">*</b> Credit Account : </label>
+                                                        <label for="machine_voucher_credit_account_id" class="control-label"><b style="color: red;">*</b> Credit Account/ Reciever : </label>
                                                         <select class="form-control  account_select" name="credit_voucher_credit_account_id" id="machine_voucher_credit_account_id" tabindex="3" style="width: 100%" disabled>
                                                             @if(!empty($accounts) && count($accounts) > 0)
                                                                 <option value="">Select account</option>
