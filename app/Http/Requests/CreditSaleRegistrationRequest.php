@@ -128,4 +128,30 @@ class CreditSaleRegistrationRequest extends FormRequest
                                         ]
         ];
     }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->somethingElseIsInvalid()) {
+                $validator->errors()->add('bill_amount', 'Something went wrong with this field!');
+            }
+        });
+    }
+
+    public function somethingElseIsInvalid() {
+        $quanty     = $this->request->get("quantity");
+        $rate       = $this->request->get("rate");
+        $billAmount = $this->request->get("bill_amount");
+
+        if(($quanty * $rate) != $billAmount) {
+            return true;
+        }
+        return false;
+    }
 }
