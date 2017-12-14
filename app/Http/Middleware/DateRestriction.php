@@ -62,6 +62,9 @@ class DateRestriction
                 case 'App\Http\Controllers\VoucherController@creditVoucherRegistrationAction':
                     $this->date = !empty($request->get('credit_voucher_date')) ? $request->get('credit_voucher_date') : '';
                     break;
+                case 'App\Http\Controllers\SalesController@weighmentRegisterAction':
+                    $this->date = !empty($request->get('date')) ? \Carbon\Carbon::createFromFormat('Y-m-Y H:i:s', $request->get('date'))->format('d-m-Y') : '';
+                    break;
                 
                 default:
                     $this->date = !empty($request->get('date')) ? $request->get('date') : '';
