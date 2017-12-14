@@ -68,12 +68,13 @@ class DateRestriction
                     break;
             }
 
-            //date in submitted form
-            $entryDate = \Carbon\Carbon::createFromFormat('d-m-Y', $this->date)->format('Y-m-d');
+            if(!empty($this->date)) {
+                //date in submitted form
+                $entryDate = \Carbon\Carbon::createFromFormat('d-m-Y', $this->date)->format('Y-m-d');
 
-            if($restrictedDate >= $entryDate) {
-                return redirect()->back()->with("message","Denied!. Entry restricted due to, the transactions for the selected date is closed permanantly.")
-                                                        ->with("alert-class","alert-danger");
+                if($restrictedDate >= $entryDate) {
+                    return redirect()->back()->with("message","Request denied!. Transactions up to ". $restrictedDate ." has been closed permanantly.")->with("alert-class","alert-danger");
+                }
             }
         }
         return $next($request);
