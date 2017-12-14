@@ -313,6 +313,14 @@ class AccountController extends Controller
     }
 
     /**
+     * Return view for profit & loss generation
+     */
+    public function profitLoss()
+    {
+        
+    }
+
+    /**
      * Return view for account editing
      */
     public function edit(Request $request)
@@ -368,19 +376,3 @@ class AccountController extends Controller
         }
     }
 }
-/*$oldBalanceDate = new DateTime($fromDate." 23:59:59");
-$oldBalanceDate->modify('-1 day');
-$oldBalanceDate = $oldBalanceDate->format('Y-m-d H:i:s');
-
-$obTransactions = Transaction::where(function ($qry) use($accountId) {
-    $qry->where('debit_account_id', $accountId)->orWhere('credit_account_id', $accountId);
-})->where('date_time', '<=', $oldBalanceDate)->get();
-if(!empty($obTransactions)) {
-    foreach ($obTransactions as $key => $obtransaction) {
-        if($obtransaction->debit_account_id == $accountId) {
-            $obDebitAmount = $obDebitAmount + $obtransaction->amount;
-        } else if($obtransaction->credit_account_id == $accountId) {
-            $obCreditAmount = $obCreditAmount + $obtransaction->amount;
-        }
-    }
-}*/

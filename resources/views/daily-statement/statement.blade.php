@@ -156,11 +156,11 @@
                                 </tr>
                                 <tr>
                                     @if($totalDebit <= $totalCredit)
-                                        <th>{{ 'Balance' }}</th>
+                                        <th>{{ 'Balance[Profit]' }}</th>
                                         <th>{{ $totalCredit - $totalDebit }}</th>
                                         <th></th>
                                     @else
-                                        <th>{{ 'Over expence' }}</th>
+                                        <th>{{ 'Over expence[Loss]' }}</th>
                                         <th></th>
                                         <th>{{ $totalDebit - $totalCredit }}</th>
                                     @endif

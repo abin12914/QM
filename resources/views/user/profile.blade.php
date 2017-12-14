@@ -72,7 +72,7 @@
                                         </div>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-3  no-print">
-                                            <a href="{{ route('under-construction-view') }}" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
+                                            <a href="{{ route('edit-profile') }}" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
                                         </div>
                                         <div class="clearfix"></div><br>
                                     </div>

@@ -28,6 +28,8 @@ Route::group(['middleware' => 'auth.check'], function () {
 	//common routes
 	Route::get('/dashboard', 'LoginController@dashboard')->name('user-dashboard');
 	Route::get('/my/profile', 'UserController@profileView')->name('user-profile-view');
+	Route::get('/my/profile/edit', 'UserController@editProfile')->name('edit-profile');
+	Route::post('/my/profile/update/action', 'UserController@updateProfile')->name('profile-update-action');
 	Route::get('/lockscreen', 'LoginController@lockscreen')->name('lockscreen');
 	Route::get('/logout', 'LoginController@logout')->name('logout');
 
@@ -103,10 +105,10 @@ Route::group(['middleware' => 'auth.check'], function () {
 
 		//sales
 		Route::get('/sales/register', 'SalesController@register')->name('sales-register-view');
-		Route::post('/sales/credit/register/action', 'SalesController@creditSaleRegisterAction')->name('credit-sales-register-action');
-		Route::post('/sales/cash/register/action', 'SalesController@cashSaleRegisterAction')->name('cash-sales-register-action');
+		Route::post('/sales/credit/register/action', 'SalesController@creditSaleRegisterAction')->name('credit-sales-register-action')->middleware('date.restrict');
+		Route::post('/sales/cash/register/action', 'SalesController@cashSaleRegisterAction')->name('cash-sales-register-action')->middleware('date.restrict');
 		Route::get('/sales/multiple/register', 'SalesController@multipleSaleRegister')->name('multiple-sales-register-view');
-		Route::post('/sales/multiple/credit/register/action', 'SalesController@multipleCreditSaleRegisterAction')->name('multiple-credit-sales-register-action');
+		Route::post('/sales/multiple/credit/register/action', 'SalesController@multipleCreditSaleRegisterAction')->name('multiple-credit-sales-register-action')->middleware('date.restrict');
 		Route::get('/sales/bill/print/{id}', 'SalesController@saleBillPrint')->name('sales-bill-print');
 
 		Route::get('/sales/list', 'SalesController@list')->name('sales-list-search');
@@ -115,11 +117,11 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//sales /weighment updation
 		Route::get('/sales/weighment/pending/list', 'SalesController@weighmentPending')->name('sales-weighment-pending-view');
 		Route::get('/sales/weighment/register', 'SalesController@weighmentRegister')->name('sales-weighment-register-view');
-		Route::post('/sales/weighment/register/action', 'SalesController@weighmentRegisterAction')->name('sales-weighment-register-action');
+		Route::post('/sales/weighment/register/action', 'SalesController@weighmentRegisterAction')->name('sales-weighment-register-action')->middleware('date.restrict');
 
 		//purchases
 		Route::get('/purchases/register', 'PurchasesController@register')->name('purchases-register-view');
-		Route::post('/purchases/register/action', 'PurchasesController@registerAction')->name('purchases-register-action');
+		Route::post('/purchases/register/action', 'PurchasesController@registerAction')->name('purchases-register-action')->middleware('date.restrict');
 		Route::get('/purchases/list', 'PurchasesController@list')->name('purchases-list-search');
 
 		//product
@@ -127,9 +129,9 @@ Route::group(['middleware' => 'auth.check'], function () {
 
 		//daily statement
 		Route::get('/daily-statement/register', 'DailyStatementController@register')->name('daily-statement-register-view');
-		Route::post('/daily-statement/employee/attendance/action', 'DailyStatementController@employeeAttendanceAction')->name('daily-statement-employee-attendance-action');
-		Route::post('/daily-statement/excavator/readings/action', 'DailyStatementController@excavatorReadingsAction')->name('daily-statement-excavator-readings-action');
-		Route::post('/daily-statement/jackhammer/readings/action', 'DailyStatementController@jackhammerReadingsAction')->name('daily-statement-jackhammer-readings-action');
+		Route::post('/daily-statement/employee/attendance/action', 'DailyStatementController@employeeAttendanceAction')->name('daily-statement-employee-attendance-action')->middleware('date.restrict');
+		Route::post('/daily-statement/excavator/readings/action', 'DailyStatementController@excavatorReadingsAction')->name('daily-statement-excavator-readings-action')->middleware('date.restrict');
+		Route::post('/daily-statement/jackhammer/readings/action', 'DailyStatementController@jackhammerReadingsAction')->name('daily-statement-jackhammer-readings-action')->middleware('date.restrict');
 		//daily statement list
 		Route::get('/daily-statement/list/employee', 'DailyStatementController@employeeAttendanceList')->name('daily-statement-list-employee');
 		Route::get('/daily-statement/list/excavator', 'DailyStatementController@excavatorReadingList')->name('daily-statement-list-excavator');
@@ -137,15 +139,15 @@ Route::group(['middleware' => 'auth.check'], function () {
 
 		//monthly statement
 		Route::get('/monthly-statement/register', 'MonthlyStatementController@register')->name('monthly-statement-register-view');
-		Route::post('/monthly-statement/employee/salary/action', 'MonthlyStatementController@employeeSalaryAction')->name('monthly-statement-employee-salary-action');
-		Route::post('/monthly-statement/excavator/rent/action', 'MonthlyStatementController@excavatorRentAction')->name('monthly-statement-excavator-rent-action');
+		Route::post('/monthly-statement/employee/salary/action', 'MonthlyStatementController@employeeSalaryAction')->name('monthly-statement-employee-salary-action')->middleware('date.restrict');
+		Route::post('/monthly-statement/excavator/rent/action', 'MonthlyStatementController@excavatorRentAction')->name('monthly-statement-excavator-rent-action')->middleware('date.restrict');
 		Route::get('/monthly-statement/list/employee', 'MonthlyStatementController@employeeSalaryList')->name('monthly-statement-list-employee');
 		Route::get('/monthly-statement/list/excavator', 'MonthlyStatementController@excavatorRentList')->name('monthly-statement-list-excavator');
 
 		//vouchers
 		Route::get('/voucher/register', 'VoucherController@register')->name('voucher-register-view');
-		Route::post('/cash/voucher/register/action', 'VoucherController@cashVoucherRegistrationAction')->name('cash-voucher-register-action');
-		Route::post('/credit/voucher/register/action', 'VoucherController@creditVoucherRegistrationAction')->name('credit-voucher-register-action');
+		Route::post('/cash/voucher/register/action', 'VoucherController@cashVoucherRegistrationAction')->name('cash-voucher-register-action')->middleware('date.restrict');
+		Route::post('/credit/voucher/register/action', 'VoucherController@creditVoucherRegistrationAction')->name('credit-voucher-register-action')->middleware('date.restrict');
 		Route::get('/get/details/by/account/{id}', 'VoucherController@getAccountDetailsByaccountId')->name('get-details-by-account-id');
 		Route::get('/voucher/list/cash', 'VoucherController@cashVoucherList')->name('cash-voucher-list');
 		Route::get('/voucher/list/credit', 'VoucherController@creditVoucherList')->name('credit-voucher-list');
@@ -156,5 +158,6 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/statement/account-statement', 'AccountController@accountSatementSearch')->name('account-statement-list-search');
 		Route::get('/statement/daily-statement', 'DailyStatementController@dailySatementSearch')->name('daily-statement-list-search');
 		Route::get('/statement/sale', 'SalesController@statement')->name('sale-statement-list-search');
+		Route::get('/statement/profit-loss', 'AccountController@profitLoss')->name('profit-loss-statement-list');
 	});
 });

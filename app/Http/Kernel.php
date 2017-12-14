@@ -62,5 +62,7 @@ class Kernel extends HttpKernel
         'is.guest' => \App\Http\Middleware\IsGuest::class,
         //User role check
         'user.role' => \App\Http\Middleware\CheckUserRole::class,
+        //check for restriction based on date for transactons
+        'date.restrict' => \App\Http\Middleware\DateRestriction::class,
     ];
 }

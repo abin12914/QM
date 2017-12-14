@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRegistrationRequest;
+use App\Http\Requests\UserUpdationRequest;
 use App\Http\Requests\OwnerRegistrationRequest;
 use Hash;
 use Auth;
@@ -271,5 +272,37 @@ class UserController extends Controller
         return view('owners.list',[
                     'owners' => $owners
                 ]);
+    }
+
+    /**
+     * Return view for registering new users
+     */
+    public function editProfile()
+    {
+        return view('user.edit-profile');
+    }
+
+    /**
+     * Handle new user registration
+     */
+    public function updateProfile(UserUpdationRequest $request)
+    {
+        $name               = $request->get('name');
+        $currentPassword    = $request->get('old_password');
+        $password           = $request->get('password');
+
+        if(Hash::check($currentPassword, Auth::User()->password)) {
+            $user = Auth::User();
+            $user->name         = $name;
+            $user->password     = Hash::make($password);
+
+            if($user->save()) {
+                return redirect()->back()->with("message","Successfully updated.")->with("alert-class","alert-success");
+            } else {
+                return redirect()->back()->withInput()->with("message","Failed to update the user profile. Try again after reloading the page!<small class='pull-right'> #00/00</small>")->with("alert-class","alert-danger");
+            }
+        } else {
+            return redirect()->back()->withInput()->with("message","Current password is invaild!<small class='pull-right'> #00/00</small>")->with("alert-class","alert-danger");
+        }
     }
 }
