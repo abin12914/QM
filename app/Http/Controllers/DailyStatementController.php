@@ -18,6 +18,7 @@ use App\Http\Requests\EmployeeAttendanceRegistrationRequest;
 use App\Http\Requests\ExcavatorReadingRegistrationRequest;
 use App\Http\Requests\JackhammerReadingRegistrationRequest;
 use App\Models\Sale;
+use App\Models\ProfitLoss;
 
 class DailyStatementController extends Controller
 {
@@ -542,6 +543,15 @@ class DailyStatementController extends Controller
         $toDate                 = 0;
         $totalDebit             = 0;
         $totalCredit            = 0;
+        $shareButtonFlag        = false;
+        $restrictedDate         = "";
+
+        $lastRecord     = ProfitLoss::where('status', 1)->orderBy('to_date', 'desc')->first();
+
+        if(!empty($lastRecord) && !empty($lastRecord->id))
+        {
+            $restrictedDate = Carbon::createFromFormat('Y-m-d', $lastRecord->to_date);
+        } 
 
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';
         $toDate     = !empty($request->get('to_date')) ? $request->get('to_date') : '';
@@ -563,6 +573,10 @@ class DailyStatementController extends Controller
             $searchToDate = Carbon::createFromFormat('d-m-Y H:i:s', $toDate." 23:59:59");
 
             $query = $query->whereBetween('date_time', [$searchFromDate, $searchToDate]);
+
+            if(($searchFromDate->dayOfWeek == Carbon::SUNDAY) && ($searchFromDate->diffInDays($searchToDate) == 6)) {
+                $shareButtonFlag = true;
+            }
         }
 
         $salesQuery = clone $query;
@@ -589,40 +603,6 @@ class DailyStatementController extends Controller
         $royaltyQuery = clone $query;
         $royalty = $royaltyQuery->where('debit_account_id', 9)->sum('amount');
 
-        /*$transactions = $query->get(); //alternate code if cloning has ay issue
-        
-        foreach ($transactions as $key => $transaction) {
-            if($transaction->credit_account_id == 2) {
-                $sales = $sales + $transaction->amount;
-            }
-            switch ($transaction->debit_account_id) {
-                case '3':
-                    $purchases = $purchases + $transaction->amount;
-                    break;
-                case '4':
-                    $labourWage = $labourWage + $transaction->amount;
-                    break;
-                case '5':
-                    $excavatorReadingRent = $excavatorReadingRent + $transaction->amount;
-                    break;
-                case '6':
-                    $jackhammerRent = $jackhammerRent + $transaction->amount;
-                    break;
-                case '7':
-                    $employeeSalary = $employeeSalary + $transaction->amount;
-                    break;
-                case '8':
-                    $excavatorMonthlyRent = $excavatorMonthlyRent + $transaction->amount;
-                    break;
-                case '9':
-                    $royalty = $royalty + $transaction->amount;
-                    break;
-                
-                default:
-                    break;
-            }
-        }*/
-
         $totalCredit    = $sales;
         $totalDebit     = $purchases + $labourWage + $excavatorReadingRent + $jackhammerRent + $employeeSalary + $excavatorMonthlyRent + $royalty;
 
@@ -638,7 +618,9 @@ class DailyStatementController extends Controller
                 'fromDate'              => $fromDate,
                 'toDate'                => $toDate,
                 'totalDebit'            => $totalDebit,
-                'totalCredit'           => $totalCredit
+                'totalCredit'           => $totalCredit,
+                'shareButtonFlag'       => $shareButtonFlag,
+                'restrictedDate'        => $restrictedDate
             ]);
     }
 }

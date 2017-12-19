@@ -1,0 +1,241 @@
+@extends('layouts.app')
+@section('title', 'Profit-Loss Share')
+@section('content')
+<div class="content-wrapper">
+     <section class="content-header">
+        <h1>
+            Profit-Loss Share
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="{{ route('user-dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Profit-Loss Share</li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        @if(Session::has('message'))
+            <div class="alert {{ Session::get('alert-class', 'alert-info') }}" id="alert-message">
+                <h4>
+                  {!! Session::get('message') !!}
+                  <?php session()->forget('message'); ?>
+                </h4>
+            </div>
+        @endif
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                <div class="box-header visible-print-block">
+                    <h3>Profit-Loss Share</h3>
+                </div>
+                    <div class="box-header">
+                        @if(!empty($fromDate) && !empty($toDate))
+                            <h4 style="float: left;"><b>From : {{ $fromDate->format('d-m-Y') }} &nbsp;&nbsp;&nbsp; To : {{ $toDate->format('d-m-Y') }}</b></h4>
+                        @endif
+                        @if(!empty($restrictedDate) && $restrictedDate->copy()->addDay(7) < \Carbon\Carbon::now())
+                            <h4 class="pull-right text-info">Next share allocation time period : {{ $restrictedDate->copy()->addDay()->format('d-m-Y') }} to {{ $restrictedDate->copy()->addDay(7)->format('d-m-Y') }}</h4>
+                        @endif
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 2%"></th>
+                                    <th style="width: 68%"></th>
+                                    <th style="width: 15%">Debit</th>
+                                    <th style="width: 15%">Credit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>0</td>
+                                    <td>Total Expense And Income</td>
+                                    <td>{{ $totalDebit }}</td>
+                                    <td>{{ $totalCredit }}</td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                        $fixedOwner = $owners->filter( function($value, $key) {
+                                         return $value->share_type == 1;
+                                        })->first();
+                                    ?>
+                                    <td>1</td>
+                                    <td>{{ $fixedOwner->account->account_name }}<a href="#sale_based_profit_details">[Sale based profit]</a></td>
+                                    <td></td>
+                                    <td>{{ $ownerShare[$fixedOwner->account_id] }}</td>
+                                </tr>
+                                <tr>
+                                    <td></td><td></td><td></td><td></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="info">
+                                    <th></th>
+                                    <th>Total</th>
+                                    <th>{{ $totalDebit }}</th>
+                                    <th>{{ $totalCredit + $ownerShare[$fixedOwner->account_id] }}</th>
+                                </tr>
+                                <tr class="{{ ($balanceAmount < 0) ? "danger" : "success" }}">
+                                    <th></th>
+                                    @if($balanceAmount < 0)
+                                        <th>Over expence[Loss]</th>
+                                        <th>{{ ($balanceAmount * -1) }}</th>
+                                        <th></th>
+                                    @else
+                                        <th>Balance[Profit]</th>
+                                        <th></th>
+                                        <th>{{ $balanceAmount }}</th>
+                                    @endif
+                                </tr>
+                            </tfoot>
+                        </table>
+                        </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col-md-12 -->
+        </div>
+        <!-- /.row (main row) -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                <div class="box-header visible-print-block">
+                    <h3>Profit-Loss Share</h3>
+                </div>
+                    <div class="box-header">
+                        @if(!empty($fromDate) && !empty($toDate))
+                            <h4>End Sharing&emsp;[{{ $fromDate->format('d-m-Y') }} - {{ $toDate->format('d-m-Y') }}]</h4>
+                        @endif
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 2%"></th>
+                                    <th style="width: 68%"></th>
+                                    <th style="width: 15%">Debit</th>
+                                    <th style="width: 15%">Credit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="{{ ($balanceAmount < 0) ? "danger" : "success" }}">
+                                    <td>0</td>
+                                    @if($balanceAmount > 0)
+                                        <td>Balance[Profit]</td>
+                                        <td>{{ $balanceAmount }}</td>
+                                        <td></td>
+                                    @else
+                                        <th>Over expence[Loss]</th>
+                                        <th></th>
+                                        <th>{{ ($balanceAmount* -1) }}</th>
+                                    @endif
+                                </tr>
+                                @foreach($owners as $key => $owner)
+                                    <tr>
+                                    @if($owner->share_type != 1)
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $owner->account->account_name }} [33.33%]</td>
+                                        @if($ownerShare[$owner->account_id] < 0)
+                                            <td>{{ ($ownerShare[$owner->account_id] * -1) }}</td>
+                                            <td></td>
+                                        @else
+                                            <td></td>
+                                            <td>{{ $ownerShare[$owner->account_id] }}</td>
+                                        @endif
+                                    @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr class="info">
+                                    <th></th>
+                                    <th>Total</th>
+                                    <th>{{ ($balanceAmount < 0) ? ($balanceAmount * -1) : $balanceAmount }}</th>
+                                    <th>{{ ($balanceAmount < 0) ? ($balanceAmount * -1) : $balanceAmount }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                    @if(!empty($shareConfirmButton) && $shareConfirmButton)
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-3"></div>
+                            <div class="col-xs-6">
+                                <div class="alert alert-warning text-center">
+                                    <b>Are sure to proceed with share options in the above table? Action is irriversable.</b>
+                                </div>
+                            </div>
+                            <div class="col-xs-5"></div>
+                            <div class="col-xs-2">
+                                <form action="{{ route('profit-loss-statement-action') }}" method="post" class="form-horizontal">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="from_date" value="{{ $fromDate->format('d-m-Y') }}">
+                                    <input type="hidden" name="to_date" value="{{ $toDate->format('d-m-Y') }}">
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4">Confirm And Allot Share Values</button>
+                                </form>
+                            </div>
+                            <!-- /.col -->
+                        </div><br>
+                    @endif
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col-md-12 -->
+        </div>
+        <!-- /.row (main row) -->
+        <div class="row" id="sale_based_profit_details">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header visible-print-block">
+                        <h3>Transaction Statement</h3>
+                    </div>
+                    <div class="box-header">
+                        @if(!empty($fromDate) && !empty($toDate))
+                            <h4>Sale Based Profit Details&emsp;[{{ $fromDate->format('d-m-Y') }} - {{ $toDate->format('d-m-Y') }}]</h4>
+                        @endif
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">#</th>
+                                    <th>Truck Type</th>
+                                    <th>No Of Load</th>
+                                    <th>Quantity x Rate</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($vehicleTypes as $key => $vehicleType)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $vehicleType->name }}</td>
+                                        <td>{{ $salesCount[$vehicleType->id] }}</td>
+                                        <td>{{ $vehicleType->generic_quantity }} x {{ $ratePerFeet }}</td>
+                                        <td>{{ $saleProfitAmount[$vehicleType->id] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Total Load</th>
+                                    <th></th>
+                                    <th>{{ $totalSaleCount }}</th>
+                                    <th></th>
+                                    <th>{{ $totalSaleProfitAmount }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col-md-12 -->
+        </div>
+        <!-- Main row -->
+    </section>
+    <!-- /.content -->
+</div>
+@endsection

@@ -8,6 +8,12 @@ use App\Http\Requests\AccountUpdationRequest;
 use App\Models\Account;
 use App\Models\AccountDetail;
 use App\Models\Transaction;
+use App\Models\ProfitLoss;
+use App\Models\VehicleType;
+use App\Models\Sale;
+use App\Models\Owner;
+use \Carbon\Carbon;
+use Validator;
 use DateTime;
 use Auth;
 
@@ -315,9 +321,272 @@ class AccountController extends Controller
     /**
      * Return view for profit & loss generation
      */
-    public function profitLoss()
+    public function profitLoss(Request $request)
     {
+        $finalDebit     = 0;
+        $finalCredit    = 0;
+        $restrictedDate = "";
+        $shareConfirmButton = false;
+
+        $validator = Validator::make($request->all(), [
+            "from_date" => "required|date_format:d-m-Y",
+            "to_date"   => "required|date_format:d-m-Y|after:from_date",
+        ]);
+
+        if ($validator->fails()) 
+        {
+            return redirect(route('daily-statement-list-search'))->with("message", "Unable to show share options. Invalid date format!")->with("alert-class", "alert-danger");
+        }
+
+        $fromDate   = Carbon::createFromFormat('d-m-Y H:i:s', $request->get("from_date"). "00:00:00");
+        $toDate     = Carbon::createFromFormat('d-m-Y H:i:s', $request->get("to_date"). "23:59:59");
+
+        $transactionQuery = Transaction::where('status', 1)->whereBetween('date_time', [$fromDate, $toDate]);
+
+        $totalCreditQuery = clone $transactionQuery;
+        $totalCredit = $totalCreditQuery->where('credit_account_id', 2)->sum('amount');
+
+        $totalDebitQuery = clone $transactionQuery;
+        $totalDebit = $totalDebitQuery->whereIn('debit_account_id', [3, 4, 5, 6, 7, 8, 9])->sum('amount');
+
+
+        //Total profit
+        //$totalDebit     = !empty($request->get('totalDebit')) ? $request->get('totalDebit') : 0;
+        //$totalCredit    = !empty($request->get('totalCredit')) ? $request->get('totalCredit') : 0;
+
+        if($fromDate->dayOfWeek == Carbon::SUNDAY && $toDate->dayOfWeek == Carbon::SATURDAY && $toDate < Carbon::now())
+        {
+            $lastRecord     = ProfitLoss::where('status', 1)->orderBy('to_date', 'desc')->first();
+
+            if(!empty($lastRecord) && !empty($lastRecord->id))
+            {
+                $restrictedDate = Carbon::createFromFormat('Y-m-d', $lastRecord->to_date);
+                if(($restrictedDate->copy()->addDay()->format('d-m-Y') == $fromDate->copy()->format('d-m-Y')) && ($fromDate->diffInDays($toDate) == 6)) {
+                    $shareConfirmButton = true;
+                }
+            } elseif($fromDate->diffInDays($toDate) == 6) {
+                $shareConfirmButton = true;
+            }
+
+            //sales details for sale based share calculation
+            $vehicleTypes   = VehicleType::where('status', 1)->orderBy('generic_quantity', 'desc')->get();
+            //to get count of sales of product 1
+            $productId      = [1];
+            $ratePerFeet    = 0.85;
+            $query = Sale::where('status', 1)->whereIn('product_id', $productId)->whereBetween('date_time', [$fromDate, $toDate]);
+
+            $salesCount             = [];
+            $totalSaleCount         = 0;
+            $singleSalecount        = 0;
+            $multipleSalecount      = 0;
+            $saleProfitAmount       = [];
+            $totalSaleProfitAmount  = 0;
+            $percentProfitAmount    = 0;
+
+            foreach ($vehicleTypes as $vehicleType) {
+                $singleSaleCountQuery   = clone $query; //cloning query
+                $multipleSaleCountQuery = clone $query; //cloning query
+
+                $vehicleTypeId = $vehicleType->id;
+                $singleSalecount = $singleSaleCountQuery->whereHas('vehicle', function ($qry) use($vehicleTypeId) {
+                                    $qry->where('vehicle_type_id', $vehicleTypeId);
+                                })->whereIn('measure_type', [1, 2])->count();
+
+                $multipleSalecount = $multipleSaleCountQuery->whereHas('vehicle', function ($qry) use($vehicleTypeId) {
+                                    $qry->where('vehicle_type_id', $vehicleTypeId);
+                                })->where('measure_type', 3)->sum('quantity');
+
+                $totalSaleCount = $totalSaleCount + $singleSalecount + $multipleSalecount;
+                $totalSaleProfitAmount = $totalSaleProfitAmount + ($singleSalecount + $multipleSalecount) * $vehicleType->generic_quantity * $ratePerFeet;
+
+                $salesCount[$vehicleType->id] = $singleSalecount + $multipleSalecount;
+                $saleProfitAmount[$vehicleType->id] = ($singleSalecount + $multipleSalecount) * $vehicleType->generic_quantity * $ratePerFeet;
+            }
+
+            $balanceAmount = $totalCredit - ($totalDebit + $totalSaleProfitAmount);
+
+            $percentProfitAmount = $balanceAmount/3;//($balanceAmount < 0) ? (($balanceAmount * -1)/3) : ($balanceAmount/3);
+            
+            $owners = Owner::where('status', 1)->whereHas('account', function($qry) {
+                $qry->where('relation', 'owner');
+            })->with('account')->get();
+
+            foreach ($owners as $key => $owner) {
+                if($owner->share_type == 1) {
+                    $ownerShare[$owner->account_id] = $totalSaleProfitAmount;
+                } else {
+                    $ownerShare[$owner->account_id] = $percentProfitAmount;
+                }
+            }
+
+            return view('account-statement.profit-loss-share', [
+                    'fromDate'              => $fromDate,
+                    'toDate'                => $toDate,
+                    'totalDebit'            => $totalDebit,
+                    'totalCredit'           => $totalCredit,
+                    'restrictedDate'        => $restrictedDate,
+                    'shareConfirmButton'    => $shareConfirmButton,
+                    'vehicleTypes'          => $vehicleTypes,
+                    'totalSaleCount'        => $totalSaleCount,
+                    'salesCount'            => $salesCount,
+                    'saleProfitAmount'      => $saleProfitAmount,
+                    'totalSaleProfitAmount' => $totalSaleProfitAmount,
+                    'ratePerFeet'           => $ratePerFeet,
+                    'owners'                => $owners,
+                    'ownerShare'            => $ownerShare,
+                    'balanceAmount'         => $balanceAmount,
+                ]);
+        }
         
+        return redirect(route('daily-statement-list-search'))->with("message", "Unable to show share options. Invalid date range! Date should Start from Sunday to Saturday.")->with("alert-class", "alert-danger");
+    }
+
+    /**
+     * Return view for profit & loss generation
+     */
+    public function profitLossAction(Request $request)
+    {
+        $restrictedDate     = "";
+        $transactionArray   = [];
+        $saveFlagCount      = 0;
+
+        $validator = Validator::make($request->all(), [
+            "from_date" => "required|date_format:d-m-Y",
+            "to_date"   => "required|date_format:d-m-Y|after:from_date",
+        ]);
+
+        if ($validator->fails()) 
+        {
+            return redirect()->back()->with("message", "Unable to process share options. Invalid date format!")->with("alert-class", "alert-danger");
+        }
+
+        $fromDate   = Carbon::createFromFormat('d-m-Y H:i:s', $request->get("from_date"). "00:00:00");
+        $toDate     = Carbon::createFromFormat('d-m-Y H:i:s', $request->get("to_date"). "23:59:59");
+
+        $transactionQuery = Transaction::where('status', 1)->whereBetween('date_time', [$fromDate, $toDate]);
+
+        $totalCreditQuery = clone $transactionQuery;
+        $totalCredit = $totalCreditQuery->where('credit_account_id', 2)->sum('amount');
+
+        $totalDebitQuery = clone $transactionQuery;
+        $totalDebit = $totalDebitQuery->whereIn('debit_account_id', [3, 4, 5, 6, 7, 8, 9])->sum('amount');
+
+        if($fromDate->dayOfWeek == Carbon::SUNDAY && $toDate->dayOfWeek == Carbon::SATURDAY && $toDate < Carbon::now())
+        {
+            $lastRecord     = ProfitLoss::where('status', 1)->orderBy('to_date', 'desc')->first();
+
+            if(!empty($lastRecord) && !empty($lastRecord->id))
+            {
+                $restrictedDate = Carbon::createFromFormat('Y-m-d', $lastRecord->to_date);
+                if(($restrictedDate->copy()->addDay()->format('d-m-Y') != $fromDate->copy()->format('d-m-Y')) && ($fromDate->diffInDays($toDate) != 6)) {
+                    return redirect()->back()
+                        ->with("message", "Unable to process share options. Invalid date period! Allowed date from".($restrictedDate->copy()->addDay()->format('d-m-Y'))." to ".($restrictedDate->copy()->addDay(6)->format('d-m-Y')))
+                        ->with("alert-class", "alert-danger");
+                }
+            } elseif($fromDate->diffInDays($toDate) != 6) {
+                return redirect()->back()
+                    ->with("message", "Unable to process share options. Invalid date period! Allowed date from".($restrictedDate->copy()->addDay()->format('d-m-Y'))." to ".($restrictedDate->copy()->addDay(6)->format('d-m-Y')))
+                        ->with("alert-class", "alert-danger");
+            }
+
+            //sales details for sale based share calculation
+            $vehicleTypes   = VehicleType::where('status', 1)->orderBy('generic_quantity', 'desc')->get();
+            //to get count of sales of product 1
+            $productId      = [1];
+            $ratePerFeet    = 0.85;
+            $query = Sale::where('status', 1)->whereIn('product_id', $productId)->whereBetween('date_time', [$fromDate, $toDate]);
+
+            $singleSalecount        = 0;
+            $multipleSalecount      = 0;
+            $totalSaleProfitAmount  = 0;
+            $percentProfitAmount    = 0;
+
+            foreach ($vehicleTypes as $vehicleType) {
+                $singleSaleCountQuery   = clone $query; //cloning query
+                $multipleSaleCountQuery = clone $query; //cloning query
+
+                $vehicleTypeId = $vehicleType->id;
+                $singleSalecount = $singleSaleCountQuery->whereHas('vehicle', function ($qry) use($vehicleTypeId) {
+                                    $qry->where('vehicle_type_id', $vehicleTypeId);
+                                })->whereIn('measure_type', [1, 2])->count();
+
+                $multipleSalecount = $multipleSaleCountQuery->whereHas('vehicle', function ($qry) use($vehicleTypeId) {
+                                    $qry->where('vehicle_type_id', $vehicleTypeId);
+                                })->where('measure_type', 3)->sum('quantity');
+
+                $totalSaleProfitAmount = $totalSaleProfitAmount + ($singleSalecount + $multipleSalecount) * $vehicleType->generic_quantity * $ratePerFeet;
+            }
+
+            $balanceAmount = $totalCredit - ($totalDebit + $totalSaleProfitAmount);
+
+            $percentProfitAmount = $balanceAmount/3;
+            
+            $profitAndLossAccount = Account::where('account_name','Profit And Loss Share')->first();
+            if($profitAndLossAccount) {
+                $profitAndLossAccountId = $profitAndLossAccount->id;
+            } else {
+                return redirect()->back()->withInput()->with("message","Failed to generate share.Try again after reloading the page!<small class='pull-right'>Cash account not found!.  #00/00</small>")->with("alert-class","alert-danger");
+            }
+
+            $owners = Owner::where('status', 1)->whereHas('account', function($qry) {
+                $qry->where('relation', 'owner');
+            })->with('account')->get();
+
+            foreach ($owners as $key => $owner) {
+                $transaction = new Transaction;
+                if($owner->share_type == 1) {
+                    //$ownerShare[$owner->account_id] = $totalSaleProfitAmount;
+                    $transaction->debit_account_id  = $profitAndLossAccountId;
+                    $transaction->credit_account_id = $owner->account_id;
+                    $transaction->amount            = $totalSaleProfitAmount;
+                    $transaction->date_time         = $toDate;
+                    $transaction->particulars       = ("Profit share based on sale, credited for the time period : ".
+                                                            $fromDate->copy()->format('d-m-Y'). " - ". $toDate->copy()->format('d-m-Y'). 
+                                                            ". [Rate : ". $ratePerFeet. "]");
+                    $transaction->status            = 1;
+                    $transaction->created_user_id   = Auth::user()->id;
+                } else {
+                    //$ownerShare[$owner->account_id] = $percentProfitAmount;
+                    if($percentProfitAmount < 0) {
+                        $transaction->debit_account_id  = $owner->account_id;
+                        $transaction->credit_account_id = $profitAndLossAccountId;
+                    } else {
+                        $transaction->debit_account_id  = $profitAndLossAccountId;
+                        $transaction->credit_account_id = $owner->account_id;
+                    }
+                    $transaction->amount                = $percentProfitAmount;
+                    $transaction->date_time             = $toDate;
+                    $transaction->particulars           = ("Profit share , credited for the time period : ".
+                                                                $fromDate->copy()->format('d-m-Y'). " - ". $toDate->copy()->format('d-m-Y').
+                                                                ". [Percentage : 33.33]");
+                    $transaction->status                = 1;
+                    $transaction->created_user_id       = Auth::user()->id;
+                }
+                if($transaction->save()) {
+                    $profitLoss = new ProfitLoss;
+                    $profitLoss->transaction_id = $transaction->id;
+                    $profitLoss->from_date      = $fromDate->copy()->format('Y-m-d');
+                    $profitLoss->to_date        = $toDate->copy()->format('Y-m-d');
+                    $profitLoss->owner_id       = $owner->id;
+                    $profitLoss->share_type     = $owner->share_type;
+                    $profitLoss->amount         = $transaction->amount;
+                    $profitLoss->status         = 1;
+                    if($profitLoss->save()) {
+                        $saveFlagCount = $saveFlagCount + 1;
+                    } else {
+                        return redirect()->back()->withInput()->with("message","Failed to generate share.Try again after reloading the page!")->with("alert-class","alert-danger");
+                    }
+                } else {
+                    return redirect()->back()->withInput()->with("message","Failed to generate share.Try again after reloading the page!")->with("alert-class","alert-danger");
+                }
+
+            }
+
+            if($saveFlagCount == count($owners)) {
+                return redirect()->back()->with("message","Successfully allotted profit-loss values!")->with("alert-class","alert-success");
+            }
+        }
+        return redirect()->back()->with("message", "Unable to process share options. Invalid date range! Date should Start from Sunday to Saturday.")->with("alert-class", "alert-danger");
     }
 
     /**

@@ -69,11 +69,14 @@
                 </div>
                     <div class="box-header">
                         @if(empty($fromDate) && !empty($toDate))
-                            <h4>Date : {{ $toDate }}</h4>
+                            <h4 style="float: left;">Date : {{ $toDate }}</h4>
                         @elseif(!empty($fromDate) && empty($toDate))
-                            <h4>Date : {{ $fromDate }}</h4>
+                            <h4 style="float: left;">Date : {{ $fromDate }}</h4>
                         @elseif(!empty($fromDate) && !empty($toDate))
-                            <h4>From : {{ $fromDate }} &nbsp;&nbsp;&nbsp; To : {{ $toDate }}</h4>
+                            <h4 style="float: left;">From : {{ $fromDate }} &nbsp;&nbsp;&nbsp; To : {{ $toDate }}</h4>
+                        @endif
+                        @if(!empty($restrictedDate) && $restrictedDate->copy()->addDay(7) < \Carbon\Carbon::now())
+                            <h4 class="pull-right text-info">Next share allocation time period : {{ $restrictedDate->copy()->addDay()->format('d-m-Y') }} to {{ $restrictedDate->copy()->addDay(7)->format('d-m-Y') }}</h4>
                         @endif
                     </div>
                     <div class="box-body">
@@ -169,12 +172,27 @@
                         </table>
                     </div>
                     <!-- /.box-body -->
+                    @if(!empty($shareButtonFlag) && $shareButtonFlag)
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-5"></div>
+                            <div class="col-xs-2">
+                                <form action="{{ route('profit-loss-statement-list') }}" method="get" class="form-horizontal">
+                                    <input type="hidden" name="from_date" value="{{ $fromDate }}">
+                                    <input type="hidden" name="to_date" value="{{ $toDate }}">
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4">Share Details</button>
+                                </form>
+                            </div>
+                            <!-- /.col -->
+                        </div><br>
+                    @endif
                 </div>
                 <!-- /.box -->
             </div>
             <!-- /.col-md-12 -->
         </div>
         <!-- /.row (main row) -->
+        <div class="box-header with-border"></div><br>
         <div class="row no-print">
             <div class="col-md-6">
                 <!-- BAR CHART -->

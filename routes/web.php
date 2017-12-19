@@ -158,6 +158,9 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/statement/account-statement', 'AccountController@accountSatementSearch')->name('account-statement-list-search');
 		Route::get('/statement/daily-statement', 'DailyStatementController@dailySatementSearch')->name('daily-statement-list-search');
 		Route::get('/statement/sale', 'SalesController@statement')->name('sale-statement-list-search');
+
+		//profit loss share distribution
 		Route::get('/statement/profit-loss', 'AccountController@profitLoss')->name('profit-loss-statement-list');
+		Route::post('/statement/profit-loss/action', 'AccountController@profitLossAction')->name('profit-loss-statement-action');
 	});
 });
