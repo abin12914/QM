@@ -100,7 +100,7 @@ class VehicleTypeController extends Controller
     /**
      * Return view for vehicle type listing
      */
-    public function list(Request $request)
+    public function vehicleTypeList(Request $request)
     {
         $totalAmount = 0;
         $fromDate   = !empty($request->get('from_date')) ? $request->get('from_date') : '';

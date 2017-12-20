@@ -69,7 +69,7 @@ class ProductController extends Controller
     /**
      * Return view for product listing
      */
-    public function list()
+    public function productList()
     {
         $products = Product::paginate(15);
         if(empty($products) || count($products) == 0) {

@@ -90,13 +90,13 @@ class MultipleCreditSaleRegistrationRequest extends FormRequest
             'rate'                  => [
                                             'required',
                                             'numeric',
-                                            'max:9999',
+                                            'max:19999',
                                             'min:100'
                                         ],
             'bill_amount'           => [
                                             'required',
                                             'numeric',
-                                            'max:99999',
+                                            'max:199999',
                                             'min:100'
                                         ],
         ];

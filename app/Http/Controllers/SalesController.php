@@ -372,7 +372,7 @@ class SalesController extends Controller
     /**
      * Return view for account listing
      */
-    public function list(Request $request)
+    public function salesList(Request $request)
     {
         $totalAmount        = 0;
         $totalLoad          = 0;

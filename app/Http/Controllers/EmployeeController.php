@@ -154,7 +154,7 @@ class EmployeeController extends Controller
     /**
      * Return view for employee listing
      */
-    public function list(Request $request)
+    public function employeeList(Request $request)
     {
         $accountId  = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $employeeId = !empty($request->get('employee_id')) ? $request->get('employee_id') : 0;

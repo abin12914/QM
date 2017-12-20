@@ -78,6 +78,7 @@
                                             <th>Date & Time</th>
                                             <th>Truck Number</th>
                                             <th>Truck Type</th>
+                                            <th>No.</th>
                                             <th>Royalty Amount</th>
                                         </tr>
                                     </thead>
@@ -89,6 +90,11 @@
                                                     <td>{{ Carbon\Carbon::parse($royalty->date_time)->format('d-m-Y H:m:i') }}</td>
                                                     <td>{{ $royalty->vehicle->reg_number }}</td>
                                                     <td>{{ $royalty->vehicle->vehicleType->name }}</td>
+                                                    @if($royalty->sale->measure_type != 3)
+                                                        <td>1</td>
+                                                    @else
+                                                        <td>{{ $royalty->sale->quantity}}</td>
+                                                    @endif
                                                     <td>{{ $royalty->transaction->amount }}</td>
                                                 </tr>
                                             @endforeach
@@ -97,12 +103,13 @@
                                     @if(!empty($royaltyRecords) && (Request::get('page') == $royaltyRecords->lastPage() || $royaltyRecords->lastPage() == 1))
                                         <tfoot>
                                             <tr>
-                                                <td></td><td></td><td></td><td></td><td></td>
+                                                <td></td><td></td><td></td><td></td><td></td><td></td>
                                             </tr>
                                             <tr>
                                                 <td></td>
                                                 <td></td>
                                                 <td><b>Total Amount</b></td>
+                                                <td></td>
                                                 <td></td>
                                                 <td><b>{{ $totalAmount }}</b></td>
                                             </tr>

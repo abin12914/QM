@@ -46,7 +46,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//product
 		Route::get('/product/register', 'ProductController@register')->name('product-register-view');
 		Route::post('/product/register/action', 'ProductController@registerAction')->name('product-register-action');
-		Route::get('/product/list/superadmin', 'ProductController@list')->name('product-list-superadmin');
+		Route::get('/product/list/superadmin', 'ProductController@productList')->name('product-list-superadmin');
 	});
 
 	//admin routes
@@ -72,12 +72,12 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//account
 		Route::get('/account/register', 'AccountController@register')->name('account-register-view');
 		Route::post('/account/register/action', 'AccountController@registerAction')->name('account-register-action');
-		Route::get('/account/list', 'AccountController@list')->name('account-list');
+		Route::get('/account/list', 'AccountController@accountList')->name('account-list');
 
 		//staff
 		Route::get('/hr/employee/register', 'EmployeeController@register')->name('employee-register-view');
 		Route::post('/hr/employee/register/action', 'EmployeeController@registerAction')->name('employee-register-action');
-		Route::get('/hr/employee/list', 'EmployeeController@list')->name('employee-list');
+		Route::get('/hr/employee/list', 'EmployeeController@employeeList')->name('employee-list');
 		Route::get('/employee/get/account/{id}', 'EmployeeController@getEmployeeByaccountId')->name('employee-get-by-account-id');
 		Route::get('/employee/get/employee/{id}', 'EmployeeController@getEmployeeByEmployeeId')->name('employee-get-by-employee-id');
 
@@ -85,22 +85,22 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//excavator
 		Route::get('/machine/excavator/register', 'ExcavatorController@register')->name('excavator-register-view');
 		Route::post('/machine/excavator/register/action', 'ExcavatorController@registerAction')->name('excavator-register-action');
-		Route::get('/machine/excavator/list', 'ExcavatorController@list')->name('excavator-list');
+		Route::get('/machine/excavator/list', 'ExcavatorController@excavatorList')->name('excavator-list');
 		Route::get('/get/account/by/excavator/{id}', 'ExcavatorController@getAccountByExcavatorId')->name('get-account-by-excavator-id');
 
 		//jackhammer
 		Route::get('/machine/jackhammer/register', 'JackhammerController@register')->name('jackhammer-register-view');
 		Route::post('/machine/jackhammer/register/action', 'JackhammerController@registerAction')->name('jackhammer-register-action');
-		Route::get('/machine/jackhammer/list', 'JackhammerController@list')->name('jackhammer-list');
+		Route::get('/machine/jackhammer/list', 'JackhammerController@jackhammerList')->name('jackhammer-list');
 		Route::get('/get/account/by/jackhammer/{id}', 'JackhammerController@getAccountByJackhammerId')->name('get-account-by-jackhammer-id');
 
 		//vehicle
 		Route::get('/vehicle/register', 'VehicleController@register')->name('vehicle-register-view');
 		Route::post('/vehicle/register/action', 'VehicleController@registerAction')->name('vehicle-register-action');
-		Route::get('/vehicle/list', 'VehicleController@list')->name('vehicle-list');
+		Route::get('/vehicle/list', 'VehicleController@vehicleList')->name('vehicle-list');
 
 		//vehicle type
-		Route::get('/vehicle-type/list', 'VehicleTypeController@list')->name('vehicle-type-list');
+		Route::get('/vehicle-type/list', 'VehicleTypeController@vehicleTypeList')->name('vehicle-type-list');
 		Route::get('/vehicle-type/chart', 'VehicleTypeController@chart')->name('vehicle-type-chart');
 
 		//sales
@@ -111,7 +111,7 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::post('/sales/multiple/credit/register/action', 'SalesController@multipleCreditSaleRegisterAction')->name('multiple-credit-sales-register-action')->middleware('date.restrict');
 		Route::get('/sales/bill/print/{id}', 'SalesController@saleBillPrint')->name('sales-bill-print');
 
-		Route::get('/sales/list', 'SalesController@list')->name('sales-list-search');
+		Route::get('/sales/list', 'SalesController@salesList')->name('sales-list-search');
 		Route::get('/sales/get/last/vehicle/{id}', 'SalesController@getLastSaleByVehicleId')->name('sale-get-last-by-vehicle-id');
 
 		//sales /weighment updation
@@ -122,10 +122,10 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//purchases
 		Route::get('/purchases/register', 'PurchasesController@register')->name('purchases-register-view');
 		Route::post('/purchases/register/action', 'PurchasesController@registerAction')->name('purchases-register-action')->middleware('date.restrict');
-		Route::get('/purchases/list', 'PurchasesController@list')->name('purchases-list-search');
+		Route::get('/purchases/list', 'PurchasesController@purchaseList')->name('purchases-list-search');
 
 		//product
-		Route::get('/product/list', 'ProductController@list')->name('product-list');
+		Route::get('/product/list', 'ProductController@productList')->name('product-list');
 
 		//daily statement
 		Route::get('/daily-statement/register', 'DailyStatementController@register')->name('daily-statement-register-view');

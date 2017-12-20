@@ -23,32 +23,20 @@
             </div>
         @endif
         <!-- Main row -->
-        {{-- <div class="row no-print">
+        <div class="row no-print">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Filter List</h3>
+                        <h3 class="box-title">Filter result</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-header">
-                        <form action="{{ route('account-list') }}" method="get" class="form-horizontal">
+                        <form action="{{ route('credit-list') }}" method="get" class="form-horizontal">
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">
                                     <div class="form-group">
-                                        <div class="col-sm-4 {{ !empty($errors->first('type')) ? 'has-error' : '' }}">
-                                            <label for="type" class="control-label">Type : </label>
-                                            <select class="form-control" name="type" id="type" tabindex="3" style="width: 100%">
-                                                <option value="" {{ (empty($type) || (empty(old('type')) && $type == 0)) ? 'selected' : '' }}>Select transaction type</option>
-                                                <option value="real" {{ (!empty($type) && ((old('type') == 'real' ) || $type == 'real')) ? 'selected' : '' }}>Real Account</option>
-                                                <option value="nominal" {{ (!empty($type) && (old('type') == 'nominal' || $type == 'nominal')) ? 'selected' : '' }}>Nominal</option>
-                                                <option value="personal" {{ (!empty($type) && (old('type') == 'personal' || $type == 'personal')) ? 'selected' : '' }}>Personal</option>
-                                            </select>
-                                            @if(!empty($errors->first('type')))
-                                                <p style="color: red;" >{{$errors->first('type')}}</p>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-4 {{ !empty($errors->first('relation')) ? 'has-error' : '' }}">
+                                        <div class="col-sm-12 {{ !empty($errors->first('relation')) ? 'has-error' : '' }}">
                                             <label for="relation" class="control-label">Relation : </label>
                                             <select class="form-control" name="relation" id="relation" tabindex="3" style="width: 100%">
                                                 <option value="" {{ (empty($relation) || (empty(old('relation')) && $relation == 0)) ? 'selected' : '' }}>Select transaction type</option>
@@ -58,24 +46,10 @@
                                                 <option value="contractor" {{ (!empty($relation) && (old('relation') == 'contractor' || $relation == 'contractor')) ? 'selected' : '' }}>Contractor</option>
                                                 <option value="owner" {{ (!empty($relation) && (old('relation') == 'owner' || $relation == 'owner')) ? 'selected' : '' }}>Owner</option>
                                                 <option value="general" {{ (!empty($relation) && (old('relation') == 'general' || $relation == 'general')) ? 'selected' : '' }}>General</option>
-                                                <option value="royalty owner" {{ (!empty($relation) && (old('relation') == 'royalty owner' || $relation == 'royalty owner')) ? 'selected' : '' }}>Royalty Owner</option>
+                                                <option value="operator" {{ (!empty($relation) && (old('relation') == 'operator' || $relation == 'operator')) ? 'selected' : '' }}>Operator</option>
                                             </select>
                                             @if(!empty($errors->first('relation')))
                                                 <p style="color: red;" >{{$errors->first('relation')}}</p>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-4     {{ !empty($errors->first('account_id')) ? 'has-error' : '' }}">
-                                            <label for="account_id" class="control-label">Account : </label>
-                                            <select class="form-control" name="account_id" id="account_id" tabindex="3" style="width: 100%">
-                                                @if(!empty($accountsCombobox) && (count($accountsCombobox) > 0))
-                                                    <option value="">Select employee account</option>
-                                                    @foreach($accountsCombobox as $account)
-                                                        <option value="{{ $account->id }}" {{ ((old('account_id') == $account->id ) || (!empty($accountId) && $accountId == $account->id)) ? 'selected' : '' }}>{{ $account->account_name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                            @if(!empty($errors->first('account_id')))
-                                                <p style="color: red;" >{{$errors->first('account_id')}}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -96,7 +70,7 @@
                     </div><br>
                 </div>
             </div>
-        </div> --}}
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -143,11 +117,11 @@
                                         @endif
                                     </tbody>
                                     <tfoot>
-                                        <th>#</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>{{ $totalDebitAmount }}</th>
-                                        <th>{{ $totalCreditAmount }}</th>
+                                        <td>#</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{ !empty($totalDebitAmount) ? $totalDebitAmount : 0 }}</td>
+                                        <td>{{ !empty($totalCreditAmount) ? $totalCreditAmount : 0 }}</td>
                                     </tfoot>
                                 </table>
                             </div>

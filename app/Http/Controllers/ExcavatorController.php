@@ -54,7 +54,7 @@ class ExcavatorController extends Controller
     /**
      * Return view for excavators listing
      */
-    public function list(Request $request)
+    public function excavatorList(Request $request)
     {
         $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $excavatorId    = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;

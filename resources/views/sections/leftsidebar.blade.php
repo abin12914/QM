@@ -224,6 +224,11 @@
                                 <i class="fa fa-circle-o"></i> Sales Statement
                             </a>
                         </li>
+                        <li class="{{ Request::is('statement/credit-list')? 'active' : '' }}">
+                            <a href="{{route('credit-list')}}">
+                                <i class="fa fa-circle-o"></i> Credit List
+                            </a>
+                        </li>
                     </ul>
 
                 </li>

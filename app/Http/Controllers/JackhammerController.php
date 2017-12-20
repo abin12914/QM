@@ -50,7 +50,7 @@ class JackhammerController extends Controller
     /**
      * Return view for jackhammer listing
      */
-    public function list(Request $request)
+    public function jackhammerList(Request $request)
     {
         $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $jackhammerId   = !empty($request->get('jackhammer_id')) ? $request->get('jackhammer_id') : 0;

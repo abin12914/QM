@@ -108,7 +108,7 @@ class PurchasesController extends Controller
     /**
      * Return view for account listing
      */
-    public function list(Request $request)
+    public function purchaseList(Request $request)
     {
         $accountId      = !empty($request->get('account_id')) ? $request->get('account_id') : 0;
         $fromDate       = !empty($request->get('from_date')) ? $request->get('from_date') : '';

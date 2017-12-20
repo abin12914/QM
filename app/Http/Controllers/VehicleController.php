@@ -52,7 +52,7 @@ class VehicleController extends Controller
     /**
      * Return view for vehicle listing
      */
-    public function list(Request $request)
+    public function vehicleList(Request $request)
     {
         $vehicleTypeId  = !empty($request->get('vehicle_type_id')) ? $request->get('vehicle_type_id') : 0;
         $bodyType       = !empty($request->get('body_type')) ? $request->get('body_type') : '0';
