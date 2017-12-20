@@ -157,26 +157,41 @@
                         </table>
                     </div>
                     <!-- /.box-body -->
-                    @if(!empty($shareConfirmButton) && $shareConfirmButton)
-                        <br>
-                        <div class="row">
-                            <div class="col-xs-3"></div>
-                            <div class="col-xs-6">
-                                <div class="alert alert-warning text-center">
-                                    <b>Are sure to proceed with share options in the above table? Action is irriversable.</b>
+                    @if(!empty($shareConfirmButton))
+                        @if($shareConfirmButton == 1)
+                            <br>
+                            <div class="row">
+                                <div class="col-xs-3"></div>
+                                <div class="col-xs-6">
+                                    <div class="alert alert-warning text-center">
+                                        <b>Are sure to proceed with share options in the above table? Action is irriversable.</b>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xs-5"></div>
-                            <div class="col-xs-2">
-                                <form action="{{ route('profit-loss-statement-action') }}" method="post" class="form-horizontal">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                    <input type="hidden" name="from_date" value="{{ $fromDate->format('d-m-Y') }}">
-                                    <input type="hidden" name="to_date" value="{{ $toDate->format('d-m-Y') }}">
-                                    <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4">Confirm And Allot Share Values</button>
-                                </form>
-                            </div>
-                            <!-- /.col -->
-                        </div><br>
+                                <div class="col-xs-5"></div>
+                                <div class="col-xs-2">
+                                    <form action="{{ route('profit-loss-statement-action') }}" method="post" class="form-horizontal">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="from_date" value="{{ $fromDate->format('d-m-Y') }}">
+                                        <input type="hidden" name="to_date" value="{{ $toDate->format('d-m-Y') }}">
+                                        <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4">Confirm And Allot Share Values</button>
+                                    </form>
+                                </div>
+                                <!-- /.col -->
+                            </div><br>
+                        @elseif($shareConfirmButton == 2)
+                            <br>
+                            <div class="row">
+                                <div class="col-xs-5"></div>
+                                <div class="col-xs-2">
+                                    <div class="alert alert-default text-center bg-info">
+                                        <i class="fa fa-2x fa-check-circle-o">
+                                            <b class="text-info"> Processed</b>
+                                        </i>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                            </div><br>
+                        @endif
                     @endif
                 </div>
                 <!-- /.box -->

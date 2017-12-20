@@ -314,7 +314,7 @@ class AccountController extends Controller
                 if(empty($creditAmount[$account->id])) {
                     $creditAmount[$account->id] = 0;
                 }
-                
+
                 if($debitAmount[$account->id] > $creditAmount[$account->id]) {
                     $totalDebit = $totalDebit + ($debitAmount[$account->id] - $creditAmount[$account->id]);
                 } else {
@@ -338,10 +338,19 @@ class AccountController extends Controller
      */
     public function profitLoss(Request $request)
     {
-        $finalDebit     = 0;
-        $finalCredit    = 0;
-        $restrictedDate = "";
-        $shareConfirmButton = false;
+        $finalDebit         = 0;
+        $finalCredit        = 0;
+        $restrictedDate     = "";
+        $shareConfirmButton = 0;
+        $vehicleTypes       = [];
+        $totalSaleCount     = 0;
+        $salesCount         = 0;
+        $saleProfitAmount   = 0;
+        $totalSaleProfitAmount  = 0;
+        $ratePerFeet        = 0;
+        $owners             = [];
+        $ownerShare         = [];
+        $balanceAmount      = 0;
 
         $validator = Validator::make($request->all(), [
             "from_date" => "required|date_format:d-m-Y",
@@ -364,23 +373,26 @@ class AccountController extends Controller
         $totalDebitQuery = clone $transactionQuery;
         $totalDebit = $totalDebitQuery->whereIn('debit_account_id', [3, 4, 5, 6, 7, 8, 9])->sum('amount');
 
-
-        //Total profit
-        //$totalDebit     = !empty($request->get('totalDebit')) ? $request->get('totalDebit') : 0;
-        //$totalCredit    = !empty($request->get('totalCredit')) ? $request->get('totalCredit') : 0;
-
         if($fromDate->dayOfWeek == Carbon::SUNDAY && $toDate->dayOfWeek == Carbon::SATURDAY && $toDate < Carbon::now())
         {
-            $lastRecord     = ProfitLoss::where('status', 1)->orderBy('to_date', 'desc')->first();
+            $profitLossQuery    = ProfitLoss::where('status', 1);
+            $checkRecord        = clone $profitLossQuery;
 
+            $checkRecord        = $checkRecord->where('to_date', $toDate->copy()->format('Y-m-d'))->first();
+            //if not processed yet
+            if(!empty($checkRecord) && !empty($checkRecord->id)) {
+                $shareConfirmButton = 2;
+            }
+            $lastRecord         = $profitLossQuery->orderBy('to_date', 'desc')->first();
+            
             if(!empty($lastRecord) && !empty($lastRecord->id))
             {
                 $restrictedDate = Carbon::createFromFormat('Y-m-d', $lastRecord->to_date);
                 if(($restrictedDate->copy()->addDay()->format('d-m-Y') == $fromDate->copy()->format('d-m-Y')) && ($fromDate->diffInDays($toDate) == 6)) {
-                    $shareConfirmButton = true;
+                    $shareConfirmButton = 1;
                 }
             } elseif($fromDate->diffInDays($toDate) == 6) {
-                $shareConfirmButton = true;
+                $shareConfirmButton = 1;
             }
 
             //sales details for sale based share calculation
