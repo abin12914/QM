@@ -577,11 +577,12 @@ class AccountController extends Controller
                     if($percentProfitAmount < 0) {
                         $transaction->debit_account_id  = $owner->account_id;
                         $transaction->credit_account_id = $profitAndLossAccountId;
+                        $transaction->amount            = ($percentProfitAmount * (-1));
                     } else {
                         $transaction->debit_account_id  = $profitAndLossAccountId;
                         $transaction->credit_account_id = $owner->account_id;
+                        $transaction->amount            = $percentProfitAmount;
                     }
-                    $transaction->amount                = $percentProfitAmount;
                     $transaction->date_time             = $toDate;
                     $transaction->particulars           = ("Profit share , credited for the time period : ".
                                                                 $fromDate->copy()->format('d-m-Y'). " - ". $toDate->copy()->format('d-m-Y').
