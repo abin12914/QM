@@ -44,7 +44,7 @@ class DateRestriction
                     break;
 
                 case 'App\Http\Controllers\MonthlyStatementController@employeeSalaryAction':
-                    $this->date = !empty($request->get('emp_salary_start_date')) ? $request->get('emp_salary_start_date') : '';
+                    $this->date = \Carbon\Carbon::now()->format('d-m-Y');
                     break;
 
                 case 'App\Http\Controllers\MonthlyStatementController@excavatorRentAction':

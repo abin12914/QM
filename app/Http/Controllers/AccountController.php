@@ -566,7 +566,7 @@ class AccountController extends Controller
                     $transaction->debit_account_id  = $profitAndLossAccountId;
                     $transaction->credit_account_id = $owner->account_id;
                     $transaction->amount            = $totalSaleProfitAmount;
-                    $transaction->date_time         = $toDate;
+                    $transaction->date_time         = Carbon::createFromFormat('d-m-Y H:i:s', $request->get("to_date"). "23:55:00");//$toDate;
                     $transaction->particulars       = ("Profit share based on sale, credited for the time period : ".
                                                             $fromDate->copy()->format('d-m-Y'). " - ". $toDate->copy()->format('d-m-Y'). 
                                                             ". [Rate : ". $ratePerFeet. "]");
@@ -583,7 +583,7 @@ class AccountController extends Controller
                         $transaction->credit_account_id = $owner->account_id;
                         $transaction->amount            = $percentProfitAmount;
                     }
-                    $transaction->date_time             = $toDate;
+                    $transaction->date_time             = Carbon::createFromFormat('d-m-Y H:i:s', $request->get("to_date"). "23:55:00");//$toDate;
                     $transaction->particulars           = ("Profit share , credited for the time period : ".
                                                                 $fromDate->copy()->format('d-m-Y'). " - ". $toDate->copy()->format('d-m-Y').
                                                                 ". [Percentage : 33.33]");
