@@ -29,7 +29,7 @@
         <a href="{{route('login-view')}}"><button type="submit" class="btn btn-primary btn-block btn-flat">Log In</button></a>
         <br>
         <p class="login-box-msg">Contact the developer team for Signup and details.</p>
-        <div class="pull-right"><a href="{{ route('licence-view') }}">License</a></div>
+        {{-- <div class="pull-right"><a href="{{ route('licence-view') }}">License</a></div> --}}
     </div>
   <!-- /.login-box-body -->
 </div>

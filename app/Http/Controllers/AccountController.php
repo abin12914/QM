@@ -399,7 +399,7 @@ class AccountController extends Controller
             $vehicleTypes   = VehicleType::where('status', 1)->orderBy('generic_quantity', 'desc')->get();
             //to get count of sales of product 1
             $productId      = [1];
-            $ratePerFeet    = 0.85;
+            $ratePerFeet    = 1;
             $query = Sale::where('status', 1)->whereIn('product_id', $productId)->whereBetween('date_time', [$fromDate, $toDate]);
 
             $salesCount             = [];
@@ -520,7 +520,7 @@ class AccountController extends Controller
             $vehicleTypes   = VehicleType::where('status', 1)->orderBy('generic_quantity', 'desc')->get();
             //to get count of sales of product 1
             $productId      = [1];
-            $ratePerFeet    = 0.85;
+            $ratePerFeet    = 1;
             $query = Sale::where('status', 1)->whereIn('product_id', $productId)->whereBetween('date_time', [$fromDate, $toDate]);
 
             $singleSalecount        = 0;

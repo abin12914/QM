@@ -47,7 +47,7 @@
         </form>
         <br>
         Forgot your password? Click<a href="{{ route('under-construction-view') }}"> here </a>to reset password.<br>
-        <a class="pull-right" href="{{ route('licence-view') }}">License</a>
+        {{-- <a class="pull-right" href="{{ route('licence-view') }}">License</a> --}}
     </div>
   <!-- /.login-box-body -->
 </div>
