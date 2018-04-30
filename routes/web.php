@@ -47,6 +47,8 @@ Route::group(['middleware' => 'auth.check'], function () {
 		Route::get('/product/register', 'ProductController@register')->name('product-register-view');
 		Route::post('/product/register/action', 'ProductController@registerAction')->name('product-register-action');
 		Route::get('/product/list/superadmin', 'ProductController@productList')->name('product-list-superadmin');
+		Route::get('/product/edit', 'ProductController@edit')->name('product-edit-view');
+		Route::post('/product/updation/action', 'ProductController@updationAction')->name('product-updation-action');
 	});
 
 	//admin routes
@@ -62,9 +64,19 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//employee
 		Route::get('/hr/employee/edit', 'EmployeeController@edit')->name('employee-edit-view');
 		Route::post('/hr/employee/updation/action', 'EmployeeController@updationAction')->name('employee-updation-action');
+		
 		//excavator
 		Route::get('/machine/excavator/edit', 'ExcavatorController@edit')->name('excavator-edit-view');
 		Route::post('/machine/excavator/updation/action', 'ExcavatorController@updationAction')->name('excavator-updation-action');
+		//jackhammer
+		Route::get('/machine/jackhammer/edit', 'JackhammerController@edit')->name('jackhammer-edit-view');
+		Route::post('/machine/jackhammer/updation/action', 'JackhammerController@updationAction')->name('jackhammer-updation-action');
+		//vehicle
+		Route::get('/machine/vehicle/edit', 'VehicleController@edit')->name('vehicle-edit-view');
+		Route::post('/machine/vehicle/updation/action', 'VehicleController@updationAction')->name('vehicle-updation-action');
+		//vehicle type
+		Route::get('/vehicle-type/edit', 'VehicleTypeController@edit')->name('vehicle-type-edit-view');
+		Route::post('/vehicle-type/updation/action', 'VehicleTypeController@updationAction')->name('vehicle-type-updation-action');
 	});
 
 	//user routes
@@ -162,5 +174,23 @@ Route::group(['middleware' => 'auth.check'], function () {
 		//profit loss share distribution
 		Route::get('/statement/profit-loss', 'AccountController@profitLoss')->name('profit-loss-statement-list');
 		Route::post('/statement/profit-loss/action', 'AccountController@profitLossAction')->name('profit-loss-statement-action');
+
+		//delete
+		//sale
+		Route::post('/sale/delete/action', 'SalesController@deleteAction')->name('sale-delete-action')->middleware('date.restrict');
+		//purchase
+		Route::post('/purchase/delete/action', 'PurchasesController@deleteAction')->name('purchase-delete-action')->middleware('date.restrict');
+		//employee attendance daily
+		Route::post('/daily-statement/employee/attendance/delete/action', 'DailyStatementController@employeeAttendanceDeleteAction')->name('daily-statement-employee-attendance-delete-action')->middleware('date.restrict');
+		//excavator reading daily
+		Route::post('/daily-statement/excavator/readings/delete/action', 'DailyStatementController@excavatorReadingDeleteAction')->name('daily-statement-excavator-readings-delete-action')->middleware('date.restrict');
+		//jackhammer attendance
+		Route::post('/daily-statement/jackhammer/readings/delete/action', 'DailyStatementController@jackhammerReadingDeleteAction')->name('daily-statement-jackhammer-readings-delete-action')->middleware('date.restrict');
+		//employee salary monthly
+		Route::post('/monthly-statement/employee/salary/delete/action', 'MonthlyStatementController@employeeSalaryDeleteAction')->name('monthly-statement-employee-salary-delete-action')->middleware('date.restrict');
+		//excavator reading monthly
+		Route::post('/monthly-statement/excavator/rent/delete/action', 'MonthlyStatementController@excavatorRentDeleteAction')->name('monthly-statement-excavator-rent-delete-action')->middleware('date.restrict');
+		//voucher
+		Route::post('/voucher/delete/action', 'VoucherController@deleteAction')->name('voucher-delete-action')->middleware('date.restrict');
 	});
 });

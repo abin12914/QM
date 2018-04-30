@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
 {
-    protected $dates = ['date_time'];
+    use SoftDeletes;
+
+    protected $dates = ['date_time', 'deleted_at'];
 
     /**
      * Get the transaction details associated with the sale
@@ -14,6 +17,11 @@ class Sale extends Model
     public function transaction()
     {
         return $this->belongsTo('App\Models\Transaction','transaction_id');
+    }
+
+    public function royalty()
+    {
+        return $this->hasOne('App\Models\Royalty');
     }
 
     /**

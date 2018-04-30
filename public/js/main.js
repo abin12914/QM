@@ -93,6 +93,33 @@ $(function () {
     $('body').on("click", ".update-button", function () {
         $('#update_confirmation_modal').modal('show');
     });
+
+    // for disabling submit button to prevent multiple submition on delete confirmation modal
+    $('body').on("click", "#delete_confirmation_modal_confirm", function () {
+        var saleId = $(this).data('sale-id');
+
+        $('#delete_confirmation_modal_confirm').prop('disabled', true);
+
+        if(saleId && saleId != 0) {
+            $("#sale_delete_"+ saleId).submit();
+        } else {
+            alert("Something went wrong! Please reload the page.");
+            $('#delete_confirmation_modal').modal('hide');
+        }
+    });
+
+    //invoke confirmation on delete
+    $('body').on("click", ".delete_button", function () {
+        var saleId = $(this).data('delete-sale-id');
+
+        if(saleId && saleId != 0) {
+            $('#delete_confirmation_modal_confirm').data('sale-id', saleId);
+            $('#delete_confirmation_modal').modal('show');
+        } else {
+            alert("Something went wrong! Please reload the page.");
+            $('#delete_confirmation_modal').modal('hide');
+        }
+    });
 });
 function dismissAlert() {
     if($("#alert-message").hasClass('alert-success')) {

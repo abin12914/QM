@@ -19,6 +19,7 @@ use App\Http\Requests\CreditSaleRegistrationRequest;
 use App\Http\Requests\CashSaleRegistrationRequest;
 use App\Http\Requests\WeighmentRegistrationRequest;
 use App\Http\Requests\MultipleCreditSaleRegistrationRequest;
+use App\Http\Requests\DeleteSaleRequest;
 
 class SalesController extends Controller
 {
@@ -692,6 +693,41 @@ class SalesController extends Controller
         } else {
             return redirect()->back()->withInput()->with("message","Failed to save the sale details.Try again after reloading the page!<small class='pull-right'> #02/35</small>")->with("alert-class","alert-danger");
         }
+    }
+
+    /**
+     * Handle sale delete action
+     */
+    public function deleteAction(DeleteSaleRequest $request)
+    {
+        $saleId = $request->get('sale_id');
+        
+        $sale = Sale::where('id', $saleId)->where('status', 1)->first();
+
+        if(!empty($sale) && !empty($sale->id)) {
+            if($sale->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
+                return redirect()->back()->with("message","Failed to delete the sale details.You don't have the permission to delete this record! #02/36")->with("alert-class","alert-danger");
+            }
+
+            $royality = Royalty::where('sale_id', $sale->id)->first();
+
+            if(!empty($royality) && !empty($royality->id)) {
+                /*$transactionDeleteFlag = Transaction::where('id', $sale->transaction_id)
+                                    ->orWhere('id', $royality->transaction_id)
+                                    ->delete();*/
+
+                $saleTransactionDelete      = $sale->transaction->delete();
+                $royaltyTransactionDelete   = $sale->royalty->transaction->delete();
+                $royaltyDeleteFlag          = $sale->royality->delete();
+                $saleDeleteFlag             = $sale->delete();
+
+                if($transactionDeleteFlag && $saleDeleteFlag && $royaltyDeleteFlag) {
+                    return redirect()->back()->with("message","Successfully deleted.")->with("alert-class","alert-success");
+                }
+            }
+        }
+
+        return redirect()->back()->with("message","Failed to delete the sale details.Try again after reloading the page! #02/37")->with("alert-class","alert-danger");
     }
 
     /**

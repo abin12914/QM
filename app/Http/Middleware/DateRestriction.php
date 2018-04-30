@@ -67,7 +67,7 @@ class DateRestriction
                     break;
                 
                 default:
-                    $this->date = !empty($request->get('date')) ? $request->get('date') : '';
+                    $this->date = !empty($request->get('date')) ? $request->get('date') : '01-01-2001';
                     break;
             }
 
@@ -76,7 +76,7 @@ class DateRestriction
                 $entryDate = \Carbon\Carbon::createFromFormat('d-m-Y', $this->date)->format('Y-m-d');
 
                 if($restrictedDate >= $entryDate) {
-                    return redirect()->back()->with("message","Request denied!. Transactions up to ". $restrictedDate ." has been closed permanantly.")->with("alert-class","alert-danger");
+                    return redirect()->back()->with("message","Request denied! Transactions up to ". $restrictedDate ." has been closed permanantly.")->with("alert-class","alert-danger");
                 }
             }
         }

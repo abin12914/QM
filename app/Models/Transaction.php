@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends Model
 {
-    protected $dates = ['date_time'];
+    use SoftDeletes;
+
+    protected $dates = ['date_time', 'deleted_at'];
 
     /**
      * Get the debit account details associated with the sale
