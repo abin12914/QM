@@ -717,11 +717,11 @@ class SalesController extends Controller
                                     ->delete();*/
 
                 $saleTransactionDelete      = $sale->transaction->delete();
-                $royaltyTransactionDelete   = $sale->royalty->transaction->delete();
+                $royaltyTransactionDelete   = $sale->royality->transaction->delete();
                 $royaltyDeleteFlag          = $sale->royality->delete();
                 $saleDeleteFlag             = $sale->delete();
 
-                if($transactionDeleteFlag && $saleDeleteFlag && $royaltyDeleteFlag) {
+                if($saleTransactionDelete && $royaltyTransactionDelete && $saleDeleteFlag && $royaltyDeleteFlag) {
                     return redirect()->back()->with("message","Successfully deleted.")->with("alert-class","alert-success");
                 }
             }

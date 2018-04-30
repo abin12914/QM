@@ -19,7 +19,7 @@ class Sale extends Model
         return $this->belongsTo('App\Models\Transaction','transaction_id');
     }
 
-    public function royalty()
+    public function royality()
     {
         return $this->hasOne('App\Models\Royalty');
     }
