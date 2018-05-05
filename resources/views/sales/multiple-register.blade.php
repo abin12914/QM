@@ -154,19 +154,22 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Date & Time</th>
-                                        <th>Truck Number</th>
-                                        <th>Purchaser</th>
-                                        <th>Product</th>
-                                        <th>Quantity</th>
-                                        <th>No Of Load</th>
-                                        <th>Amount</th>
+                                        <th style="width: 15%;">Date / Ref. No.</th>
+                                        <th style="width: 15%;">Truck Number</th>
+                                        <th style="width: 20%;">Purchaser</th>
+                                        <th style="width: 10%;">Product</th>
+                                        <th style="width: 10%;">Quantity</th>
+                                        <th style="width: 5%;">No Of Load</th>
+                                        <th style="width: 10%;">Amount</th>
+                                        <th style="width: 15%;" class="no-print">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($sales_records as $sales_record)
                                         <tr>
-                                            <td>{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y H:m:i') }}</td>
+                                            <td>{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}<i class="no-print"> / </i>
+                                                <b class="no-print bg-info text-red">{{ $sales_record->transaction->id }}</b>
+                                            </td>
                                             <td>{{ $sales_record->vehicle->reg_number }}</td>
                                             <td>{{ $sales_record->transaction->debitAccount->account_name }}</td>
                                             <td>{{ $sales_record->product->name }}</td>
@@ -174,21 +177,97 @@
                                             @if($sales_record->measure_type == 1)
                                                 <td>{{ $sales_record->quantity }} - Cubic feet</td>
                                                 <td>1</td>
-                                                <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }}">{{ $sales_record->total_amount }}</td>
+                                                <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }}">
+                                                    {{ $sales_record->total_amount }}
+                                                </td>
+                                                <td class="no-print">
+                                                    @if($sales_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                        <form action="{{route('sale-delete-action')}}" id="sale_delete_{{ $sales_record->id }}" method="post" style="float: left;">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                            <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
+                                                            <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
+                                                            &nbsp;
+                                                            <button type="button" class="btn btn-danger delete_button" data-delete-sale-id="{{ $sales_record->id }}" type="button">
+                                                                <i class="fa fa-trash"> Delete</i>
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <button type="button" class="btn btn-default button-disabled">
+                                                            &nbsp;<i class="fa fa-exclamation-circle"> No Access</i>
+                                                        </button>
+                                                    @endif
+                                                </td>
                                             @elseif($sales_record->measure_type == 2)
                                                 @if($sales_record->quantity <= 0)
                                                     <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
                                                     <td>1</td>
                                                     <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
+                                                    <td class="no-print" title="Quantity updation pending" tooltip>
+                                                        @if($sales_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                            <form action="{{route('sale-delete-action')}}" id="sale_delete_{{ $sales_record->id }}" method="post" style="float: left;">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                                <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
+                                                                <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
+                                                                &nbsp;
+                                                                <button type="button" class="btn btn-danger delete_button" data-delete-sale-id="{{ $sales_record->id }}" type="button">
+                                                                    <i class="fa fa-trash"> Delete</i>
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            <button type="button" class="btn btn-default button-disabled">
+                                                                &nbsp;<i class="fa fa-exclamation-circle"> No Access</i>
+                                                            </button>
+                                                        @endif
+                                                    </td>
                                                 @else
                                                     <td>{{ $sales_record->quantity }} - Ton</td>
                                                     <td>1</td>
-                                                    <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }}">{{ $sales_record->total_amount }}</td>
+                                                    <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }}">
+                                                        {{ $sales_record->total_amount }}
+                                                    </td>
+                                                    <td class="no-print">
+                                                        <button class="btn btn-default" style="float: left;">
+                                                            <a href="{{ route('sales-bill-print', ['id' => $sales_record->id]) }}" target="_blank"><i class="fa fa-print"></i> Print Bill</a>
+                                                        </button>
+                                                        @if($sales_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                            <form action="{{route('sale-delete-action')}}" id="sale_delete_{{ $sales_record->id }}" method="post" style="float: left;">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                                <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
+                                                                <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
+                                                                &nbsp;
+                                                                <button type="button" class="btn btn-danger delete_button" data-delete-sale-id="{{ $sales_record->id }}" type="button">
+                                                                    <i class="fa fa-trash"> Delete</i>
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            <button type="button" class="btn btn-default button-disabled">
+                                                                &nbsp;<i class="fa fa-exclamation-circle"> No Access</i>
+                                                            </button>
+                                                        @endif
+                                                    </td>
                                                 @endif
                                             @else
                                                 <td>{{ ($sales_record->quantity * $sales_record->vehicle->volume) }} - Cubic feet</td>
                                                 <td>{{ $sales_record->quantity }}</td>
-                                                <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }} - {{ $sales_record->discount }}">{{ $sales_record->total_amount }}</td>
+                                                <td title="{{ $sales_record->quantity }} * {{ $sales_record->rate }} - {{ $sales_record->discount }}">
+                                                    {{ $sales_record->total_amount }}
+                                                </td>
+                                                <td class="no-print" title="Multiple sales" tooltip>
+                                                    @if($sales_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                        <form action="{{route('sale-delete-action')}}" id="sale_delete_{{ $sales_record->id }}" method="post">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                            <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
+                                                            <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
+                                                            <button type="button" class="btn btn-danger delete_button" data-delete-sale-id="{{ $sales_record->id }}" type="button">
+                                                                <i class="fa fa-trash"> Delete</i>
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <button type="button" class="btn btn-default button-disabled">
+                                                            &nbsp;<i class="fa fa-exclamation-circle"> No Access</i>
+                                                        </button>
+                                                    @endif
+                                                </td>
                                             @endif
                                         </tr>
                                     @endforeach
@@ -206,6 +285,37 @@
         </div>
     </section>
     <!-- /.content -->
+    <div class="modal modal modal-danger" id="delete_confirmation_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Confirm Action</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="modal_warning">
+                        <div class="row">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <p>
+                                    <b> Are you sure to delete this record?</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel & Edit</button>
+                    <button type="button" id="delete_confirmation_modal_confirm" class="btn btn-primary" data-sale-id="0" data-dismiss="modal">Confirm</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </div>
 @endsection
 @section('scripts')

@@ -708,14 +708,13 @@ class SalesController extends Controller
             if($sale->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
                 return redirect()->back()->with("message","Failed to delete the sale details.You don't have the permission to delete this record! #02/36")->with("alert-class","alert-danger");
             }
+            if($sale->created_at->diffInDays(Carbon::now(), false) < 5) {
+                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #02/37")->with("alert-class","alert-danger");
+            }
 
             $royality = Royalty::where('sale_id', $sale->id)->first();
 
             if(!empty($royality) && !empty($royality->id)) {
-                /*$transactionDeleteFlag = Transaction::where('id', $sale->transaction_id)
-                                    ->orWhere('id', $royality->transaction_id)
-                                    ->delete();*/
-
                 $saleTransactionDelete      = $sale->transaction->delete();
                 $royaltyTransactionDelete   = $sale->royality->transaction->delete();
                 $royaltyDeleteFlag          = $sale->royality->delete();
@@ -727,7 +726,7 @@ class SalesController extends Controller
             }
         }
 
-        return redirect()->back()->with("message","Failed to delete the sale details.Try again after reloading the page! #02/37")->with("alert-class","alert-danger");
+        return redirect()->back()->with("message","Failed to delete the sale details.Try again after reloading the page! #02/38")->with("alert-class","alert-danger");
     }
 
     /**
