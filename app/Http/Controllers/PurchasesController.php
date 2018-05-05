@@ -10,6 +10,7 @@ use App\Models\Transaction;
 use Auth;
 use DateTime;
 use App\Http\Requests\PurchaseRegistrationRequest;
+use App\Http\Requests\DeletePurchaseRequest;
 
 class PurchasesController extends Controller
 {
@@ -159,5 +160,38 @@ class PurchasesController extends Controller
                 'toDate'                => $toDate,
                 'totalAmount'           => $totalAmount
             ]);
+    }
+
+    /**
+     * Handle sale delete action
+     */
+    public function deleteAction(DeletePurchaseRequest $request)
+    {
+        $purchaseId = $request->get('purchase_id');
+        $date       = $request->get('date');
+        
+        $purchase   = Purchase::where('id', $purchaseId)->where('status', 1)->first();
+
+        if(!empty($purchase) && !empty($purchase->id)) {
+            if(Carbon\Carbon::parse($purchase->date_time)->format('d-m-Y') != $date) {
+                return redirect()->back()->with("message","Deletion restricted. Date change detected!! #03/05")->with("alert-class","alert-danger");
+            }
+
+            if($purchase->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
+                return redirect()->back()->with("message","Failed to delete the purchase details.You don't have the permission to delete this record! #03/06")->with("alert-class","alert-danger");
+            }
+            if($purchase->created_at->diffInDays(Carbon::now(), false) > 5) {
+                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #03/07")->with("alert-class","alert-danger");
+            }
+
+            $purchaseTransactionDelete  = $purchase->transaction->delete();
+            $purchaseDeleteFlag         = $purchase->delete();
+
+            if($purchaseTransactionDelete && $purchaseDeleteFlag) {
+                return redirect()->back()->with("message","#". $purchase->transaction->id. " -Successfully deleted.")->with("alert-class","alert-success");
+            }
+        }
+
+        return redirect()->back()->with("message","Failed to delete the purchase details.Try again after reloading the page! #03/08")->with("alert-class","alert-danger");
     }
 }

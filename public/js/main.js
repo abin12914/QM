@@ -94,27 +94,27 @@ $(function () {
         $('#update_confirmation_modal').modal('show');
     });
 
-    // for disabling submit button to prevent multiple submition on delete confirmation modal
-    $('body').on("click", "#delete_confirmation_modal_confirm", function () {
-        var saleId = $(this).data('sale-id');
+    //invoke confirmation on delete
+    $('body').on("click", ".delete_button", function () {
+        var deleteId = $(this).data('delete-id');
 
-        $('#delete_confirmation_modal_confirm').prop('disabled', true);
-
-        if(saleId && saleId != 0) {
-            $("#sale_delete_"+ saleId).submit();
+        if(deleteId && deleteId != 0) {
+            $('#delete_confirmation_modal_confirm').data('delete-modal-id', deleteId);
+            $('#delete_confirmation_modal').modal('show');
         } else {
             alert("Something went wrong! Please reload the page.");
             $('#delete_confirmation_modal').modal('hide');
         }
     });
 
-    //invoke confirmation on delete
-    $('body').on("click", ".delete_button", function () {
-        var saleId = $(this).data('delete-sale-id');
+    // for disabling submit button to prevent multiple submition on delete confirmation modal
+    $('body').on("click", "#delete_confirmation_modal_confirm", function () {
+        var deleteId = $(this).data('delete-modal-id');
 
-        if(saleId && saleId != 0) {
-            $('#delete_confirmation_modal_confirm').data('sale-id', saleId);
-            $('#delete_confirmation_modal').modal('show');
+        $('#delete_confirmation_modal_confirm').prop('disabled', true);
+
+        if(deleteId && deleteId != 0) {
+            $("#delete_"+ deleteId).submit();
         } else {
             alert("Something went wrong! Please reload the page.");
             $('#delete_confirmation_modal').modal('hide');

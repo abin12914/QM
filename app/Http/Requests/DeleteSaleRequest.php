@@ -21,7 +21,8 @@ class DeleteSaleRequest extends FormRequest
     public function messages()
     {
         return [
-            'sale_id.*' => 'Something went wrong while deletion. Please try again later.',
+            'sale_id.*' => 'Something went wrong. Please try again later.',
+            'date.*'    => 'Something went wrong. Please try again later.',
         ];
     }
 
@@ -33,10 +34,14 @@ class DeleteSaleRequest extends FormRequest
     public function rules()
     {
         return [
-            'sale_id' => [
-                            'required',
-                            Rule::in(Sale::pluck('id')->toArray()),
-                        ],
+            'sale_id'   =>  [
+                                'required',
+                                Rule::in(Sale::pluck('id')->toArray()),
+                            ],
+            'date'      =>  [
+                                'required',
+                                'date_format:d-m-Y',
+                            ],
         ];
     }
 }

@@ -701,15 +701,20 @@ class SalesController extends Controller
     public function deleteAction(DeleteSaleRequest $request)
     {
         $saleId = $request->get('sale_id');
+        $date   = $request->get('date');
         
         $sale = Sale::where('id', $saleId)->where('status', 1)->first();
 
         if(!empty($sale) && !empty($sale->id)) {
-            if($sale->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
-                return redirect()->back()->with("message","Failed to delete the sale details.You don't have the permission to delete this record! #02/36")->with("alert-class","alert-danger");
+            if(Carbon\Carbon::parse($sale->date_time)->format('d-m-Y') != $date) {
+                return redirect()->back()->with("message","Deletion restricted. Date change detected!! #02/36")->with("alert-class","alert-danger");
             }
-            if($sale->created_at->diffInDays(Carbon::now(), false) < 5) {
-                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #02/37")->with("alert-class","alert-danger");
+
+            if($sale->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
+                return redirect()->back()->with("message","Failed to delete the sale details.You don't have the permission to delete this record! #02/37")->with("alert-class","alert-danger");
+            }
+            if($sale->created_at->diffInDays(Carbon::now(), false) > 5) {
+                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #02/38")->with("alert-class","alert-danger");
             }
 
             $royality = Royalty::where('sale_id', $sale->id)->first();
@@ -721,12 +726,12 @@ class SalesController extends Controller
                 $saleDeleteFlag             = $sale->delete();
 
                 if($saleTransactionDelete && $royaltyTransactionDelete && $saleDeleteFlag && $royaltyDeleteFlag) {
-                    return redirect()->back()->with("message","Successfully deleted.")->with("alert-class","alert-success");
+                    return redirect()->back()->with("message","#". $sale->transaction->id. " -Successfully deleted.")->with("alert-class","alert-success");
                 }
             }
         }
 
-        return redirect()->back()->with("message","Failed to delete the sale details.Try again after reloading the page! #02/38")->with("alert-class","alert-danger");
+        return redirect()->back()->with("message","Failed to delete the sale details.Try again after reloading the page! #02/39")->with("alert-class","alert-danger");
     }
 
     /**

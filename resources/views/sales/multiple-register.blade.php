@@ -182,18 +182,17 @@
                                                 </td>
                                                 <td class="no-print">
                                                     @if($sales_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
-                                                        <form action="{{route('sale-delete-action')}}" id="sale_delete_{{ $sales_record->id }}" method="post" style="float: left;">
+                                                        <form action="{{route('sale-delete-action')}}" id="delete_{{ $sales_record->id }}" method="post" style="float: left;">
                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                             <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
-                                                            &nbsp;
-                                                            <button type="button" class="btn btn-danger delete_button" data-delete-sale-id="{{ $sales_record->id }}" type="button">
+                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" type="button">
                                                                 <i class="fa fa-trash"> Delete</i>
                                                             </button>
                                                         </form>
                                                     @else
-                                                        <button type="button" class="btn btn-default button-disabled">
-                                                            &nbsp;<i class="fa fa-exclamation-circle"> No Access</i>
+                                                        <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                            <i class="fa fa-exclamation-circle"> No Access</i>
                                                         </button>
                                                     @endif
                                                 </td>
@@ -204,18 +203,17 @@
                                                     <td title="Quantity updation pending" tooltip><i class="fa fa-hourglass-half"></i></td>
                                                     <td class="no-print" title="Quantity updation pending" tooltip>
                                                         @if($sales_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
-                                                            <form action="{{route('sale-delete-action')}}" id="sale_delete_{{ $sales_record->id }}" method="post" style="float: left;">
+                                                            <form action="{{route('sale-delete-action')}}" id="delete_{{ $sales_record->id }}" method="post" style="float: left;">
                                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                 <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
                                                                 <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
-                                                                &nbsp;
-                                                                <button type="button" class="btn btn-danger delete_button" data-delete-sale-id="{{ $sales_record->id }}" type="button">
+                                                                <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" type="button">
                                                                     <i class="fa fa-trash"> Delete</i>
                                                                 </button>
                                                             </form>
                                                         @else
-                                                            <button type="button" class="btn btn-default button-disabled">
-                                                                &nbsp;<i class="fa fa-exclamation-circle"> No Access</i>
+                                                            <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                                <i class="fa fa-exclamation-circle"> No Access</i>
                                                             </button>
                                                         @endif
                                                     </td>
@@ -226,24 +224,24 @@
                                                         {{ $sales_record->total_amount }}
                                                     </td>
                                                     <td class="no-print">
-                                                        <button class="btn btn-default" style="float: left;">
-                                                            <a href="{{ route('sales-bill-print', ['id' => $sales_record->id]) }}" target="_blank"><i class="fa fa-print"></i> Print Bill</a>
-                                                        </button>
                                                         @if($sales_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
-                                                            <form action="{{route('sale-delete-action')}}" id="sale_delete_{{ $sales_record->id }}" method="post" style="float: left;">
+                                                            <form action="{{route('sale-delete-action')}}" id="delete_{{ $sales_record->id }}" method="post" style="float: left;">
                                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                 <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
                                                                 <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
-                                                                &nbsp;
-                                                                <button type="button" class="btn btn-danger delete_button" data-delete-sale-id="{{ $sales_record->id }}" type="button">
+                                                                <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" type="button">
                                                                     <i class="fa fa-trash"> Delete</i>
                                                                 </button>
                                                             </form>
                                                         @else
-                                                            <button type="button" class="btn btn-default button-disabled">
-                                                                &nbsp;<i class="fa fa-exclamation-circle"> No Access</i>
+                                                            <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                                <i class="fa fa-exclamation-circle"> No Access</i>
                                                             </button>
                                                         @endif
+                                                        &nbsp;
+                                                        <button class="btn btn-default">
+                                                            <a href="{{ route('sales-bill-print', ['id' => $sales_record->id]) }}" target="_blank"><i class="fa fa-print"></i> Print Bill</a>
+                                                        </button>
                                                     </td>
                                                 @endif
                                             @else
@@ -254,17 +252,17 @@
                                                 </td>
                                                 <td class="no-print" title="Multiple sales" tooltip>
                                                     @if($sales_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
-                                                        <form action="{{route('sale-delete-action')}}" id="sale_delete_{{ $sales_record->id }}" method="post">
+                                                        <form action="{{route('sale-delete-action')}}" id="delete_{{ $sales_record->id }}" method="post" style="float: left;">
                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                             <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
-                                                            <button type="button" class="btn btn-danger delete_button" data-delete-sale-id="{{ $sales_record->id }}" type="button">
+                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" type="button">
                                                                 <i class="fa fa-trash"> Delete</i>
                                                             </button>
                                                         </form>
                                                     @else
-                                                        <button type="button" class="btn btn-default button-disabled">
-                                                            &nbsp;<i class="fa fa-exclamation-circle"> No Access</i>
+                                                        <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                            <i class="fa fa-exclamation-circle"> No Access</i>
                                                         </button>
                                                     @endif
                                                 </td>
@@ -308,7 +306,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel & Edit</button>
-                    <button type="button" id="delete_confirmation_modal_confirm" class="btn btn-primary" data-sale-id="0" data-dismiss="modal">Confirm</button>
+                    <button type="button" id="delete_confirmation_modal_confirm" class="btn btn-primary" data-delete-modal-id="0" data-dismiss="modal">Confirm</button>
                 </div>
             </div>
             <!-- /.modal-content -->
