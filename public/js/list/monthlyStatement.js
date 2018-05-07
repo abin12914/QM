@@ -171,10 +171,12 @@ $(function () {
 
     //invoke confirmation on delete
     $('body').on("click", ".employee_delete_button", function () {
-        var deleteId = $(this).data('employee-delete-id');
+        var deleteId        = $(this).data('employee-delete-id');
+        var transactionId   = $(this).data('employee-transaction-id');
 
         if(deleteId && deleteId != 0) {
             $('#employee_delete_confirmation_modal_confirm').data('employee-delete-modal-id', deleteId);
+            $('#employee_modal_warning_record_id').html("#"+ transactionId);
             $('#employee_delete_confirmation_modal').modal('show');
         } else {
             alert("Something went wrong! Please reload the page.");
@@ -189,6 +191,7 @@ $(function () {
         $('#employee_delete_confirmation_modal_confirm').prop('disabled', true);
 
         if(deleteId && deleteId != 0) {
+            $("#employee_delete_"+ deleteId).find('.employee_delete_button').prop('disabled',true);
             $("#employee_delete_"+ deleteId).submit();
         } else {
             alert("Something went wrong! Please reload the page.");

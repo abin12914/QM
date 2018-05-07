@@ -214,10 +214,12 @@ $(function () {
 
     //invoke confirmation on delete
     $('body').on("click", ".employee_delete_button", function () {
-        var deleteId = $(this).data('employee-delete-id');
+        var deleteId        = $(this).data('employee-delete-id');
+        var transactionId   = $(this).data('employee-transaction-id');
 
         if(deleteId && deleteId != 0) {
             $('#employee_delete_confirmation_modal_confirm').data('employee-delete-modal-id', deleteId);
+            $('#employee_modal_warning_record_id').html("#"+ transactionId);
             $('#employee_delete_confirmation_modal').modal('show');
         } else {
             alert("Something went wrong! Please reload the page.");
@@ -232,6 +234,7 @@ $(function () {
         $('#employee_delete_confirmation_modal_confirm').prop('disabled', true);
 
         if(deleteId && deleteId != 0) {
+            $("#employee_delete_"+ deleteId).find('.employee_delete_button').prop('disabled',true);
             $("#employee_delete_"+ deleteId).submit();
         } else {
             alert("Something went wrong! Please reload the page.");
@@ -242,9 +245,11 @@ $(function () {
     //invoke confirmation on delete
     $('body').on("click", ".excavator_delete_button", function () {
         var deleteId = $(this).data('excavator-delete-id');
+        var transactionId   = $(this).data('excavator-transaction-id');
 
         if(deleteId && deleteId != 0) {
             $('#excavator_delete_confirmation_modal_confirm').data('excavator-delete-modal-id', deleteId);
+            $('#excavator_modal_warning_record_id').html("#"+ transactionId);
             $('#excavator_delete_confirmation_modal').modal('show');
         } else {
             alert("Something went wrong! Please reload the page.");
@@ -259,6 +264,7 @@ $(function () {
         $('#excavator_delete_confirmation_modal_confirm').prop('disabled', true);
 
         if(deleteId && deleteId != 0) {
+            $("#excavator_delete_"+ deleteId).find('.excavator_delete_button').prop('disabled',true);
             $("#excavator_delete_"+ deleteId).submit();
         } else {
             alert("Something went wrong! Please reload the page.");
@@ -269,9 +275,11 @@ $(function () {
     //invoke confirmation on delete
     $('body').on("click", ".jackhammer_delete_button", function () {
         var deleteId = $(this).data('jackhammer-delete-id');
+        var transactionId   = $(this).data('jackhammer-transaction-id');
 
         if(deleteId && deleteId != 0) {
             $('#jackhammer_delete_confirmation_modal_confirm').data('jackhammer-delete-modal-id', deleteId);
+            $('#jackhammer_modal_warning_record_id').html("#"+ transactionId);
             $('#jackhammer_delete_confirmation_modal').modal('show');
         } else {
             alert("Something went wrong! Please reload the page.");
@@ -286,6 +294,7 @@ $(function () {
         $('#jackhammer_delete_confirmation_modal_confirm').prop('disabled', true);
 
         if(deleteId && deleteId != 0) {
+            $("#jackhammer_delete_"+ deleteId).find('.jackhammer_delete_button').prop('disabled',true);
             $("#jackhammer_delete_"+ deleteId).submit();
         } else {
             alert("Something went wrong! Please reload the page.");

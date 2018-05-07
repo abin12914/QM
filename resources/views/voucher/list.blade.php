@@ -150,7 +150,7 @@
                                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                             <input type="hidden" name="voucher_id" value="{{ $cashVoucher->id }}">
                                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($cashVoucher->date_time)->format('d-m-Y') }}">
-                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $cashVoucher->id }}" type="button">
+                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $cashVoucher->id }}" data-transaction-id="{{ $cashVoucher->transaction->id }}" type="button">
                                                                                 <i class="fa fa-trash"> Delete</i>
                                                                             </button>
                                                                         </form>
@@ -265,10 +265,17 @@
                                                     <tr>
                                                         <th style="width: 5%;">#</th>
                                                         <th style="width: 15%;">Date / Ref. No.</th>
-                                                        <th style="width: 15%;">Supplier</th>
-                                                        <th style="width: 15%;">Receiver</th>
-                                                        <th style="width: 30%;">Description</th>
-                                                        <th style="width: 10%;">Amount</th>
+                                                        @if(!empty($accountId))
+                                                            <th style="width: 15%;">Account</th>
+                                                            <th style="width: 35%;">Description</th>
+                                                            <th style="width: 10%;">Debit</th>
+                                                            <th style="width: 10%;">Credit</th>
+                                                        @else
+                                                            <th style="width: 15%;">Supplier</th>
+                                                            <th style="width: 15%;">Receiver</th>
+                                                            <th style="width: 30%;">Description</th>
+                                                            <th style="width: 10%;">Amount</th>
+                                                        @endif
                                                         <th style="width: 10%;" class="no-print">Action</th>
                                                     </tr>
                                                 </thead>
@@ -285,32 +292,38 @@
                                                                     <b class="no-print bg-info text-red">{{ $creditVoucher->transaction->id }}</b>
                                                                 </td>
                                                                 @if($creditVoucher->transaction->debitAccount->id == $accountId)
-                                                                    <td>
+                                                                    {{-- <td>
                                                                         {{ $creditVoucher->transaction->creditAccount->account_name }}
-                                                                    </td>
+                                                                    </td> --}}
                                                                     <td class="bg-gray">
                                                                         {{ $creditVoucher->transaction->debitAccount->account_name }}
                                                                     </td>
+                                                                    <td>{{ $creditVoucher->transaction->particulars }}</td>
+                                                                    <td>{{ $creditVoucher->amount }}</td>
+                                                                    <td></td>
                                                                 @elseif($creditVoucher->transaction->creditAccount->id == $accountId)
-                                                                    <td class="bg-gray">
+                                                                    <td class="bg-warning">
                                                                         {{ $creditVoucher->transaction->creditAccount->account_name }}
                                                                     </td>
-                                                                    <td>
+                                                                    {{-- <td>
                                                                         {{ $creditVoucher->transaction->debitAccount->account_name }}
-                                                                    </td>
+                                                                    </td> --}}
+                                                                    <td>{{ $creditVoucher->transaction->particulars }}</td>
+                                                                    <td></td>
+                                                                    <td>{{ $creditVoucher->amount }}</td>
                                                                 @else
                                                                     <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
                                                                     <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
+                                                                    <td>{{ $creditVoucher->transaction->particulars }}</td>
+                                                                    <td>{{ $creditVoucher->amount }}</td>
                                                                 @endif
-                                                                <td>{{ $creditVoucher->transaction->particulars }}</td>
-                                                                <td>{{ $creditVoucher->amount }}</td>
                                                                 <td class="no-print">
                                                                     @if($creditVoucher->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
                                                                         <form action="{{route('voucher-delete-action')}}" id="delete_{{ $creditVoucher->id }}" method="post" style="float: left;">
                                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                             <input type="hidden" name="voucher_id" value="{{ $creditVoucher->id }}">
                                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($creditVoucher->date_time)->format('d-m-Y') }}">
-                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $creditVoucher->id }}" type="button">
+                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $creditVoucher->id }}" data-transaction-id="{{ $creditVoucher->transaction->id }}" type="button">
                                                                                 <i class="fa fa-trash"> Delete</i>
                                                                             </button>
                                                                         </form>
@@ -322,7 +335,7 @@
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-                                                        @if(Request::get('page') == $creditVouchers->lastPage() || $creditVouchers->lastPage() == 1)
+                                                        @if(!empty($accountId) && (Request::get('page') == $creditVouchers->lastPage() || $creditVouchers->lastPage() == 1))
                                                             <tr>
                                                                 <td></td>
                                                                 <td></td>
@@ -337,8 +350,8 @@
                                                                 <td><b>Total Amount</b></td>
                                                                 <td></td>
                                                                 <td></td>
-                                                                <td></td>
-                                                                <td><b>{{ $totalAmount }}</b></td>
+                                                                <td><b>{{ $totalDebitAmount }}</b></td>
+                                                                <td><b>{{ $totalCreditAmount }}</b></td>
                                                                 <td class="no-print"></td>
                                                             </tr>
                                                         @endif
@@ -507,7 +520,7 @@
                                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                             <input type="hidden" name="voucher_id" value="{{ $machineVoucher->id }}">
                                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($machineVoucher->date_time)->format('d-m-Y') }}">
-                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $machineVoucher->id }}" type="button">
+                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $machineVoucher->id }}" data-transaction-id="{{ $machineVoucher->transaction->id }}" type="button">
                                                                                 <i class="fa fa-trash"> Delete</i>
                                                                             </button>
                                                                         </form>
@@ -587,7 +600,9 @@
             <div class="modal-body">
                 <div id="modal_warning">
                     <div class="row">
-                        <div class="col-sm-2"></div>
+                        <div class="col-sm-2">
+                            <b id="modal_warning_record_id" class="pull-right"></b>
+                        </div>
                         <div class="col-sm-10">
                             <p>
                                 <b> Are you sure to delete this record?</b>

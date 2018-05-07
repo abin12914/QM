@@ -169,18 +169,18 @@
                                 </div>
                                 <div class="col-xs-5"></div>
                                 <div class="col-xs-2">
-                                    <form action="{{ route('profit-loss-statement-action') }}" method="post" class="form-horizontal">
+                                    <form action="{{ route('profit-loss-statement-action') }}" method="post" id="share_form" class="form-horizontal">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="hidden" name="from_date" value="{{ $fromDate->format('d-m-Y') }}">
                                         <input type="hidden" name="to_date" value="{{ $toDate->format('d-m-Y') }}">
-                                        <button type="submit" class="btn btn-primary btn-block btn-flat submit-button" tabindex="4">Confirm And Allot Share Values</button>
+                                        <button type="button" class="btn btn-primary btn-block btn-flat" id="share_button" tabindex="4">Allot Share Values</button>
                                     </form>
                                 </div>
                                 <!-- /.col -->
                             </div><br>
                         @elseif($shareConfirmButton == 2)
                             <br>
-                            <div class="row">
+                            <div class="row no-print">
                                 <div class="col-xs-5"></div>
                                 <div class="col-xs-2">
                                     <div class="alert alert-default text-center bg-info">
@@ -252,5 +252,38 @@
         <!-- Main row -->
     </section>
     <!-- /.content -->
+    <!-- /.content -->
+    <div class="modal modal modal-danger" id="share_confirmation_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Confirm Action</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="modal_warning">
+                        <div class="row">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-11">
+                                <p>
+                                    <b> Are sure to proceed with share options in the table? Action is irriversable.</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="share_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="share_modal_confirm" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </div>
 @endsection

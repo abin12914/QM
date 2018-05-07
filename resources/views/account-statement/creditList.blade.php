@@ -115,14 +115,14 @@
                                                 </tr>
                                             @endforeach
                                         @endif
+                                        <tr>
+                                            <td>#</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{ !empty($totalDebitAmount) ? $totalDebitAmount : 0 }}</td>
+                                            <td>{{ !empty($totalCreditAmount) ? $totalCreditAmount : 0 }}</td>
+                                        </tr>
                                     </tbody>
-                                    <tfoot>
-                                        <td>#</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>{{ !empty($totalDebitAmount) ? $totalDebitAmount : 0 }}</td>
-                                        <td>{{ !empty($totalCreditAmount) ? $totalCreditAmount : 0 }}</td>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>

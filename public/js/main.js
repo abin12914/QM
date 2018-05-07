@@ -128,6 +128,16 @@ $(function () {
             $('#delete_confirmation_modal').modal('hide');
         }
     });
+
+    //invoke confirmation on click
+    $('body').on("click", "#share_button", function () {
+        $('#share_confirmation_modal').modal('show');
+    });
+
+    $('body').on("click", "#share_modal_confirm", function () {
+        $('#share_modal_confirm').prop('disabled', true);
+        $("#share_form").submit();
+    });
 });
 function dismissAlert() {
     if($("#alert-message").hasClass('alert-success')) {

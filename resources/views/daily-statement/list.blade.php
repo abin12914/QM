@@ -134,7 +134,7 @@
                                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                             <input type="hidden" name="attenddance_id" value="{{ $attendance->id }}">
                                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($attendance->date)->format('d-m-Y') }}">
-                                                                            <button type="button" class="btn btn-danger employee_delete_button" data-employee-delete-id="{{ $attendance->id }}" data-employee-transaction-id="{{ $sale->transaction->id }}" type="button">
+                                                                            <button type="button" class="btn btn-danger employee_delete_button" data-employee-delete-id="{{ $attendance->id }}" data-employee-transaction-id="{{ $attendance->transaction->id }}" type="button">
                                                                                 <i class="fa fa-trash"> Delete</i>
                                                                             </button>
                                                                         </form>
@@ -341,7 +341,7 @@
                                                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                         <input type="hidden" name="excavator_id" value="{{ $excavatorReading->id }}">
                                                                         <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($excavatorReading->date)->format('d-m-Y') }}">
-                                                                        <button type="button" class="btn btn-danger excavator_delete_button" data-excavator-delete-id="{{ $excavatorReading->id }}" type="button">
+                                                                        <button type="button" class="btn btn-danger excavator_delete_button" data-excavator-delete-id="{{ $excavatorReading->id }}" data-excavator-transaction-id="{{ $excavatorReading->transaction->id }}" type="button">
                                                                             <i class="fa fa-trash"> Delete</i>
                                                                         </button>
                                                                     </form>
@@ -422,7 +422,9 @@
                                         <div class="modal-body">
                                             <div id="modal_warning">
                                                 <div class="row">
-                                                    <div class="col-sm-2"></div>
+                                                    <div class="col-sm-2">
+                                                        <b id="excavator_modal_warning_record_id" class="pull-right"></b>
+                                                    </div>
                                                     <div class="col-sm-10">
                                                         <p>
                                                             <b> Are you sure to delete this record?</b>
@@ -548,7 +550,7 @@
                                                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                         <input type="hidden" name="jackhammer_id" value="{{ $jackhammerReading->id }}">
                                                                         <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($jackhammerReading->date)->format('d-m-Y') }}">
-                                                                        <button type="button" class="btn btn-danger jackhammer_delete_button" data-jackhammer-delete-id="{{ $jackhammerReading->id }}" type="button">
+                                                                        <button type="button" class="btn btn-danger jackhammer_delete_button" data-jackhammer-delete-id="{{ $jackhammerReading->id }}" data-jackhammer-transaction-id="{{ $jackhammerReading->transaction->id }}" type="button">
                                                                             <i class="fa fa-trash"> Delete</i>
                                                                         </button>
                                                                     </form>
@@ -619,7 +621,9 @@
                                         <div class="modal-body">
                                             <div id="modal_warning">
                                                 <div class="row">
-                                                    <div class="col-sm-2"></div>
+                                                    <div class="col-sm-2">
+                                                        <b id="jackhammer_modal_warning_record_id" class="pull-right"></b>
+                                                    </div>
                                                     <div class="col-sm-10">
                                                         <p>
                                                             <b> Are you sure to delete this record?</b>

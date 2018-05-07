@@ -106,8 +106,9 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="width: 5%;">#</th>
-                                                        <th style="width: 20%;">Employee Name</th>
-                                                        <th style="width: 20%;">Account Name</th>
+                                                        <th style="width: 15%;">Date & Ref. No.</th>
+                                                        <th style="width: 10%;">Employee Name</th>
+                                                        <th style="width: 15%;">Account Name</th>
                                                         <th style="width: 15%;">From</th>
                                                         <th style="width: 15%;">To</th>
                                                         <th style="width: 10%;">Wage</th>
@@ -119,6 +120,11 @@
                                                         @foreach($employeeSalary as $index => $salary)
                                                             <tr>
                                                                 <td>{{ $index + $employeeSalary->firstItem() }}</td>
+                                                                <td>
+                                                                    {{ $salary->transaction->date_time->format('d-m-Y') }}
+                                                                    <i class="no-print"> / </i>
+                                                                    <b class="no-print bg-info text-red">{{ $salary->transaction->id }}</b>
+                                                                </td>
                                                                 <td>{{ $salary->employee->account->accountDetail->name }}</td>
                                                                 <td>{{ $salary->employee->account->account_name }}</td>
                                                                 <td>{{ $salary->from_date }}</td>
@@ -130,7 +136,7 @@
                                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                             <input type="hidden" name="salary_id" value="{{ $salary->id }}">
                                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($salary->transaction->date_time)->format('d-m-Y') }}">
-                                                                            <button type="button" class="btn btn-danger employee_delete_button" data-employee-delete-id="{{ $salary->id }}" type="button">
+                                                                            <button type="button" class="btn btn-danger employee_delete_button" data-employee-delete-id="{{ $salary->id }}" data-employee-transaction-id="{{ $salary->transaction->id }}" type="button">
                                                                                 <i class="fa fa-trash"> Delete</i>
                                                                             </button>
                                                                         </form>
@@ -195,7 +201,9 @@
                                         <div class="modal-body">
                                             <div id="modal_warning">
                                                 <div class="row">
-                                                    <div class="col-sm-2"></div>
+                                                    <div class="col-sm-2">
+                                                        <b id="employee_modal_warning_record_id" class="pull-right"></b>
+                                                    </div>
                                                     <div class="col-sm-10">
                                                         <p>
                                                             <b> Are you sure to delete this record?</b>

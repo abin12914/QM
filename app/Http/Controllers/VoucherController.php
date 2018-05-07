@@ -253,6 +253,8 @@ class VoucherController extends Controller
     public function creditVoucherList(Request $request)
     {
         $totalAmount        = 0;
+        $totalDebitAmount   = 0;
+        $totalCreditAmount  = 0;
         $accountId          = !empty($request->get('credit_voucher_account_id')) ? $request->get('credit_voucher_account_id') : 0;
         $fromDate           = !empty($request->get('credit_voucher_from_date')) ? $request->get('credit_voucher_from_date') : '';
         $toDate             = !empty($request->get('credit_voucher_to_date')) ? $request->get('credit_voucher_to_date') : '';
@@ -260,12 +262,6 @@ class VoucherController extends Controller
         $accounts   = Account::where('type', 'personal')->where('status', '1')->get();
 
         $query = Voucher::where('status', 1)->where('voucher_type', 'Credit');
-
-        if(!empty($accountId) && $accountId != 0) {
-            $query = $query->whereHas('transaction', function ($q) use($accountId) {
-                $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
-            });
-        }
 
         if(!empty($fromDate)) {
             $searchFromDate = new DateTime($fromDate);
@@ -279,20 +275,38 @@ class VoucherController extends Controller
             $query = $query->where('date_time', '<=', $searchToDate);
         }
 
-        $totalQuery     = clone $query;
-        $totalAmount    = $totalQuery->sum('amount');
+        if(!empty($accountId) && $accountId != 0) {
+            $totalDebitQuery     = clone $query;
+            $totalDebitAmount    = $totalDebitQuery->whereHas('transaction', function ($q) use($accountId) {
+                                        $q->where('debit_account_id', $accountId);
+                                    })->sum('amount');
+
+            $totalCreditQuery     = clone $query;
+            $totalCreditAmount    = $totalCreditQuery->whereHas('transaction', function ($q) use($accountId) {
+                                        $q->where('credit_account_id', $accountId);
+                                    })->sum('amount');
+
+            $query = $query->whereHas('transaction', function ($q) use($accountId) {
+                $q->where('credit_account_id', $accountId)->orWhere('debit_account_id', $accountId);
+            });
+        }
+
+        /*$totalQuery     = clone $query;
+        $totalAmount    = $totalQuery->sum('amount');*/
 
         $creditVouchers = $query->with(['transaction.debitAccount.accountDetail', 'transaction.creditAccount.accountDetail'])->orderBy('id','desc')->paginate(15);
         
         return view('voucher.list',[
-                'accounts'        => $accounts,
-                'creditVouchers'  => $creditVouchers,
-                'accountId'       => $accountId,
-                'fromDate'        => $fromDate,
-                'toDate'          => $toDate,
-                'cashVouchers'    => [],
-                'machineVouchers' => [],
-                'totalAmount'     => $totalAmount
+                'accounts'          => $accounts,
+                'creditVouchers'    => $creditVouchers,
+                'accountId'         => $accountId,
+                'fromDate'          => $fromDate,
+                'toDate'            => $toDate,
+                'cashVouchers'      => [],
+                'machineVouchers'   => [],
+                /*'totalAmount'     => $totalAmount*/
+                'totalDebitAmount'  => $totalDebitAmount,
+                'totalCreditAmount' => $totalCreditAmount
             ]);
     }
 

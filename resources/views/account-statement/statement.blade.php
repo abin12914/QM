@@ -218,12 +218,12 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Date & Time</th>
-                                            <th style="width: 3%;">Ref No.</th>
-                                            <th>Particulars</th>
-                                            <th>Debit</th>
-                                            <th>Credit</th>
+                                            <th style="width: 5%;">#</th>
+                                            <th style="width: 10%;">Date</th>
+                                            <th style="width: 5%;">Ref No.</th>
+                                            <th style="width: 50%;">Particulars</th>
+                                            <th style="width: 15%;">Debit</th>
+                                            <th style="width: 15%;">Credit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -235,65 +235,87 @@
                                                     <td>{{ $transaction->id }}</td>
                                                     <td>{{ $transaction->particulars }}</td>
                                                     @if($transaction->debit_account_id == $accountId)
-                                                        <td>{{ $transaction->amount }}</td>
+                                                        <td>{{ round($transaction->amount, 2) }}</td>
                                                         <td>-</td>
-                                                         {{-- $debitAmount = $debitAmount + $transaction->amount; --}}
                                                     @elseif($transaction->credit_account_id == $accountId)
                                                         <td>-</td>
-                                                        <td>{{ $transaction->amount }}</td>
-                                                        {{-- $creditAmount = $creditAmount + $transaction->amount; --}}
+                                                        <td>{{ round($transaction->amount, 2) }}</td>
                                                     @else
                                                         <td>0</td>
                                                         <td>0</td>
                                                     @endif
                                                 </tr>
                                             @endforeach
+                                            @if(Request::get('page') == $transactions->lastPage() || $transactions->lastPage() == 1)
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <td><b>Sub Total</b></td>
+                                                    <td><b>{{ round($subtotalDebit, 2) }}</b></td>
+                                                    <td><b>{{ round($subtotalCredit, 2) }}</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <td></td>
+                                                    <td>----------</td>
+                                                    <td>----------</td>
+                                                </tr>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    @if($subtotalDebit <= $subtotalCredit )
+                                                        <td><b>Sub total Balance </b>- [{{ round($subtotalCredit, 2) }} - {{ round($subtotalDebit, 2) }}]</td>
+                                                        <td><b>{{ round(($subtotalCredit - $subtotalDebit), 2) }}</b></td>
+                                                        <td></td>
+                                                    @else
+                                                        <td><b>Sub total Balance </b>- [{{ round($subtotalDebit, 2) }} - {{ round($subtotalCredit, 2) }}]</td>
+                                                        <td></td>
+                                                        <td><b>{{ round(($subtotalDebit - $subtotalCredit), 2) }}</b></td>
+                                                    @endif
+                                                </tr>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    @if($obDebitAmount <= $obCreditAmount )
+                                                        <td><b>Old Balance </b>- [{{ round($obCreditAmount, 2) }} - {{ round($obDebitAmount, 2) }}]</td>
+                                                        <td><b>{{ round(($obCreditAmount- $obDebitAmount), 2) }}</b></td>
+                                                        <td></td>
+                                                    @else
+                                                        <td><b>Old Balance </b>- [{{ round($obDebitAmount, 2) }} - {{ round($obCreditAmount, 2) }}]</td>
+                                                        <td></td>
+                                                        <td><b>{{ round(($obDebitAmount - $obCreditAmount), 2) }}</b></td>
+                                                    @endif    
+                                                </tr>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <td><b>Total Amount</b></td>
+                                                   <td><b>{{ round($totalDebit, 2) }}</b></td>
+                                                   <td><b>{{ round($totalCredit, 2) }}</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    @if($totalDebit <= $totalCredit)
+                                                        <td><b>Balance </b>[ {{ round($totalCredit) }} - {{ round($totalDebit) }} ]</td>
+                                                        <td>{{ round(($totalCredit - $totalDebit), 2) }}</td>
+                                                        <td></td>
+                                                    @else
+                                                        <td><b>OVER </b>[ {{ round($totalDebit) }} - {{ round($totalCredit) }} ]</td>
+                                                        <td></td>
+                                                        <td><b>{{ round(($totalDebit - $totalCredit), 2) }}</b></td>
+                                                    @endif
+                                                </tr>
+                                            @endif
                                         @endif
                                     </tbody>
-                                    @if(!empty($transactions) && (Request::get('page') == $transactions->lastPage() || $transactions->lastPage() == 1))
-                                        <tfoot>
-                                            <tr>
-                                                <th></th><th></th><th></th><th></th><th></th><th></th>
-                                            </tr>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th>Sub Total</th>
-                                                <th>{{ $subtotalDebit }}</th>
-                                                <th>{{ $subtotalCredit }}</th>
-                                            </tr>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th>Old Balance</th>
-                                                <th>{{ $obDebitAmount }}</th>
-                                                <th>{{ $obCreditAmount }}</th>
-                                            </tr>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th>Total Amount</th>
-                                                <th>{{ $totalDebit }}</th>
-                                                <th>{{ $totalCredit }}</th>
-                                            </tr>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th>{{ 'Balance' }}</th>
-                                                @if($totalDebit <= $totalCredit)
-                                                    <th>{{ $totalCredit - $totalDebit }}</th>
-                                                    <th></th>
-                                                @else
-                                                    <th></th>
-                                                    <th>{{ $totalDebit - $totalCredit }}</th>
-                                                @endif
-                                            </tr>
-                                        </tfoot>
-                                    @endif
                                 </table>
                             </div>
                         </div>
