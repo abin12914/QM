@@ -96,10 +96,17 @@ $(function () {
 
     //invoke confirmation on delete
     $('body').on("click", ".delete_button", function () {
-        var deleteId = $(this).data('delete-id');
+        var deleteId        = $(this).data('delete-id');
+        var transactionId   = $(this).data('transaction-id');
+
+        if(!transactionId) {
+            alert("Something went wrong. Please try again later.");
+            return false;
+        }
 
         if(deleteId && deleteId != 0) {
             $('#delete_confirmation_modal_confirm').data('delete-modal-id', deleteId);
+            $('#modal_warning_record_id').html("#"+ transactionId);
             $('#delete_confirmation_modal').modal('show');
         } else {
             alert("Something went wrong! Please reload the page.");
@@ -114,6 +121,7 @@ $(function () {
         $('#delete_confirmation_modal_confirm').prop('disabled', true);
 
         if(deleteId && deleteId != 0) {
+            $("#delete_"+ deleteId).find('.delete_button').prop('disabled',true);
             $("#delete_"+ deleteId).submit();
         } else {
             alert("Something went wrong! Please reload the page.");

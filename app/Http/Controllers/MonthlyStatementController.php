@@ -14,6 +14,7 @@ use App\Models\Excavator;
 use App\Models\ExcavatorRent;
 use App\Http\Requests\EmployeeSalaryRegistrationRequest;
 use App\Http\Requests\ExcavatorRentRegistrationRequest;
+use App\Http\Requests\DeleteSalaryRequest;
 
 class MonthlyStatementController extends Controller
 {
@@ -294,5 +295,38 @@ class MonthlyStatementController extends Controller
                 'employeeSalary'    => [],
                 'totalAmount'       => $totalAmount
             ]);
+    }
+
+    /**
+     * Handle employee salary delete action
+     */
+    public function employeeSalaryDeleteAction(DeleteSalaryRequest $request)
+    {
+        $id     = $request->get('salary_id');
+        $date   = $request->get('date');
+        
+        $salary = EmployeeSalary::where('id', $id)->where('status', 1)->first();
+
+        if(!empty($salary) && !empty($salary->id)) {
+            if(Carbon::parse($salary->transaction->date_time)->format('d-m-Y') != $date) {
+                return redirect()->back()->with("message","Deletion restricted. Date change detected!! #05/13")->with("alert-class","alert-danger");
+            }
+
+            if($salary->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
+                return redirect()->back()->with("message","Failed to delete the salary details.You don't have the permission to delete this record! #05/14")->with("alert-class","alert-danger");
+            }
+            if($salary->transaction->created_at->diffInDays(Carbon::now(), false) > 5) {
+                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #05/15")->with("alert-class","alert-danger");
+            }
+
+            $salaryTransactionDelete    = $salary->transaction->delete();
+            $salaryDeleteFlag           = $salary->delete();
+
+            if($salaryTransactionDelete && $salaryDeleteFlag) {
+                return redirect()->back()->with("message","#". $salary->transaction->id. " -Successfully deleted.")->with("alert-class","alert-success");
+            }
+        }
+
+        return redirect()->back()->with("message","Failed to delete the salary details.Try again after reloading the page! #05/16")->with("alert-class","alert-danger");
     }
 }

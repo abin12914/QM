@@ -706,7 +706,7 @@ class SalesController extends Controller
         $sale = Sale::where('id', $saleId)->where('status', 1)->first();
 
         if(!empty($sale) && !empty($sale->id)) {
-            if(Carbon\Carbon::parse($sale->date_time)->format('d-m-Y') != $date) {
+            if(Carbon::parse($sale->date_time)->format('d-m-Y') != $date) {
                 return redirect()->back()->with("message","Deletion restricted. Date change detected!! #02/36")->with("alert-class","alert-danger");
             }
 

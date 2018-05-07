@@ -122,7 +122,7 @@
                                             @foreach($purchases as $index=>$purchase)
                                                 <tr>
                                                     <td>{{ $index + $purchases->firstItem() }}</td>
-                                                    <td>{{ Carbon\Carbon::parse($purchase->date_time)->format('d-m-Y') }}<i class="no-print"> / </i>
+                                                    <td>{{ $purchase->date_time->format('d-m-Y') }}<i class="no-print"> / </i>
                                                         <b class="no-print bg-info text-red">{{ $purchase->transaction->id }}</b>
                                                     </td>
                                                     <td>{{ $purchase->purchasebleProduct->name }}</td>
@@ -135,7 +135,7 @@
                                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                 <input type="hidden" name="purchase_id" value="{{ $purchase->id }}">
                                                                 <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($purchase->date_time)->format('d-m-Y') }}">
-                                                                <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $purchase->id }}" type="button">
+                                                                <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $purchase->id }}" data-transaction-id="{{ $purchase->transaction->id }}" type="button">
                                                                     <i class="fa fa-trash"> Delete</i>
                                                                 </button>
                                                             </form>
@@ -155,6 +155,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
@@ -163,6 +164,7 @@
                                                     <td><b>Total Amount</b></td>
                                                     <td></td>
                                                     <td><b>{{ $totalAmount }}</b></td>
+                                                    <td></td>
                                                 </tr>
                                             @endif
                                         @endif
@@ -204,7 +206,9 @@
                 <div class="modal-body">
                     <div id="modal_warning">
                         <div class="row">
-                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <b id="modal_warning_record_id" class="pull-right"></b>
+                            </div>
                             <div class="col-sm-10">
                                 <p>
                                     <b> Are you sure to delete this record?</b>
@@ -214,7 +218,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel & Edit</button>
+                    <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                     <button type="button" id="delete_confirmation_modal_confirm" class="btn btn-primary" data-delete-modal-id="0" data-dismiss="modal">Confirm</button>
                 </div>
             </div>

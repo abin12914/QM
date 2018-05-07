@@ -211,4 +211,85 @@ $(function () {
            $('#jackhammer_id').val('');
         }
     });
+
+    //invoke confirmation on delete
+    $('body').on("click", ".employee_delete_button", function () {
+        var deleteId = $(this).data('employee-delete-id');
+
+        if(deleteId && deleteId != 0) {
+            $('#employee_delete_confirmation_modal_confirm').data('employee-delete-modal-id', deleteId);
+            $('#employee_delete_confirmation_modal').modal('show');
+        } else {
+            alert("Something went wrong! Please reload the page.");
+            $('#employee_delete_confirmation_modal').modal('hide');
+        }
+    });
+
+    // for disabling submit button to prevent multiple submition on delete confirmation modal
+    $('body').on("click", "#employee_delete_confirmation_modal_confirm", function () {
+        var deleteId = $(this).data('employee-delete-modal-id');
+
+        $('#employee_delete_confirmation_modal_confirm').prop('disabled', true);
+
+        if(deleteId && deleteId != 0) {
+            $("#employee_delete_"+ deleteId).submit();
+        } else {
+            alert("Something went wrong! Please reload the page.");
+            $('#employee_delete_confirmation_modal').modal('hide');
+        }
+    });
+
+    //invoke confirmation on delete
+    $('body').on("click", ".excavator_delete_button", function () {
+        var deleteId = $(this).data('excavator-delete-id');
+
+        if(deleteId && deleteId != 0) {
+            $('#excavator_delete_confirmation_modal_confirm').data('excavator-delete-modal-id', deleteId);
+            $('#excavator_delete_confirmation_modal').modal('show');
+        } else {
+            alert("Something went wrong! Please reload the page.");
+            $('#excavator_delete_confirmation_modal').modal('hide');
+        }
+    });
+
+    // for disabling submit button to prevent multiple submition on delete confirmation modal
+    $('body').on("click", "#excavator_delete_confirmation_modal_confirm", function () {
+        var deleteId = $(this).data('excavator-delete-modal-id');
+
+        $('#excavator_delete_confirmation_modal_confirm').prop('disabled', true);
+
+        if(deleteId && deleteId != 0) {
+            $("#excavator_delete_"+ deleteId).submit();
+        } else {
+            alert("Something went wrong! Please reload the page.");
+            $('#excavator_delete_confirmation_modal').modal('hide');
+        }
+    });
+
+    //invoke confirmation on delete
+    $('body').on("click", ".jackhammer_delete_button", function () {
+        var deleteId = $(this).data('jackhammer-delete-id');
+
+        if(deleteId && deleteId != 0) {
+            $('#jackhammer_delete_confirmation_modal_confirm').data('jackhammer-delete-modal-id', deleteId);
+            $('#jackhammer_delete_confirmation_modal').modal('show');
+        } else {
+            alert("Something went wrong! Please reload the page.");
+            $('#jackhammer_delete_confirmation_modal').modal('hide');
+        }
+    });
+
+    // for disabling submit button to prevent multiple submition on delete confirmation modal
+    $('body').on("click", "#jackhammer_delete_confirmation_modal_confirm", function () {
+        var deleteId = $(this).data('jackhammer-delete-modal-id');
+
+        $('#jackhammer_delete_confirmation_modal_confirm').prop('disabled', true);
+
+        if(deleteId && deleteId != 0) {
+            $("#jackhammer_delete_"+ deleteId).submit();
+        } else {
+            alert("Something went wrong! Please reload the page.");
+            $('#jackhammer_delete_confirmation_modal').modal('hide');
+        }
+    });
 });

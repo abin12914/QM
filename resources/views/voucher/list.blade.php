@@ -103,21 +103,28 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
-                                                        <th>Date & Time</th>
-                                                        <th>Account Name</th>
-                                                        <th>Name</th>
-                                                        <th>Description</th>
-                                                        <th>Debit</th>
-                                                        <th>Credit</th>
+                                                        <th style="width: 5%;">#</th>
+                                                        <th style="width: 15%;">Date / Ref. No.</th>
+                                                        <th style="width: 15%;">Account Name</th>
+                                                        <th style="width: 10%;">Name</th>
+                                                        <th style="width: 20%;">Description</th>
+                                                        <th style="width: 10%;">Debit</th>
+                                                        <th style="width: 10%;">Credit</th>
+                                                        <th style="width: 15%;" class="no-print">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @if(!empty($cashVouchers) && count($cashVouchers) > 0)
                                                         @foreach($cashVouchers as $index => $cashVoucher)
                                                             <tr>
-                                                                <td>{{ $index + $cashVouchers->firstItem() }}</td>
-                                                                <td>{{ Carbon\Carbon::parse($cashVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
+                                                                <td>
+                                                                    {{ $index + $cashVouchers->firstItem() }}
+                                                                </td>
+                                                                <td>
+                                                                    {{ Carbon\Carbon::parse($cashVoucher->date_time)->format('d-m-Y') }}
+                                                                    <i class="no-print"> / </i>
+                                                                    <b class="no-print bg-info text-red">{{ $cashVoucher->transaction->id }}</b>
+                                                                </td>
                                                                 @if($cashVoucher->transaction_type == 1)
                                                                     <td>{{ $cashVoucher->transaction->creditAccount->account_name }}</td>
                                                                     <td>{{ $cashVoucher->transaction->creditAccount->accountDetail->name }}</td>
@@ -137,26 +144,48 @@
                                                                     <td></td>
                                                                     <td></td>
                                                                 @endif
+                                                                <td class="no-print">
+                                                                    @if($cashVoucher->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                                        <form action="{{route('voucher-delete-action')}}" id="delete_{{ $cashVoucher->id }}" method="post" style="float: left;">
+                                                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                                            <input type="hidden" name="voucher_id" value="{{ $cashVoucher->id }}">
+                                                                            <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($cashVoucher->date_time)->format('d-m-Y') }}">
+                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $cashVoucher->id }}" type="button">
+                                                                                <i class="fa fa-trash"> Delete</i>
+                                                                            </button>
+                                                                        </form>
+                                                                    @else
+                                                                        <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                                            <i class="fa fa-exclamation-circle"> No Access</i>
+                                                                        </button>
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                         @endforeach
+                                                        @if(Request::get('page') == $cashVouchers->lastPage() || $cashVouchers->lastPage() == 1)
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td class="no-print"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td><b>Total Amount</b></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td><b>{{ $totalDebitAmount }}</b></td>
+                                                                <td><b>{{ $totalCreditAmount }}</b></td>
+                                                                <td class="no-print"></td>
+                                                            </tr>
+                                                        @endif
                                                     @endif
                                                 </tbody>
-                                                @if(!empty($cashVouchers) && (Request::get('page') == $cashVouchers->lastPage() || $cashVouchers->lastPage() == 1))
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td><b>Total Amount</b></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td><b>{{ $totalDebitAmount }}</b></td>
-                                                            <td><b>{{ $totalCreditAmount }}</b></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -234,51 +263,87 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
-                                                        <th>Date & Time</th>
-                                                        <th>Debit Account</th>
-                                                        <th>Credit Account</th>
-                                                        <th>Description</th>
-                                                        <th>Amount</th>
+                                                        <th style="width: 5%;">#</th>
+                                                        <th style="width: 15%;">Date / Ref. No.</th>
+                                                        <th style="width: 15%;">Supplier</th>
+                                                        <th style="width: 15%;">Receiver</th>
+                                                        <th style="width: 30%;">Description</th>
+                                                        <th style="width: 10%;">Amount</th>
+                                                        <th style="width: 10%;" class="no-print">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @if(!empty($creditVouchers) && count($creditVouchers) > 0)
-                                                    @foreach($creditVouchers as $index => $creditVoucher)
-                                                        <tr>
-                                                            <td>{{ $index + $creditVouchers->firstItem() }}</td>
-                                                            <td>{{ Carbon\Carbon::parse($creditVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
-                                                            @if($creditVoucher->transaction->debitAccount->id == $accountId)
-                                                                <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td class="bg-gray">{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
-                                                            @elseif($creditVoucher->transaction->creditAccount->id == $accountId)
-                                                                <td class="bg-gray">{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
-                                                            @else
-                                                                <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
-                                                            @endif
-                                                            <td>{{ $creditVoucher->transaction->particulars }}</td>
-                                                            <td>{{ $creditVoucher->amount }}</td>
-                                                        </tr>
-                                                    @endforeach
+                                                        @foreach($creditVouchers as $index => $creditVoucher)
+                                                            <tr>
+                                                                <td>
+                                                                    {{ $index + $creditVouchers->firstItem() }}
+                                                                </td>
+                                                                <td>
+                                                                    {{ Carbon\Carbon::parse($creditVoucher->date_time)->format('d-m-Y') }}
+                                                                    <i class="no-print"> / </i>
+                                                                    <b class="no-print bg-info text-red">{{ $creditVoucher->transaction->id }}</b>
+                                                                </td>
+                                                                @if($creditVoucher->transaction->debitAccount->id == $accountId)
+                                                                    <td>
+                                                                        {{ $creditVoucher->transaction->creditAccount->account_name }}
+                                                                    </td>
+                                                                    <td class="bg-gray">
+                                                                        {{ $creditVoucher->transaction->debitAccount->account_name }}
+                                                                    </td>
+                                                                @elseif($creditVoucher->transaction->creditAccount->id == $accountId)
+                                                                    <td class="bg-gray">
+                                                                        {{ $creditVoucher->transaction->creditAccount->account_name }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $creditVoucher->transaction->debitAccount->account_name }}
+                                                                    </td>
+                                                                @else
+                                                                    <td>{{ $creditVoucher->transaction->creditAccount->account_name }}</td>
+                                                                    <td>{{ $creditVoucher->transaction->debitAccount->account_name }}</td>
+                                                                @endif
+                                                                <td>{{ $creditVoucher->transaction->particulars }}</td>
+                                                                <td>{{ $creditVoucher->amount }}</td>
+                                                                <td class="no-print">
+                                                                    @if($creditVoucher->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                                        <form action="{{route('voucher-delete-action')}}" id="delete_{{ $creditVoucher->id }}" method="post" style="float: left;">
+                                                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                                            <input type="hidden" name="voucher_id" value="{{ $creditVoucher->id }}">
+                                                                            <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($creditVoucher->date_time)->format('d-m-Y') }}">
+                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $creditVoucher->id }}" type="button">
+                                                                                <i class="fa fa-trash"> Delete</i>
+                                                                            </button>
+                                                                        </form>
+                                                                    @else
+                                                                        <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                                            <i class="fa fa-exclamation-circle"> No Access</i>
+                                                                        </button>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        @if(Request::get('page') == $creditVouchers->lastPage() || $creditVouchers->lastPage() == 1)
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td class="no-print"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td><b>Total Amount</b></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td><b>{{ $totalAmount }}</b></td>
+                                                                <td class="no-print"></td>
+                                                            </tr>
+                                                        @endif
                                                     @endif
                                                 </tbody>
-                                                @if(!empty($creditVouchers) && (Request::get('page') == $creditVouchers->lastPage() || $creditVouchers->lastPage() == 1))
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td><b>Total Amount</b></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td><b>{{ $totalAmount }}</b></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -397,60 +462,87 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
-                                                        <th>Date & Time</th>
-                                                        <th>Machine</th>
-                                                        <th>Debit Account</th>
-                                                        <th>Credit Account</th>
-                                                        <th>Description</th>
-                                                        <th>Amount</th>
+                                                        <th style="width: 5%;">#</th>
+                                                        <th style="width: 15%;">Date / Ref. No.</th>
+                                                        <th style="width: 10%;">Machine</th>
+                                                        <th style="width: 12%;">Supplier</th>
+                                                        <th style="width: 12%;">Receiver</th>
+                                                        <th style="width: 28%;">Description</th>
+                                                        <th style="width: 8%;">Amount</th>
+                                                        <th style="width: 10%;" class="no-print">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @if(!empty($machineVouchers) && count($machineVouchers) > 0)
-                                                    @foreach($machineVouchers as $index => $machineVoucher)
-                                                        <tr>
-                                                            <td>{{ $index + $machineVouchers->firstItem() }}</td>
-                                                            <td>{{ Carbon\Carbon::parse($machineVoucher->date_time)->format('d-m-Y H:m:i') }}</td>
-                                                            @if(!empty($machineVoucher->excavator_id))
-                                                                <td>{{ $machineVoucher->excavator->name }}</td>
-                                                            @elseif(!empty($machineVoucher->jackhammer_id))
-                                                                <td>{{ $machineVoucher->jackhammer->name }}</td>
-                                                            @else
+                                                        @foreach($machineVouchers as $index => $machineVoucher)
+                                                            <tr>
+                                                                <td>{{ $index + $machineVouchers->firstItem() }}</td>
+                                                                <td>
+                                                                    {{ Carbon\Carbon::parse($machineVoucher->date_time)->format('d-m-Y') }}
+                                                                    <i class="no-print"> / </i>
+                                                                    <b class="no-print bg-info text-red">{{ $machineVoucher->transaction->id }}</b>
+                                                                </td>
+                                                                @if(!empty($machineVoucher->excavator_id))
+                                                                    <td>{{ $machineVoucher->excavator->name }}</td>
+                                                                @elseif(!empty($machineVoucher->jackhammer_id))
+                                                                    <td>{{ $machineVoucher->jackhammer->name }}</td>
+                                                                @else
+                                                                    <td></td>
+                                                                @endif
+                                                                @if($machineVoucher->transaction->debitAccount->id == $accountId)
+                                                                    <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
+                                                                    <td class="bg-gray">{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
+                                                                @elseif($machineVoucher->transaction->creditAccount->id == $accountId)
+                                                                    <td class="bg-gray">{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
+                                                                    <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
+                                                                @else
+                                                                    <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
+                                                                    <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
+                                                                @endif
+                                                                <td>{{ $machineVoucher->transaction->particulars }}</td>
+                                                                <td>{{ $machineVoucher->amount }}</td>
+                                                                <td class="no-print">
+                                                                    @if($machineVoucher->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                                        <form action="{{route('voucher-delete-action')}}" id="delete_{{ $machineVoucher->id }}" method="post" style="float: left;">
+                                                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                                            <input type="hidden" name="voucher_id" value="{{ $machineVoucher->id }}">
+                                                                            <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($machineVoucher->date_time)->format('d-m-Y') }}">
+                                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $machineVoucher->id }}" type="button">
+                                                                                <i class="fa fa-trash"> Delete</i>
+                                                                            </button>
+                                                                        </form>
+                                                                    @else
+                                                                        <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                                            <i class="fa fa-exclamation-circle"> No Access</i>
+                                                                        </button>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        @if(!empty($machineVouchers) && (Request::get('page') == $machineVouchers->lastPage() || $machineVouchers->lastPage() == 1))
+                                                            <tr>
                                                                 <td></td>
-                                                            @endif
-                                                            @if($machineVoucher->transaction->debitAccount->id == $accountId)
-                                                                <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td class="bg-gray">{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
-                                                            @elseif($machineVoucher->transaction->creditAccount->id == $accountId)
-                                                                <td class="bg-gray">{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
-                                                            @else
-                                                                <td>{{ $machineVoucher->transaction->creditAccount->account_name }}</td>
-                                                                <td>{{ $machineVoucher->transaction->debitAccount->account_name }}</td>
-                                                            @endif
-                                                            <td>{{ $machineVoucher->transaction->particulars }}</td>
-                                                            <td>{{ $machineVoucher->amount }}</td>
-                                                        </tr>
-                                                    @endforeach
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td class="no-print"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td><b>Total Amount</b></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td><b>{{ $totalAmount }}</b></td>
+                                                                <td class="no-print"></td>
+                                                            </tr>
+                                                        @endif
                                                     @endif
                                                 </tbody>
-                                                @if(!empty($machineVouchers) && (Request::get('page') == $machineVouchers->lastPage() || $machineVouchers->lastPage() == 1))
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td><b>Total Amount</b></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td><b>{{ $totalAmount }}</b></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -483,6 +575,37 @@
     </section>
     <!-- /.content -->
 </div>
+<div class="modal modal modal-danger" id="delete_confirmation_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Confirm Action</h4>
+            </div>
+            <div class="modal-body">
+                <div id="modal_warning">
+                    <div class="row">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            <p>
+                                <b> Are you sure to delete this record?</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                <button type="button" id="delete_confirmation_modal_confirm" class="btn btn-primary" data-delete-modal-id="0" data-dismiss="modal">Confirm</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 @endsection
 @section('scripts')
     <script src="/js/list/voucher.js?rndstr={{ rand(1000,9999) }}"></script>

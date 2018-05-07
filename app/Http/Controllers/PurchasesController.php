@@ -9,6 +9,7 @@ use App\Models\Purchase;
 use App\Models\Transaction;
 use Auth;
 use DateTime;
+use Carbon\Carbon;
 use App\Http\Requests\PurchaseRegistrationRequest;
 use App\Http\Requests\DeletePurchaseRequest;
 
@@ -163,7 +164,7 @@ class PurchasesController extends Controller
     }
 
     /**
-     * Handle sale delete action
+     * Handle purchase delete action
      */
     public function deleteAction(DeletePurchaseRequest $request)
     {
@@ -173,7 +174,7 @@ class PurchasesController extends Controller
         $purchase   = Purchase::where('id', $purchaseId)->where('status', 1)->first();
 
         if(!empty($purchase) && !empty($purchase->id)) {
-            if(Carbon\Carbon::parse($purchase->date_time)->format('d-m-Y') != $date) {
+            if(Carbon::parse($purchase->date_time)->format('d-m-Y') != $date) {
                 return redirect()->back()->with("message","Deletion restricted. Date change detected!! #03/05")->with("alert-class","alert-danger");
             }
 

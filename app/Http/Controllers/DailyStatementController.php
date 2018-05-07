@@ -17,6 +17,9 @@ use App\Models\JackhammerReading;
 use App\Http\Requests\EmployeeAttendanceRegistrationRequest;
 use App\Http\Requests\ExcavatorReadingRegistrationRequest;
 use App\Http\Requests\JackhammerReadingRegistrationRequest;
+use App\Http\Requests\DeleteAttendanceRequest;
+use App\Http\Requests\DeleteExcavatorReadingRequest;
+use App\Http\Requests\DeleteJackhammerReadingRequest;
 use App\Models\Sale;
 use App\Models\ProfitLoss;
 
@@ -389,8 +392,8 @@ class DailyStatementController extends Controller
         $totalBucketReading     = 0;
         $totalBreakerReading    = 0;
         $totalBata              = 0;
-        $bucketRate             = 0;
-        $breakerRate            = 0;
+        /*$bucketRate             = 0;
+        $breakerRate            = 0;*/
         $accountId      = !empty($request->get('excavator_account_id')) ? $request->get('excavator_account_id') : 0;
         $excavatorId    = !empty($request->get('excavator_id')) ? $request->get('excavator_id') : 0;
         $fromDate       = !empty($request->get('excavator_from_date')) ? $request->get('excavator_from_date') : '';
@@ -407,12 +410,12 @@ class DailyStatementController extends Controller
             });
         }
 
-        if(!empty($excavatorId) && $excavatorId != 0) {
+        /*if(!empty($excavatorId) && $excavatorId != 0) {
             $query = $query->where('excavator_id', $excavatorId);
             $excavator = Excavator::find($excavatorId);
             $bucketRate     = $excavator->rent_hourly_bucket;
             $breakerRate    = $excavator->rent_hourly_breaker;
-        }
+        }*/
 
         if(!empty($fromDate)) {
             $searchFromDate = new DateTime($fromDate);
@@ -454,8 +457,8 @@ class DailyStatementController extends Controller
                 'totalBreakerReading'   => $totalBreakerReading,
                 'totalBucketReading'    => $totalBucketReading,
                 'totalBata'             => $totalBata,
-                'breakerRate'           => $breakerRate,
-                'bucketRate'            => $bucketRate
+                /*'breakerRate'           => $breakerRate,
+                'bucketRate'            => $bucketRate*/
             ]);
     }
 
@@ -622,5 +625,104 @@ class DailyStatementController extends Controller
                 'shareButtonFlag'       => $shareButtonFlag,
                 'restrictedDate'        => $restrictedDate
             ]);
+    }
+
+    /**
+     * Handle employee attendance delete action
+     */
+    public function employeeAttendanceDeleteAction(DeleteAttendanceRequest $request)
+    {
+        $id     = $request->get('attenddance_id');
+        $date   = $request->get('date');
+        
+        $attendance = EmployeeAttendance::where('id', $id)->where('status', 1)->first();
+
+        if(!empty($attendance) && !empty($attendance->id)) {
+            if(Carbon::parse($attendance->date)->format('d-m-Y') != $date) {
+                return redirect()->back()->with("message","Deletion restricted. Date change detected!! #04/19")->with("alert-class","alert-danger");
+            }
+
+            if($attendance->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
+                return redirect()->back()->with("message","Failed to delete the attendance details.You don't have the permission to delete this record! #04/20")->with("alert-class","alert-danger");
+            }
+            if($attendance->transaction->created_at->diffInDays(Carbon::now(), false) > 5) {
+                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #04/21")->with("alert-class","alert-danger");
+            }
+
+            $attendanceTransactionDelete    = $attendance->transaction->delete();
+            $attendanceDeleteFlag           = $attendance->delete();
+
+            if($attendanceTransactionDelete && $attendanceDeleteFlag) {
+                return redirect()->back()->with("message","#". $attendance->transaction->id. " -Successfully deleted.")->with("alert-class","alert-success");
+            }
+        }
+
+        return redirect()->back()->with("message","Failed to delete the attendance details.Try again after reloading the page! #04/22")->with("alert-class","alert-danger");
+    }
+
+    /**
+     * Handle excavator reading delete action
+     */
+    public function excavatorReadingDeleteAction(DeleteExcavatorReadingRequest $request)
+    {
+        $id     = $request->get('excavator_id');
+        $date   = $request->get('date');
+        
+        $reading = ExcavatorReading::where('id', $id)->where('status', 1)->first();
+
+        if(!empty($reading) && !empty($reading->id)) {
+            if(Carbon::parse($reading->date)->format('d-m-Y') != $date) {
+                return redirect()->back()->with("message","Deletion restricted. Date change detected!! #04/23")->with("alert-class","alert-danger");
+            }
+
+            if($reading->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
+                return redirect()->back()->with("message","Failed to delete the reading details.You don't have the permission to delete this record! #04/24")->with("alert-class","alert-danger");
+            }
+            if($reading->transaction->created_at->diffInDays(Carbon::now(), false) > 5) {
+                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #04/25")->with("alert-class","alert-danger");
+            }
+
+            $readingTransactionDelete   = $reading->transaction->delete();
+            $readingDeleteFlag          = $reading->delete();
+
+            if($readingTransactionDelete && $readingDeleteFlag) {
+                return redirect()->back()->with("message","#". $reading->transaction->id. " -Successfully deleted.")->with("alert-class","alert-success");
+            }
+        }
+
+        return redirect()->back()->with("message","Failed to delete the reading details.Try again after reloading the page! #04/26")->with("alert-class","alert-danger");
+    }
+
+    /**
+     * Handle excavator reading delete action
+     */
+    public function jackhammerReadingDeleteAction(DeleteJackhammerReadingRequest $request)
+    {
+        $id     = $request->get('jackhammer_id');
+        $date   = $request->get('date');
+        
+        $reading = JackhammerReading::where('id', $id)->where('status', 1)->first();
+
+        if(!empty($reading) && !empty($reading->id)) {
+            if(Carbon::parse($reading->date)->format('d-m-Y') != $date) {
+                return redirect()->back()->with("message","Deletion restricted. Date change detected!! #04/27")->with("alert-class","alert-danger");
+            }
+
+            if($reading->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
+                return redirect()->back()->with("message","Failed to delete the reading details.You don't have the permission to delete this record! #04/28")->with("alert-class","alert-danger");
+            }
+            if($reading->transaction->created_at->diffInDays(Carbon::now(), false) > 5) {
+                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #04/29")->with("alert-class","alert-danger");
+            }
+
+            $readingTransactionDelete   = $reading->transaction->delete();
+            $readingDeleteFlag          = $reading->delete();
+
+            if($readingTransactionDelete && $readingDeleteFlag) {
+                return redirect()->back()->with("message","#". $reading->transaction->id. " -Successfully deleted.")->with("alert-class","alert-success");
+            }
+        }
+
+        return redirect()->back()->with("message","Failed to delete the reading details.Try again after reloading the page! #04/30")->with("alert-class","alert-danger");
     }
 }

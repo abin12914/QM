@@ -186,7 +186,7 @@
                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                             <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
-                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" type="button">
+                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" data-transaction-id="{{ $sales_record->transaction->id }}" type="button">
                                                                 <i class="fa fa-trash"> Delete</i>
                                                             </button>
                                                         </form>
@@ -207,7 +207,7 @@
                                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                 <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
                                                                 <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
-                                                                <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" type="button">
+                                                                <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}"  data-transaction-id="{{ $sales_record->transaction->id }}" type="button">
                                                                     <i class="fa fa-trash"> Delete</i>
                                                                 </button>
                                                             </form>
@@ -229,7 +229,7 @@
                                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                 <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
                                                                 <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
-                                                                <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" type="button">
+                                                                <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" data-transaction-id="{{ $sales_record->transaction->id }}" type="button">
                                                                     <i class="fa fa-trash"> Delete</i>
                                                                 </button>
                                                             </form>
@@ -256,7 +256,7 @@
                                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                             <input type="hidden" name="sale_id" value="{{ $sales_record->id }}">
                                                             <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($sales_record->date_time)->format('d-m-Y') }}">
-                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" type="button">
+                                                            <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $sales_record->id }}" data-transaction-id="{{ $sales_record->transaction->id }}" type="button">
                                                                 <i class="fa fa-trash"> Delete</i>
                                                             </button>
                                                         </form>
@@ -295,7 +295,9 @@
                 <div class="modal-body">
                     <div id="modal_warning">
                         <div class="row">
-                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <b id="modal_warning_record_id" class="pull-right"></b>
+                            </div>
                             <div class="col-sm-10">
                                 <p>
                                     <b> Are you sure to delete this record?</b>
@@ -305,7 +307,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel & Edit</button>
+                    <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                     <button type="button" id="delete_confirmation_modal_confirm" class="btn btn-primary" data-delete-modal-id="0" data-dismiss="modal">Confirm</button>
                 </div>
             </div>

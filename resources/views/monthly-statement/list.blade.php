@@ -105,16 +105,17 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
-                                                        <th>Employee Name</th>
-                                                        <th>Account Name</th>
-                                                        <th>From</th>
-                                                        <th>To</th>
-                                                        <th>Wage</th>
+                                                        <th style="width: 5%;">#</th>
+                                                        <th style="width: 20%;">Employee Name</th>
+                                                        <th style="width: 20%;">Account Name</th>
+                                                        <th style="width: 15%;">From</th>
+                                                        <th style="width: 15%;">To</th>
+                                                        <th style="width: 10%;">Wage</th>
+                                                        <th style="width: 15%;" class="no-print">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(count($employeeSalary) > 0)
+                                                    @if(!empty($employeeSalary) && count($employeeSalary) > 0)
                                                         @foreach($employeeSalary as $index => $salary)
                                                             <tr>
                                                                 <td>{{ $index + $employeeSalary->firstItem() }}</td>
@@ -123,25 +124,46 @@
                                                                 <td>{{ $salary->from_date }}</td>
                                                                 <td>{{ $salary->to_date }}</td>
                                                                 <td>{{ $salary->salary }}</td>
+                                                                <td class="no-print">
+                                                                    @if($salary->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                                        <form action="{{route('monthly-statement-employee-salary-delete-action')}}" id="employee_delete_{{ $salary->id }}" method="post" style="float: left;">
+                                                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                                            <input type="hidden" name="salary_id" value="{{ $salary->id }}">
+                                                                            <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($salary->transaction->date_time)->format('d-m-Y') }}">
+                                                                            <button type="button" class="btn btn-danger employee_delete_button" data-employee-delete-id="{{ $salary->id }}" type="button">
+                                                                                <i class="fa fa-trash"> Delete</i>
+                                                                            </button>
+                                                                        </form>
+                                                                    @else
+                                                                        <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                                            <i class="fa fa-exclamation-circle"> No Access</i>
+                                                                        </button>
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                         @endforeach
+                                                        @if(Request::get('page') == $employeeSalary->lastPage() || $employeeSalary->lastPage() == 1)
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td class="no-print"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td><b>Total Amount</b></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td><b>{{ $totalAmount }}</b></td>
+                                                                <td class="no-print"></td>
+                                                            </tr>
+                                                        @endif
                                                     @endif
                                                 </tbody>
-                                                @if(!empty($employeeSalary) && (Request::get('page') == $employeeSalary->lastPage() || $employeeSalary->lastPage() == 1))
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td></td><td></td><td></td><td></td><td></td><td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td><b>Total Amount</b></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td><b>{{ $totalAmount }}</b></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                @endif
                                             </table>
                                         </div>
                                     </div>
@@ -161,6 +183,38 @@
                                 <!-- /.box-body -->
                             </div>
                             <!-- /.tab-pane -->
+                            <div class="modal modal modal-danger" id="employee_delete_confirmation_modal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title">Confirm Action</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="modal_warning">
+                                                <div class="row">
+                                                    <div class="col-sm-2"></div>
+                                                    <div class="col-sm-10">
+                                                        <p>
+                                                            <b> Are you sure to delete this record?</b>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                                            <button type="button" id="employee_delete_confirmation_modal_confirm" class="btn btn-primary" data-employee-delete-modal-id="0" data-dismiss="modal">Confirm</button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                            <!-- /.modal -->
+
                             <div class="{{ Request::is('monthly-statement/list/excavator')? 'active' : '' }} tab-pane" id="excavators_tab">
                                 <!-- box-header -->
                                 <div class="box-header no-print">

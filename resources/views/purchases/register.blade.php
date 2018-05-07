@@ -178,21 +178,42 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Date & Time</th>
-                                        <th>Product</th>
-                                        <th>Supplier</th>
-                                        <th>Description</th>
-                                        <th>Bill Amount</th>
+                                        <th style="width: 15%;">Date / Ref. No.</th>
+                                        <th style="width: 10%;">Product</th>
+                                        <th style="width: 15%;">Supplier</th>
+                                        <th style="width: 35%;">Description</th>
+                                        <th style="width: 15%;">Bill Amount</th>
+                                        <th style="width: 10%;" class="no-print">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($purchaseRecords as $purchase_record)
                                         <tr>
-                                            <td>{{ Carbon\Carbon::parse($purchase_record->date_time)->format('d-m-Y H:m:i') }}</td>
+                                            <td>
+                                                {{ Carbon\Carbon::parse($purchase_record->date_time)->format('d-m-Y') }}
+                                                <i class="no-print"> / </i>
+                                                <b class="no-print bg-info text-red">{{ $purchase_record->transaction->id }}
+                                            </td>
                                             <td>{{ $purchase_record->purchasebleProduct->name }}</td>
                                             <td>{{ $purchase_record->transaction->creditAccount->account_name }}</td>
                                             <td>{{ $purchase_record->transaction->particulars }}</td>
                                             <td>{{ $purchase_record->bill_amount }}</td>
+                                            <td class="no-print">
+                                                @if($purchase_record->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
+                                                    <form action="{{route('purchase-delete-action')}}" id="delete_{{ $purchase_record->id }}" method="post" style="float: left;">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                        <input type="hidden" name="purchase_id" value="{{ $purchase_record->id }}">
+                                                        <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($purchase_record->date_time)->format('d-m-Y') }}">
+                                                        <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $purchase_record->id }}" data-transaction-id="{{ $purchase_record->transaction->id }}" type="button">
+                                                            <i class="fa fa-trash"> Delete</i>
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <button type="button" class="btn btn-default button-disabled" style="float: left;">
+                                                        <i class="fa fa-exclamation-circle"> No Access</i>
+                                                    </button>
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -209,6 +230,39 @@
         </div>
     </section>
     <!-- /.content -->
+    <div class="modal modal modal-danger" id="delete_confirmation_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Confirm Action</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="modal_warning">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <b id="modal_warning_record_id" class="pull-right"></b>
+                            </div>
+                            <div class="col-sm-10">
+                                <p>
+                                    <b> Are you sure to delete this record?</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="delete_confirmation_modal_cancel" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="delete_confirmation_modal_confirm" class="btn btn-primary" data-delete-modal-id="0" data-dismiss="modal">Confirm</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </div>
 @endsection
 @section('scripts')

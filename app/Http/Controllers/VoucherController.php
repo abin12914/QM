@@ -11,6 +11,7 @@ use App\Models\Voucher;
 use App\Models\Transaction;
 use App\Http\Requests\CashVoucherRegistrationRequest;
 use App\Http\Requests\CreditVoucherRegistrationRequest;
+use App\Http\Requests\DeleteVoucherRequest;
 use App\Models\Jackhammer;
 use App\Models\Excavator;
 class VoucherController extends Controller
@@ -385,5 +386,38 @@ class VoucherController extends Controller
                     'flag'      => false
                 ]);            
         }
+    }
+
+    /**
+     * Handle voucher delete action
+     */
+    public function deleteAction(DeleteVoucherRequest $request)
+    {
+        $voucherId = $request->get('voucher_id');
+        $date       = $request->get('date');
+        
+        $voucher   = Voucher::where('id', $voucherId)->where('status', 1)->first();
+
+        if(!empty($voucher) && !empty($voucher->id)) {
+            if(Carbon::parse($voucher->date_time)->format('d-m-Y') != $date) {
+                return redirect()->back()->with("message","Deletion restricted. Date change detected!! #06/09")->with("alert-class","alert-danger");
+            }
+
+            if($voucher->transaction->created_user_id != Auth::id() && Auth::user()->role != 'admin') {
+                return redirect()->back()->with("message","Failed to delete the voucher details.You don't have the permission to delete this record! #06/10")->with("alert-class","alert-danger");
+            }
+            if($voucher->created_at->diffInDays(Carbon::now(), false) > 5) {
+                return redirect()->back()->with("message","Deletion restricted.Only records created within 5 days can be deleted! #06/11")->with("alert-class","alert-danger");
+            }
+
+            $voucherTransactionDelete  = $voucher->transaction->delete();
+            $voucherDeleteFlag         = $voucher->delete();
+
+            if($voucherTransactionDelete && $voucherDeleteFlag) {
+                return redirect()->back()->with("message","#". $voucher->transaction->id. " -Successfully deleted.")->with("alert-class","alert-success");
+            }
+        }
+
+        return redirect()->back()->with("message","Failed to delete the voucher details.Try again after reloading the page! #0/12")->with("alert-class","alert-danger");
     }
 }
