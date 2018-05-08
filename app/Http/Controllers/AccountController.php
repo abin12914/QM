@@ -601,7 +601,7 @@ class AccountController extends Controller
                     $profitLoss->to_date        = $toDate->copy()->format('Y-m-d');
                     $profitLoss->owner_id       = $owner->id;
                     $profitLoss->share_type     = $owner->share_type;
-                    $profitLoss->share_type     = $owner->share_type == 1 ? $ratePerFeet : round((100/3), 2);
+                    $profitLoss->share_rate     = $owner->share_type == 1 ? $ratePerFeet : round((100/3), 2);
                     $profitLoss->amount         = $transaction->amount;
                     $profitLoss->status         = 1;
                     if($profitLoss->save()) {
