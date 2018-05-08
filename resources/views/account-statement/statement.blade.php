@@ -112,7 +112,7 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-yellow" style="width:100%; font-size: 15px;">{{ $totalOverviewDebit }}</span>
+                                                                <span class="badge bg-yellow" style="width:100%; font-size: 15px;">{{ round($totalOverviewDebit) }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -121,7 +121,7 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-orange" style="width:100%; font-size: 15px;">{{ $totalOverviewCredit }}</span>
+                                                                <span class="badge bg-orange" style="width:100%; font-size: 15px;">{{ round($totalOverviewCredit) }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -131,7 +131,7 @@
                                                                     <b class="pull-right">:</b>
                                                                 </th>
                                                                 <td>
-                                                                    <span class="badge bg-green" style="width:100%; font-size: 15px;">{{ $totalOverviewDebit - $totalOverviewCredit }}</span>
+                                                                    <span class="badge bg-green" style="width:100%; font-size: 15px;">{{ round(($totalOverviewDebit - $totalOverviewCredit)) }}</span>
                                                                 </td>
                                                             @else
                                                                 <th>
@@ -139,7 +139,7 @@
                                                                     <b class="pull-right">:</b>
                                                                 </th>
                                                                 <td>
-                                                                    <span class="badge bg-red" style="width:100%; font-size: 15px;">{{ $totalOverviewCredit - $totalOverviewDebit }}</span>
+                                                                    <span class="badge bg-red" style="width:100%; font-size: 15px;">{{ round(($totalOverviewCredit - $totalOverviewDebit)) }}</span>
                                                                 </td>
                                                             @endif
                                                         </tr>
@@ -161,7 +161,7 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-yellow" style="width:100%; font-size: 15px;">{{ $totalDebitAmount }}</span>
+                                                                <span class="badge bg-yellow" style="width:100%; font-size: 15px;">{{ round($totalDebitAmount) }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -170,7 +170,7 @@
                                                                 <b class="pull-right">:</b>
                                                             </th>
                                                             <td>
-                                                                <span class="badge bg-orange" style="width:100%; font-size: 15px;">{{ $totalCreditAmount }}</span>
+                                                                <span class="badge bg-orange" style="width:100%; font-size: 15px;">{{ round($totalCreditAmount) }}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -180,7 +180,7 @@
                                                                     <b class="pull-right">:</b>
                                                                 </th>
                                                                 <td>
-                                                                    <span class="badge bg-green" style="width:100%; font-size: 15px;">{{ $totalDebitAmount - $totalCreditAmount }}</span>
+                                                                    <span class="badge bg-green" style="width:100%; font-size: 15px;">{{ round(($totalDebitAmount - $totalCreditAmount)) }}</span>
                                                                 </td>
                                                             @else
                                                                 <th>
@@ -188,7 +188,7 @@
                                                                     <b class="pull-right">:</b>
                                                                 </th>
                                                                 <td>
-                                                                    <span class="badge bg-red" style="width:100%; font-size: 15px;">{{ $totalCreditAmount - $totalDebitAmount }}</span>
+                                                                    <span class="badge bg-red" style="width:100%; font-size: 15px;">{{ round(($totalCreditAmount - $totalDebitAmount)) }}</span>
                                                                 </td>
                                                             @endif
                                                         </tr>

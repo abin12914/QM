@@ -271,7 +271,7 @@ class AccountController extends Controller
         $accountRelation    = $request->get('relation');
 
         if(!empty($accountRelation)) {
-            $accounts = Account::where('type', 'personal')->Where('relation', $accountRelation)->where('status', '1')->get();
+            $accounts = Account::with('accountDetail')->where('type', 'personal')->Where('relation', $accountRelation)->where('status', '1')->get();
 
             if(empty($accounts)) {
                 session()->flash('fixed-message', 'No accounts available to show!');
@@ -377,6 +377,7 @@ class AccountController extends Controller
         {
             $profitLossQuery    = ProfitLoss::where('status', 1);
             $checkRecord        = clone $profitLossQuery;
+            $rateQuery          = clone $profitLossQuery;
 
             $checkRecord        = $checkRecord->where('to_date', $toDate->copy()->format('Y-m-d'))->first();
             //if not processed yet
@@ -399,7 +400,9 @@ class AccountController extends Controller
             $vehicleTypes   = VehicleType::where('status', 1)->orderBy('generic_quantity', 'desc')->get();
             //to get count of sales of product 1
             $productId      = [1];
-            $ratePerFeet    = 1;
+            $rateQuery      = $rateQuery->where('share_type', 1)->where('from_date', $fromDate->copy()->format('Y-m-d'))->first();
+            $saleBasedOwner = Owner::where('share_type', 1)->first();
+            $ratePerFeet    = !empty($rateQuery) ? $rateQuery->share_rate : $saleBasedOwner->share_rate;
             $query = Sale::where('status', 1)->whereIn('product_id', $productId)->whereBetween('date_time', [$fromDate, $toDate]);
 
             $salesCount             = [];
@@ -520,7 +523,8 @@ class AccountController extends Controller
             $vehicleTypes   = VehicleType::where('status', 1)->orderBy('generic_quantity', 'desc')->get();
             //to get count of sales of product 1
             $productId      = [1];
-            $ratePerFeet    = 1;
+            $saleBasedOwner = Owner::where('share_type', 1)->first();
+            $ratePerFeet    = !empty($saleBasedOwner) ? $saleBasedOwner->share_rate : 1;
             $query = Sale::where('status', 1)->whereIn('product_id', $productId)->whereBetween('date_time', [$fromDate, $toDate]);
 
             $singleSalecount        = 0;
@@ -597,6 +601,7 @@ class AccountController extends Controller
                     $profitLoss->to_date        = $toDate->copy()->format('Y-m-d');
                     $profitLoss->owner_id       = $owner->id;
                     $profitLoss->share_type     = $owner->share_type;
+                    $profitLoss->share_type     = $owner->share_type == 1 ? $ratePerFeet : round((100/3), 2);
                     $profitLoss->amount         = $transaction->amount;
                     $profitLoss->status         = 1;
                     if($profitLoss->save()) {
