@@ -194,7 +194,7 @@
                                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                                     <input type="hidden" name="voucher_id" value="{{ $cashVoucher->id }}">
                                                                     <input type="hidden" name="date" value="{{ Carbon\Carbon::parse($cashVoucher->date_time)->format('d-m-Y') }}">
-                                                                    <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $cashVoucher->id }}" type="button">
+                                                                    <button type="button" class="btn btn-danger delete_button" data-delete-id="{{ $cashVoucher->id }}" data-transaction-id="{{ $cashVoucher->transaction->id }}" type="button">
                                                                         <i class="fa fa-trash"> Delete</i>
                                                                     </button>
                                                                 </form>
@@ -579,7 +579,9 @@
                 <div class="modal-body">
                     <div id="modal_warning">
                         <div class="row">
-                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <b id="modal_warning_record_id" class="pull-right"></b>
+                            </div>
                             <div class="col-sm-10">
                                 <p>
                                     <b> Are you sure to delete this record?</b>
