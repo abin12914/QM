@@ -156,6 +156,7 @@
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>
+                                                                <td></td>
                                                                 <td class="no-print"></td>
                                                             </tr>
                                                             <tr>
@@ -164,7 +165,8 @@
                                                                 <td><b>Total Amount</b></td>
                                                                 <td></td>
                                                                 <td></td>
-                                                                <td><b>{{ $totalAmount }}</b></td>
+                                                                <td></td>
+                                                                <td><b>{{ round($totalAmount, 2) }}</b></td>
                                                                 <td class="no-print"></td>
                                                             </tr>
                                                         @endif

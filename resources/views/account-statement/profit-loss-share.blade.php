@@ -49,8 +49,8 @@
                                 <tr>
                                     <td>0</td>
                                     <td>Total Expense And Income</td>
-                                    <td>{{ $totalDebit }}</td>
-                                    <td>{{ $totalCredit }}</td>
+                                    <td>{{ round($totalDebit) }}</td>
+                                    <td>{{ round($totalCredit) }}</td>
                                 </tr>
                                 <tr>
                                     <?php
@@ -61,29 +61,32 @@
                                     <td>1</td>
                                     <td>{{ $fixedOwner->account->account_name }}<a href="#sale_based_profit_details">[Sale based profit]</a></td>
                                     <td></td>
-                                    <td>{{ $ownerShare[$fixedOwner->account_id] }}</td>
+                                    <td>{{ round($ownerShare[$fixedOwner->account_id]) }}</td>
                                 </tr>
                                 <tr>
-                                    <td></td><td></td><td></td><td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr class="info">
                                     <th></th>
                                     <th>Total</th>
-                                    <th>{{ $totalDebit }}</th>
-                                    <th>{{ $totalCredit + $ownerShare[$fixedOwner->account_id] }}</th>
+                                    <th>{{ round($totalDebit) }}</th>
+                                    <th>{{ round(($totalCredit + $ownerShare[$fixedOwner->account_id])) }}</th>
                                 </tr>
                                 <tr class="{{ ($balanceAmount < 0) ? "danger" : "success" }}">
                                     <th></th>
                                     @if($balanceAmount < 0)
                                         <th>Over expence[Loss]</th>
-                                        <th>{{ ($balanceAmount * -1) }}</th>
+                                        <th>{{ round(($balanceAmount * -1)) }}</th>
                                         <th></th>
                                     @else
                                         <th>Balance[Profit]</th>
                                         <th></th>
-                                        <th>{{ $balanceAmount }}</th>
+                                        <th>{{ round($balanceAmount) }}</th>
                                     @endif
                                 </tr>
                             </tfoot>
@@ -122,12 +125,12 @@
                                     <td>0</td>
                                     @if($balanceAmount > 0)
                                         <td>Balance[Profit]</td>
-                                        <td>{{ $balanceAmount }}</td>
+                                        <td>{{ round($balanceAmount) }}</td>
                                         <td></td>
                                     @else
                                         <th>Over expence[Loss]</th>
                                         <th></th>
-                                        <th>{{ ($balanceAmount* -1) }}</th>
+                                        <th>{{ round(($balanceAmount* -1)) }}</th>
                                     @endif
                                 </tr>
                                 @foreach($owners as $key => $owner)
@@ -136,11 +139,11 @@
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $owner->account->account_name }} [33.33%]</td>
                                         @if($ownerShare[$owner->account_id] < 0)
-                                            <td>{{ ($ownerShare[$owner->account_id] * -1) }}</td>
+                                            <td>{{ round(($ownerShare[$owner->account_id] * -1)) }}</td>
                                             <td></td>
                                         @else
                                             <td></td>
-                                            <td>{{ $ownerShare[$owner->account_id] }}</td>
+                                            <td>{{ round($ownerShare[$owner->account_id]) }}</td>
                                         @endif
                                     @endif
                                     </tr>
@@ -150,8 +153,8 @@
                                 <tr class="info">
                                     <th></th>
                                     <th>Total</th>
-                                    <th>{{ ($balanceAmount < 0) ? ($balanceAmount * -1) : $balanceAmount }}</th>
-                                    <th>{{ ($balanceAmount < 0) ? ($balanceAmount * -1) : $balanceAmount }}</th>
+                                    <th>{{ ($balanceAmount < 0) ? round(($balanceAmount * -1)) : round($balanceAmount) }}</th>
+                                    <th>{{ ($balanceAmount < 0) ? round(($balanceAmount * -1)) : round($balanceAmount) }}</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -238,7 +241,7 @@
                                     <th></th>
                                     <th>{{ $totalSaleCount }}</th>
                                     <th></th>
-                                    <th>{{ $totalSaleProfitAmount }}</th>
+                                    <th>{{ round($totalSaleProfitAmount) }}</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -269,7 +272,7 @@
                             </div>
                             <div class="col-sm-11">
                                 <p>
-                                    <b> Are sure to proceed with share options in the table? Action is irriversable.</b>
+                                    <b> Are sure to proceed with share options in the table? Action is irreversible.</b>
                                 </p>
                             </div>
                         </div>

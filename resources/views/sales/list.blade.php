@@ -275,7 +275,7 @@
                                                 <td></td>
                                                 <td>aprox. <b>{{ $totalQuantity }} Cft</b></td>
                                                 <td><b>{{ $totalLoad }}</b></td>
-                                                <td><b>{{ $totalAmount }}</b></td>
+                                                <td><b>{{ round($totalAmount, 2) }}</b></td>
                                                 <td></td>
                                             </tr>
                                         @endif

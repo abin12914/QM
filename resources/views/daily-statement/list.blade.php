@@ -160,7 +160,7 @@
                                                                 <td></td>
                                                                 <td><b>Total Amount</b></td>
                                                                 <td></td>
-                                                                <td><b>{{ $totalAmount }}</b></td>
+                                                                <td><b>{{ round($totalAmount) }}</b></td>
                                                                 <td class="no-print"></td>
                                                             </tr>
                                                         @endif
@@ -334,7 +334,7 @@
                                                                 <td>{{ $excavatorReading->operator_name }}</td>
                                                             @endif
                                                             <td>{{ $excavatorReading->bata }}</td>
-                                                            <td>{{ $excavatorReading->bill_amount }}</td>
+                                                            <td>{{ round($excavatorReading->bill_amount) }}</td>
                                                             <td class="no-print">
                                                                 @if($excavatorReading->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
                                                                     <form action="{{route('daily-statement-excavator-readings-delete-action')}}" id="excavator_delete_{{ $excavatorReading->id }}" method="post" style="float: left;">
@@ -372,8 +372,8 @@
                                                             <td><b>Total Amount</b></td>
                                                             <td></td>
 
-                                                            <td><b>{{ $totalBucketReading }}</b></td>
-                                                            <td><b>{{ $totalBreakerReading }}</b></td>
+                                                            <td><b>{{ round($totalBucketReading, 2) }}</b></td>
+                                                            <td><b>{{ round($totalBreakerReading, 2) }}</b></td>
                                                             {{-- @if(!empty($bucketRate))
                                                                 <td><b>{{ $totalBucketReading }} x {{ $bucketRate }} = {{ ($totalBucketReading * $bucketRate) }}</b></td>
                                                             @else
@@ -386,7 +386,7 @@
                                                             @endif --}}
                                                             <td></td>
                                                             <td><b>{{ $totalBata }}</b></td>
-                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                            <td><b>{{ round($totalAmount) }}</b></td>
                                                             <td class="no-print"></td>
                                                         </tr>
                                                     @endif
@@ -539,11 +539,11 @@
                                                             </td>
                                                             <td>{{ $jackhammerReading->jackhammer->name }}</td>
                                                             <td>{{ $jackhammerReading->jackhammer->account->account_name }}</td>
-                                                            <td>{{ ($jackhammerReading->total_pit_depth / 5) }}</td>
+                                                            <td>{{ round(($jackhammerReading->total_pit_depth / 5), 2) }}</td>
                                                             <td>
                                                                 {{ $jackhammerReading->total_pit_depth }} x {{ round(($jackhammerReading->bill_amount/$jackhammerReading->total_pit_depth), 2) }}
                                                             </td>
-                                                            <td>{{ $jackhammerReading->bill_amount }}</td>
+                                                            <td>{{ round($jackhammerReading->bill_amount) }}</td>
                                                             <td class="no-print">
                                                                 @if($jackhammerReading->transaction->created_user_id == Auth::id() || Auth::user()->role == 'admin')
                                                                     <form action="{{route('daily-statement-jackhammer-readings-delete-action')}}" id="jackhammer_delete_{{ $jackhammerReading->id }}" method="post" style="float: left;">
@@ -584,7 +584,7 @@
                                                             @else
                                                                 <td><b>{{ $totalDepth }}</b></td>
                                                             @endif
-                                                            <td><b>{{ $totalAmount }}</b></td>
+                                                            <td><b>{{ round($totalAmount) }}</b></td>
                                                             <td class="no-print"></td>
                                                         </tr>
                                                     @endif

@@ -410,12 +410,12 @@ class DailyStatementController extends Controller
             });
         }
 
-        /*if(!empty($excavatorId) && $excavatorId != 0) {
+        if(!empty($excavatorId) && $excavatorId != 0) {
             $query = $query->where('excavator_id', $excavatorId);
-            $excavator = Excavator::find($excavatorId);
+            /*$excavator = Excavator::find($excavatorId);
             $bucketRate     = $excavator->rent_hourly_bucket;
-            $breakerRate    = $excavator->rent_hourly_breaker;
-        }*/
+            $breakerRate    = $excavator->rent_hourly_breaker;*/
+        }
 
         if(!empty($fromDate)) {
             $searchFromDate = new DateTime($fromDate);

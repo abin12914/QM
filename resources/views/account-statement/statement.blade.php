@@ -255,13 +255,13 @@
                                                     <td><b>{{ round($subtotalDebit, 2) }}</b></td>
                                                     <td><b>{{ round($subtotalCredit, 2) }}</b></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="bg-gray">
                                                     <th></th>
                                                     <th></th>
                                                     <th></th>
+                                                    <td>Summary</td>
                                                     <td></td>
-                                                    <td>----------</td>
-                                                    <td>----------</td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <th></th>
@@ -269,12 +269,12 @@
                                                     <th></th>
                                                     @if($subtotalDebit <= $subtotalCredit )
                                                         <td><b>Sub total Balance </b>- [{{ round($subtotalCredit, 2) }} - {{ round($subtotalDebit, 2) }}]</td>
-                                                        <td><b>{{ round(($subtotalCredit - $subtotalDebit), 2) }}</b></td>
                                                         <td></td>
+                                                        <td><b>{{ round(($subtotalCredit - $subtotalDebit), 2) }}</b></td>
                                                     @else
                                                         <td><b>Sub total Balance </b>- [{{ round($subtotalDebit, 2) }} - {{ round($subtotalCredit, 2) }}]</td>
-                                                        <td></td>
                                                         <td><b>{{ round(($subtotalDebit - $subtotalCredit), 2) }}</b></td>
+                                                        <td></td>
                                                     @endif
                                                 </tr>
                                                 <tr>
@@ -283,12 +283,12 @@
                                                     <th></th>
                                                     @if($obDebitAmount <= $obCreditAmount )
                                                         <td><b>Old Balance </b>- [{{ round($obCreditAmount, 2) }} - {{ round($obDebitAmount, 2) }}]</td>
-                                                        <td><b>{{ round(($obCreditAmount- $obDebitAmount), 2) }}</b></td>
                                                         <td></td>
+                                                        <td><b>{{ round(($obCreditAmount- $obDebitAmount), 2) }}</b></td>
                                                     @else
                                                         <td><b>Old Balance </b>- [{{ round($obDebitAmount, 2) }} - {{ round($obCreditAmount, 2) }}]</td>
-                                                        <td></td>
                                                         <td><b>{{ round(($obDebitAmount - $obCreditAmount), 2) }}</b></td>
+                                                        <td></td>
                                                     @endif    
                                                 </tr>
                                                 <tr>

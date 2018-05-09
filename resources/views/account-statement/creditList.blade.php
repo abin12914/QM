@@ -104,9 +104,9 @@
                                                     <td>{{ $account->accountDetail->name }}</td>
                                                     @if($creditAmount[$account->id] > $debitAmount[$account->id])
                                                         <td></td>
-                                                        <td>{{ ($creditAmount[$account->id] - $debitAmount[$account->id]) }}</td>
+                                                        <td>{{ round(($creditAmount[$account->id] - $debitAmount[$account->id]), 2) }}</td>
                                                     @elseif($debitAmount[$account->id] > $creditAmount[$account->id])
-                                                        <td>{{ ($debitAmount[$account->id] - $creditAmount[$account->id]) }}</td>
+                                                        <td>{{ round(($debitAmount[$account->id] - $creditAmount[$account->id]), 2) }}</td>
                                                         <td></td>
                                                     @else
                                                         <td>-</td>
@@ -119,8 +119,8 @@
                                             <td>#</td>
                                             <td></td>
                                             <td></td>
-                                            <td>{{ !empty($totalDebitAmount) ? $totalDebitAmount : 0 }}</td>
-                                            <td>{{ !empty($totalCreditAmount) ? $totalCreditAmount : 0 }}</td>
+                                            <td>{{ !empty($totalDebitAmount) ? round($totalDebitAmount, 2) : 0 }}</td>
+                                            <td>{{ !empty($totalCreditAmount) ? round($totalCreditAmount, 2) : 0 }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

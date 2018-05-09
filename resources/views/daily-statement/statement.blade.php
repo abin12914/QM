@@ -93,55 +93,55 @@
                                     <tr>
                                         <td>Sales</td>
                                         <td>-</td>
-                                        <td>{{ $sales }}</td>
+                                        <td>{{ round($sales) }}</td>
                                     </tr>
                                 @endif
                                 @if(!empty($purchases))
                                     <tr>
                                         <td>Purchases and other expences</td>
-                                        <td>{{ $purchases }}</td>
+                                        <td>{{ round($purchases) }}</td>
                                         <td>-</td>
                                     </tr>
                                 @endif
                                 @if(!empty($labourWage))
                                     <tr>
                                         <td>Labour Wage</td>
-                                        <td>{{ $labourWage }}</td>
+                                        <td>{{ round($labourWage) }}</td>
                                         <td>-</td>
                                     </tr>
                                 @endif
                                 @if(!empty($excavatorReadingRent))
                                     <tr>
                                         <td>Excavator reading rent</td>
-                                        <td>{{ $excavatorReadingRent }}</td>
+                                        <td>{{ round($excavatorReadingRent) }}</td>
                                         <td>-</td>
                                     </tr>
                                 @endif
                                 @if(!empty($jackhammerRent))
                                     <tr>
                                         <td>Jackhammer rent</td>
-                                        <td>{{ $jackhammerRent }}</td>
+                                        <td>{{ round($jackhammerRent) }}</td>
                                         <td>-</td>
                                     </tr>
                                 @endif
                                 @if(!empty($employeeSalary))
                                     <tr>
                                         <td>Employee Salary</td>
-                                        <td>{{ $employeeSalary }}</td>
+                                        <td>{{ round($employeeSalary) }}</td>
                                         <td>-</td>
                                     </tr>
                                 @endif
                                 @if(!empty($excavatorMonthlyRent))
                                     <tr>
                                         <td>Excavator monthly rent</td>
-                                        <td>{{ $excavatorMonthlyRent }}</td>
+                                        <td>{{ round($excavatorMonthlyRent) }}</td>
                                         <td>-</td>
                                     </tr>
                                 @endif
                                 @if(!empty($royalty))
                                     <tr>
                                         <td>Royalty</td>
-                                        <td>{{ $royalty }}</td>
+                                        <td>{{ round($royalty) }}</td>
                                         <td>-</td>
                                     </tr>
                                 @endif
@@ -154,18 +154,18 @@
                                 </tr>
                                 <tr>
                                     <th>Total Amount</th>
-                                    <th>{{ $totalDebit }}</th>
-                                    <th>{{ $totalCredit }}</th>
+                                    <th>{{ round($totalDebit) }}</th>
+                                    <th>{{ round($totalCredit) }}</th>
                                 </tr>
                                 <tr>
                                     @if($totalDebit <= $totalCredit)
                                         <th>{{ 'Balance[Profit]' }}</th>
-                                        <th>{{ $totalCredit - $totalDebit }}</th>
+                                        <th>{{ round(($totalCredit - $totalDebit)) }}</th>
                                         <th></th>
                                     @else
                                         <th>{{ 'Over expence[Loss]' }}</th>
                                         <th></th>
-                                        <th>{{ $totalDebit - $totalCredit }}</th>
+                                        <th>{{ round(($totalDebit - $totalCredit)) }}</th>
                                     @endif
                                 </tr>
                             </tfoot>
@@ -253,7 +253,7 @@
                         label: "Income",
                         fillColor: "rgb(0, 153, 0)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $totalCredit }}]
+                        data: [{{ round($totalCredit) }}]
                     },
                 @endif
                 @if(!empty($totalDebit))
@@ -261,7 +261,7 @@
                         label: "Expence",
                         fillColor: "rgb(255,32,32)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $totalDebit }}]
+                        data: [{{ round($totalDebit) }}]
                     },
                 @endif
                 {
@@ -282,7 +282,7 @@
                         label: "royalty",
                         fillColor: "rgb(255,32,32)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $royalty }}]
+                        data: [{{ round($royalty) }}]
                     },
                 @endif
                 @if(!empty($purchases))
@@ -290,7 +290,7 @@
                         label: "Purchases",
                         fillColor: "rgb(255,91,91)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $purchases }}]
+                        data: [{{ round($purchases) }}]
                     },
                 @endif
                 @if(!empty($labourWage))
@@ -298,7 +298,7 @@
                         label: "labourWage",
                         fillColor: "rgb(91,91,255)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $labourWage }}]
+                        data: [{{ round($labourWage) }}]
                     },
                 @endif
                 @if(!empty($excavatorReadingRent))
@@ -306,7 +306,7 @@
                         label: "excavatorReadingRent",
                         fillColor: "rgb(255,255,0)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $excavatorReadingRent }}]
+                        data: [{{ round($excavatorReadingRent) }}]
                     },
                 @endif
                 @if(!empty($jackhammerRent))
@@ -314,7 +314,7 @@
                         label: "jackhammerRent",
                         fillColor: "rgb(255,0,127)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $jackhammerRent }}]
+                        data: [{{ round($jackhammerRent) }}]
                     },
                 @endif
                 @if(!empty($employeeSalary))
@@ -322,7 +322,7 @@
                         label: "employeeSalary",
                         fillColor: "rgb(204,0,0)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $employeeSalary }}]
+                        data: [{{ round($employeeSalary) }}]
                     },
                 @endif
                 @if(!empty($excavatorMonthlyRent))
@@ -330,7 +330,7 @@
                         label: "excavatorMonthlyRent",
                         fillColor: "rgb(153,255,255)",
                         strokeColor: "rgb(255,255,255)",
-                        data: [{{ $excavatorMonthlyRent }}]
+                        data: [{{ round($excavatorMonthlyRent) }}]
                     },
                 @endif
             ]

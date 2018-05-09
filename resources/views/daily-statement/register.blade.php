@@ -151,7 +151,7 @@
                                                             @if(count($excavators))
                                                                 <option value="">Select excavator</option>
                                                                 @foreach($excavators as $excavator)
-                                                                    <option value="{{ $excavator->id }}" {{ (old('excavator_id') == $excavator->id ) ? 'selected' : '' }}>{{ $excavator->name }} / Contractor : {{ $excavator->account->account_name }}</option>
+                                                                    <option value="{{ $excavator->id }}" {{ (old('excavator_id') == $excavator->id ) ? 'selected' : '' }}>{{ $excavator->name }} / {{ $excavator->account->account_name }} [{{ $excavator->rent_hourly_bucket }} / {{ $excavator->rent_hourly_breaker }}]</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>
